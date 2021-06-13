@@ -40,7 +40,7 @@ logging:
           maxFileSize: 10MB
           archivedLogFilenamePattern: ./logs/archive/wiremock/wiremock-%d-%i.log.gz
           archivedFileCount: 200
-    # Uncomment below logger for Iron Test resource oriented HTTP APIs request/response logging
+    # Uncomment below logger for REST APIs request/response logging
     # "org.glassfish.jersey.filter.LoggingFilter":
     #   additive: false
     #   appenders:

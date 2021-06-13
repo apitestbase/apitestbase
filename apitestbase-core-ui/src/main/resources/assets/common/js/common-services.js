@@ -33,7 +33,7 @@ angular.module('common')
 
         if (!errorHTTPResponse.data) {
           errorMessage = 'Connection refused.';
-          errorDetails = 'Unable to talk to Iron Test server.';
+          errorDetails = 'Unable to talk to API Test Base server.';
         } else if (errorHTTPResponse.status === 401) {
           errorMessage = 'User not authenticated.';
           errorDetails = 'Please log in and try the operation again.';

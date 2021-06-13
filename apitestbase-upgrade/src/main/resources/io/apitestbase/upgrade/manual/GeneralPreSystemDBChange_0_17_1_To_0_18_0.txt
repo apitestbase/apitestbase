@@ -1,0 +1,4 @@
+Please manually update the config.yml file under your <IronTest_Home>:
+    Change 'irontest' to 'apitestbase'
+    Change 'Iron Test resource oriented HTTP' to 'REST'
+To confirm update completion, type y and then Enter.
