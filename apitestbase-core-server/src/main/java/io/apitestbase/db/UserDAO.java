@@ -12,7 +12,7 @@ import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
 
-import static io.apitestbase.IronTestConstants.*;
+import static io.apitestbase.APITestBaseConstants.*;
 
 @RegisterRowMapper(UserMapper.class)
 public interface UserDAO {

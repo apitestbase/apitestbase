@@ -9,7 +9,7 @@ import io.apitestbase.models.assertion.HTTPStubsHitInOrderAssertionVerificationR
 
 import java.util.*;
 
-import static io.apitestbase.IronTestConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER;
+import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER;
 
 public class HTTPStubsHitInOrderAssertionVerifier extends AssertionVerifier {
     @Override

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Map;
 
-public class IronTestConfiguration extends Configuration {
+public class APITestBaseConfiguration extends Configuration {
     private String mode;
     private String sslTrustStorePath;
     private String sslTrustStorePassword;

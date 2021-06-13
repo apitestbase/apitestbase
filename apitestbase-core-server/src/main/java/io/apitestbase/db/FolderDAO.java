@@ -9,7 +9,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
-import static io.apitestbase.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+import static io.apitestbase.APITestBaseConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
 @RegisterRowMapper(FolderMapper.class)
 public interface FolderDAO {

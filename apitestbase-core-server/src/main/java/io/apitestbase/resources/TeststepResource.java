@@ -10,7 +10,7 @@ import io.apitestbase.models.UserDefinedProperty;
 import io.apitestbase.models.assertion.Assertion;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.teststep.*;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import io.apitestbase.utils.XMLUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.apitestbase.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
-import static io.apitestbase.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME;
+import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
+import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME;
 
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
@@ -62,7 +62,7 @@ public class TeststepResource {
         if (Teststep.TYPE_DB.equals(teststep.getType())) {
             boolean isSQLRequestSingleSelectStatement;
             try {
-                isSQLRequestSingleSelectStatement = IronTestUtils.isSQLRequestSingleSelectStatement(
+                isSQLRequestSingleSelectStatement = GeneralUtils.isSQLRequestSingleSelectStatement(
                         (String) teststep.getRequest());
             } catch (Exception e) {
                 //  the SQL script is invalid, so it can't be a single select statement
@@ -159,13 +159,13 @@ public class TeststepResource {
 
         //  gather referenceable string properties and endpoint properties
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
-        Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
         Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
         if (dataTable.getRows().size() > 0) {
-            IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(referenceableStringProperties.keySet(), dataTable);
+            GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(referenceableStringProperties.keySet(), dataTable);
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
             referenceableEndpointProperties.putAll(dataTable.getEndpointPropertiesInRow(0));
         }
@@ -183,16 +183,16 @@ public class TeststepResource {
                 break;
             case Teststep.TYPE_HTTP:
                 HTTPAPIResponse httpAPIResponse = (HTTPAPIResponse) basicTeststepRun.getResponse();
-                httpAPIResponse.setHttpBody(IronTestUtils.prettyPrintJSONOrXML(httpAPIResponse.getHttpBody()));
+                httpAPIResponse.setHttpBody(GeneralUtils.prettyPrintJSONOrXML(httpAPIResponse.getHttpBody()));
                 break;
             case Teststep.TYPE_MQ:
                 if (Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
                     MQDequeueResponse mqDequeueResponse = (MQDequeueResponse) basicTeststepRun.getResponse();
                     if (mqDequeueResponse != null) {
-                        mqDequeueResponse.setBodyAsText(IronTestUtils.prettyPrintJSONOrXML(mqDequeueResponse.getBodyAsText()));
+                        mqDequeueResponse.setBodyAsText(GeneralUtils.prettyPrintJSONOrXML(mqDequeueResponse.getBodyAsText()));
                         if (mqDequeueResponse.getMqrfh2Header() != null) {
                             for (MQRFH2Folder mqrfh2Folder: mqDequeueResponse.getMqrfh2Header().getFolders()) {
-                                mqrfh2Folder.setString(IronTestUtils.prettyPrintJSONOrXML(mqrfh2Folder.getString()));
+                                mqrfh2Folder.setString(GeneralUtils.prettyPrintJSONOrXML(mqrfh2Folder.getString()));
                             }
                         }
                     }

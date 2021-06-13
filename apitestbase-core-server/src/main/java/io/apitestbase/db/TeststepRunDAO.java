@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.testrun.TeststepRun;
 import io.apitestbase.models.teststep.Teststep;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
@@ -54,7 +54,7 @@ public interface TeststepRunDAO {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        IronTestUtils.addMixInsForWireMock(objectMapper);
+        GeneralUtils.addMixInsForWireMock(objectMapper);
         long id = _insert(testcaseRunId, testcaseIndividualRunId, objectMapper.writeValueAsString(teststep),
                 objectMapper.writeValueAsString(teststepRun.getResponse()), teststepRun.getInfoMessage(),
                 teststepRun.getErrorMessage(), objectMapper.writeValueAsString(teststepRun.getAssertionVerifications()),

@@ -11,7 +11,7 @@ import io.apitestbase.models.assertion.IntegerEqualAssertionProperties;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.propertyextractor.PropertyExtractor;
 import io.apitestbase.models.teststep.*;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.io.IOUtils;
 import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import static io.apitestbase.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+import static io.apitestbase.APITestBaseConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
 @RegisterRowMapper(TeststepMapper.class)
 public interface TeststepDAO extends CrossReferenceDAO {
@@ -276,7 +276,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     default void processDBTeststep(Teststep teststep) {
-        if (!IronTestUtils.isSQLRequestSingleSelectStatement((String) teststep.getRequest())) {
+        if (!GeneralUtils.isSQLRequestSingleSelectStatement((String) teststep.getRequest())) {
             teststep.getAssertions().clear();
         }
     }
@@ -306,7 +306,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
         if (rfh2Header != null) {
             List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
             for (MQRFH2Folder folder : rfh2Folders) {
-                IronTestUtils.validateMQRFH2FolderStringAndSetFolderName(folder);
+                GeneralUtils.validateMQRFH2FolderStringAndSetFolderName(folder);
             }
         }
     }

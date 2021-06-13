@@ -8,7 +8,7 @@ import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.endpoint.MQConnectionMode;
 import io.apitestbase.models.endpoint.MQEndpointProperties;
 import io.apitestbase.models.teststep.*;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -237,7 +237,7 @@ public class MQTeststepRunner extends TeststepRunner {
                     for (int i = 0; i < folderStrings.length; i++) {
                         MQRFH2Folder mqrfh2Folder = new MQRFH2Folder();
                         mqrfh2Folder.setString(folderStrings[i]);
-                        IronTestUtils.validateMQRFH2FolderStringAndSetFolderName(mqrfh2Folder);
+                        GeneralUtils.validateMQRFH2FolderStringAndSetFolderName(mqrfh2Folder);
                         mqrfh2Header.getFolders().add(mqrfh2Folder);
                     }
                 }

@@ -11,7 +11,7 @@ import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
 
-import static io.apitestbase.IronTestConstants.*;
+import static io.apitestbase.APITestBaseConstants.*;
 
 @RegisterRowMapper(DataTableColumnMapper.class)
 public interface DataTableColumnDAO extends CrossReferenceDAO {

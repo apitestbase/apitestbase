@@ -10,7 +10,7 @@ import io.apitestbase.models.testrun.TestcaseIndividualRun;
 import io.apitestbase.models.testrun.TestcaseRun;
 import io.apitestbase.models.testrun.TeststepRun;
 import io.apitestbase.models.teststep.Teststep;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
-import static io.apitestbase.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
-import static io.apitestbase.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME;
+import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
+import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME;
 
 public class DataDrivenTestcaseRunner extends TestcaseRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataDrivenTestcaseRunner.class);
@@ -38,7 +38,7 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
         startTestcaseRun(testcaseRun);
 
         DataTable dataTable = getTestcase().getDataTable();
-        IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(getUdpNames(), dataTable);
+        GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(getUdpNames(), dataTable);
 
         for (int dataTableRowIndex = 0; dataTableRowIndex < dataTable.getRows().size(); dataTableRowIndex++) {
             LinkedHashMap<String, DataTableCell> dataTableRow = dataTable.getRows().get(dataTableRowIndex);

@@ -5,7 +5,7 @@ import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.teststep.APIRequest;
 import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.TeststepRequestType;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TeststepMapper implements RowMapper<Teststep> {
     public Teststep map(ResultSet rs, StatementContext ctx) throws SQLException {
-        List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);
+        List<String> fields = GeneralUtils.getFieldsPresentInResultSet(rs);
 
         Teststep teststep;
         String type = rs.getString("type");

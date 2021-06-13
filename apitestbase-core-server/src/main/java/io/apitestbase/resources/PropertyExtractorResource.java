@@ -10,7 +10,7 @@ import io.apitestbase.models.UserDefinedProperty;
 import io.apitestbase.models.propertyextractor.PropertyExtractionRequest;
 import io.apitestbase.models.propertyextractor.PropertyExtractionResult;
 import io.apitestbase.models.propertyextractor.PropertyExtractor;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,11 +76,11 @@ public class PropertyExtractorResource {
         //  gather referenceable string properties
         long testcaseId = propertyExtractorDAO.findTestcaseIdById(propertyExtractor.getId());
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
-        Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         Set<String> udpNames = referenceableStringProperties.keySet();
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
         if (dataTable.getRows().size() > 0) {
-            IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
+            GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
         }
 

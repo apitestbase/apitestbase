@@ -11,10 +11,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
-import static io.apitestbase.IronTestConstants.*;
+import static io.apitestbase.APITestBaseConstants.*;
 
-public class IronTestLoggingExceptionMapper extends LoggingExceptionMapper<Throwable> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(IronTestLoggingExceptionMapper.class);
+public class APITestBaseLoggingExceptionMapper extends LoggingExceptionMapper<Throwable> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(APITestBaseLoggingExceptionMapper.class);
 
     @Override
     public Response toResponse(Throwable exception) {

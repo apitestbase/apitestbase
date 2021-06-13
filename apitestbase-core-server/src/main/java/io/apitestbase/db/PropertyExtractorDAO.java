@@ -10,7 +10,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
 
-import static io.apitestbase.IronTestConstants.*;
+import static io.apitestbase.APITestBaseConstants.*;
 
 @RegisterRowMapper(PropertyExtractorMapper.class)
 public interface PropertyExtractorDAO {

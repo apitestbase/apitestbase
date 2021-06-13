@@ -12,7 +12,7 @@ import io.apitestbase.models.TestResult;
 import io.apitestbase.models.UserDefinedProperty;
 import io.apitestbase.models.assertion.*;
 import io.apitestbase.models.teststep.MQRFH2Header;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -66,11 +66,11 @@ public class AssertionResource {
         //  gather referenceable string properties
         long testcaseId = teststepDAO.findTestcaseIdById(assertion.getTeststepId());
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
-        Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         Set<String> udpNames = referenceableStringProperties.keySet();
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
         if (dataTable.getRows().size() > 0) {
-            IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
+            GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
         }
 

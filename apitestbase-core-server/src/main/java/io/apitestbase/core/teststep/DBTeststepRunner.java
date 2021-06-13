@@ -7,7 +7,7 @@ import io.apitestbase.db.SQLStatementType;
 import io.apitestbase.models.OracleTIMESTAMPTZSerializer;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.teststep.Teststep;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
@@ -50,7 +50,7 @@ public class DBTeststepRunner extends TeststepRunner {
         DBAPIResponse response = new DBAPIResponse();
         String request = (String) teststep.getRequest();
 
-        List<String> statements = IronTestUtils.getStatements(request);
+        List<String> statements = GeneralUtils.getStatements(request);
         sanityCheckTheStatements(statements);
 
         Endpoint endpoint = teststep.getEndpoint();

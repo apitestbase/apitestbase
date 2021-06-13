@@ -1,6 +1,6 @@
 package io.apitestbase.resources;
 
-import io.apitestbase.IronTestConstants;
+import io.apitestbase.APITestBaseConstants;
 import io.apitestbase.auth.SimplePrincipal;
 import io.apitestbase.db.UserDAO;
 import io.apitestbase.models.User;
@@ -35,23 +35,23 @@ public class UserResource {
     }
 
     @GET
-    @RolesAllowed(IronTestConstants.USER_ROLE_ADMIN)
+    @RolesAllowed(APITestBaseConstants.USER_ROLE_ADMIN)
     public List<User> findAll() {
         return userDAO.findAll();
     }
 
     @POST
-    @RolesAllowed(IronTestConstants.USER_ROLE_ADMIN)
+    @RolesAllowed(APITestBaseConstants.USER_ROLE_ADMIN)
     public User create(User user) {
         return userDAO.insert(user.getUsername());
     }
 
     @DELETE @Path("{userId}")
-    @RolesAllowed(IronTestConstants.USER_ROLE_ADMIN)
+    @RolesAllowed(APITestBaseConstants.USER_ROLE_ADMIN)
     public void delete(@PathParam("userId") long userId) {
         User user = userDAO.findById(userId);
-        if (user != null && IronTestConstants.SYSADMIN_USER.equals(user.getUsername())) {
-            throw new RuntimeException("Can not delete " + IronTestConstants.SYSADMIN_USER);
+        if (user != null && APITestBaseConstants.SYSADMIN_USER.equals(user.getUsername())) {
+            throw new RuntimeException("Can not delete " + APITestBaseConstants.SYSADMIN_USER);
         }
 
         userDAO.deleteById(userId);

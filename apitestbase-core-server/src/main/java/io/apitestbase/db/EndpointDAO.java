@@ -13,8 +13,8 @@ import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
 
-import static io.apitestbase.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
-import static io.apitestbase.IronTestConstants.ENDPOINT_PASSWORD_ENCRYPTION_KEY;
+import static io.apitestbase.APITestBaseConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+import static io.apitestbase.APITestBaseConstants.ENDPOINT_PASSWORD_ENCRYPTION_KEY;
 
 @RegisterRowMapper(EndpointMapper.class)
 public interface EndpointDAO {

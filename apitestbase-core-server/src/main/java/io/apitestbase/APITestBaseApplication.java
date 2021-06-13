@@ -36,7 +36,7 @@ import io.apitestbase.db.*;
 import io.apitestbase.models.AppInfo;
 import io.apitestbase.models.AppMode;
 import io.apitestbase.resources.*;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import io.apitestbase.ws.ArticleSOAP;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.eclipse.jetty.server.Server;
@@ -54,11 +54,11 @@ import java.util.logging.Logger;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
-public class IronTestApplication extends Application<IronTestConfiguration> {
+public class APITestBaseApplication extends Application<APITestBaseConfiguration> {
     private JAXWSBundle jaxWsBundle = new JAXWSBundle();
 
     public static void main(String[] args) throws Exception {
-        new IronTestApplication().run(args);
+        new APITestBaseApplication().run(args);
     }
 
     @Override
@@ -67,16 +67,16 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     }
 
     @Override
-    public void initialize(Bootstrap<IronTestConfiguration> bootstrap) {
+    public void initialize(Bootstrap<APITestBaseConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/assets/app", "/ui", "index.htm", "ui"));
         bootstrap.addBundle(new AssetsBundle("/META-INF/resources/webjars", "/ui/lib", null, "lib"));
         bootstrap.addBundle(new AssetsBundle("/assets/mockserver", "/ui/mockserver", "mockserver.htm", "mockserver"));
         bootstrap.addBundle(new AssetsBundle("/assets/common", "/ui/common", null, "common"));
         bootstrap.addBundle(jaxWsBundle);
         bootstrap.addBundle(new MultiPartBundle());
-        bootstrap.addBundle(new ViewBundle<IronTestConfiguration>(){
+        bootstrap.addBundle(new ViewBundle<APITestBaseConfiguration>(){
             @Override
-            public Map<String, Map<String, String>> getViewConfiguration(IronTestConfiguration config) {
+            public Map<String, Map<String, String>> getViewConfiguration(APITestBaseConfiguration config) {
                 return config.getViewRendererConfiguration();
             }
         });
@@ -103,15 +103,15 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         //  configure the Jackson ObjectMapper used by JAX-RS (Jersey)
         ObjectMapper objectMapper = bootstrap.getObjectMapper();
         objectMapper.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
-        IronTestUtils.addMixInsForWireMock(objectMapper);
+        GeneralUtils.addMixInsForWireMock(objectMapper);
     }
 
-    private boolean isInTeamMode(IronTestConfiguration configuration) {
+    private boolean isInTeamMode(APITestBaseConfiguration configuration) {
         return AppMode.TEAM.toString().equals(configuration.getMode());
     }
 
     @Override
-    public void run(IronTestConfiguration configuration, Environment environment) throws IOException {
+    public void run(APITestBaseConfiguration configuration, Environment environment) throws IOException {
         final JdbiFactory jdbiFactory = new JdbiFactory();
         final Jdbi systemDBJdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
 
@@ -191,7 +191,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         }
     }
 
-    private void createSystemResources(IronTestConfiguration configuration, Environment environment, Jdbi systemDBJdbi,
+    private void createSystemResources(APITestBaseConfiguration configuration, Environment environment, Jdbi systemDBJdbi,
                                        WireMockServer wireMockServer) {
         systemDBJdbi.registerArgument(new PropertiesArgumentFactory());
         systemDBJdbi.registerArgument(new EndpointPropertiesArgumentFactory());
@@ -307,10 +307,10 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         }
 
         //  register exception mappers
-        environment.jersey().register(new IronTestLoggingExceptionMapper());
+        environment.jersey().register(new APITestBaseLoggingExceptionMapper());
     }
 
-    private void createSampleResources(IronTestConfiguration configuration, Environment environment) {
+    private void createSampleResources(APITestBaseConfiguration configuration, Environment environment) {
         final JdbiFactory jdbiFactory = new JdbiFactory();
         final Jdbi jdbi = jdbiFactory.build(environment, configuration.getSampleDatabase(), "sampleDatabase");
 

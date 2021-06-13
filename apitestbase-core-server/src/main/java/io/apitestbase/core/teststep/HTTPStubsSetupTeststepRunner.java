@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import io.apitestbase.models.HTTPStubMapping;
 import io.apitestbase.models.teststep.HTTPStubsSetupTeststepProperties;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 
 import java.util.Map;
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class HTTPStubsSetupTeststepRunner extends TeststepRunner {
         HTTPStubsSetupTeststepProperties otherProperties = (HTTPStubsSetupTeststepProperties) getTeststep().getOtherProperties();
         wireMockServer.loadMappingsUsing(stubMappings -> {
             for (HTTPStubMapping stubMapping: otherProperties.getHttpStubMappings()) {
-                StubMapping stubInstance = IronTestUtils.createStubInstance(stubMapping.getId(), stubMapping.getNumber(), stubMapping.getSpec());
+                StubMapping stubInstance = GeneralUtils.createStubInstance(stubMapping.getId(), stubMapping.getNumber(), stubMapping.getSpec());
                 stubMappings.addMapping(stubInstance);
                 httpStubMappingInstanceIds.put(stubMapping.getNumber(), stubInstance.getId());
             }

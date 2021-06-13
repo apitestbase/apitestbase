@@ -54,10 +54,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
-import static io.apitestbase.IronTestConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID;
-import static io.apitestbase.IronTestConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER;
+import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID;
+import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER;
 
-public final class IronTestUtils {
+public final class GeneralUtils {
     /**
      * @param rs
      * @return a list of lower case column names present in the result set.

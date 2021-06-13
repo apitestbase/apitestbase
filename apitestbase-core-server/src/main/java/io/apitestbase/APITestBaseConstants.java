@@ -2,7 +2,7 @@ package io.apitestbase;
 
 import java.text.SimpleDateFormat;
 
-public interface IronTestConstants {
+public interface APITestBaseConstants {
     String IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME = "Test_Case_Start_Time";
     String IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME = "Test_Case_Individual_Start_Time";
     String IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME = "Test_Step_Start_Time";

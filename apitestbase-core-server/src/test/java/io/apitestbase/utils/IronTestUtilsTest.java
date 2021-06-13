@@ -12,7 +12,7 @@ public class IronTestUtilsTest {
     void prettyPrintJSONOrXML_NullInput() throws Exception {
         String input = null;
         String expectedOutput = null;
-        assertEquals(expectedOutput, IronTestUtils.prettyPrintJSONOrXML(input));
+        assertEquals(expectedOutput, GeneralUtils.prettyPrintJSONOrXML(input));
     }
 
     /**
@@ -26,14 +26,14 @@ public class IronTestUtilsTest {
         String expectedOutput = "{" + System.lineSeparator() +
                 "  \"a\" : 1" + System.lineSeparator() +
                 "}";
-        assertEquals(expectedOutput, IronTestUtils.prettyPrintJSONOrXML(input));
+        assertEquals(expectedOutput, GeneralUtils.prettyPrintJSONOrXML(input));
     }
 
     @Test
     void prettyPrintJSONOrXML_InvalidJSON() throws Exception {
         String input = "{\"a\":1";
         String expectedOutput = input;
-        assertEquals(expectedOutput, IronTestUtils.prettyPrintJSONOrXML(input));
+        assertEquals(expectedOutput, GeneralUtils.prettyPrintJSONOrXML(input));
     }
 
     /**
@@ -47,13 +47,13 @@ public class IronTestUtilsTest {
         String expectedOutput = "<root>" + System.lineSeparator() +
                 "  <a>1</a>" + System.lineSeparator() +
                 "</root>" + System.lineSeparator();
-        assertEquals(expectedOutput, IronTestUtils.prettyPrintJSONOrXML(input));
+        assertEquals(expectedOutput, GeneralUtils.prettyPrintJSONOrXML(input));
     }
 
     @Test
     void prettyPrintJSONOrXML_InvalidXML() throws Exception {
         String input = "<root>";
         String expectedOutput = input;
-        assertEquals(expectedOutput, IronTestUtils.prettyPrintJSONOrXML(input));
+        assertEquals(expectedOutput, GeneralUtils.prettyPrintJSONOrXML(input));
     }
 }

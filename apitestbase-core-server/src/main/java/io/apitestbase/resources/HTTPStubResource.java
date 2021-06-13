@@ -13,7 +13,7 @@ import io.apitestbase.db.UserDefinedPropertyDAO;
 import io.apitestbase.models.DataTable;
 import io.apitestbase.models.HTTPStubMapping;
 import io.apitestbase.models.UserDefinedProperty;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.text.StrSubstitutor;
 
 import javax.annotation.security.PermitAll;
@@ -26,7 +26,7 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
-import static io.apitestbase.IronTestConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID;
+import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class HTTPStubResource {
@@ -78,10 +78,10 @@ public class HTTPStubResource {
     public void loadAll(@PathParam("testcaseId") long testcaseId) throws IOException {
         //  gather referenceable string properties
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
-        Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
         if (dataTable.getRows().size() > 0) {
-            IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(referenceableStringProperties.keySet(), dataTable);
+            GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(referenceableStringProperties.keySet(), dataTable);
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
         }
 
@@ -91,7 +91,7 @@ public class HTTPStubResource {
         List<String> undefinedStringProperties = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-        IronTestUtils.addMixInsForWireMock(objectMapper);
+        GeneralUtils.addMixInsForWireMock(objectMapper);
         String httpStubMappingsJSON = objectMapper.writeValueAsString(stubs);
         MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, true);
         String resolvedHttpStubMappingsJSON = new StrSubstitutor(propertyReferenceResolver).replace(httpStubMappingsJSON);
@@ -101,7 +101,7 @@ public class HTTPStubResource {
             throw new RuntimeException("String properties " + undefinedStringProperties + " not defined.");
         }
 
-        IronTestUtils.substituteRequestBodyMainPatternValue(stubs);
+        GeneralUtils.substituteRequestBodyMainPatternValue(stubs);
 
         //  load stubs
         final List<HTTPStubMapping> finalStubs = stubs;
@@ -115,7 +115,7 @@ public class HTTPStubResource {
                     wireMockServer.removeStubMapping(existingInstance);
                 }
 
-                StubMapping stubInstance = IronTestUtils.createStubInstance(stub.getId(), stub.getNumber(), stub.getSpec());
+                StubMapping stubInstance = GeneralUtils.createStubInstance(stub.getId(), stub.getNumber(), stub.getSpec());
                 stubMappings.addMapping(stubInstance);
             }
         });

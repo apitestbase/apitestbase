@@ -19,14 +19,14 @@ import io.apitestbase.models.testrun.TeststepRun;
 import io.apitestbase.models.teststep.HTTPHeader;
 import io.apitestbase.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.apitestbase.models.teststep.Teststep;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.eclipse.jetty.http.HttpHeader;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.*;
 
-import static io.apitestbase.IronTestConstants.*;
+import static io.apitestbase.APITestBaseConstants.*;
 
 public abstract class TestcaseRunner {
     private Testcase testcase;
@@ -129,7 +129,7 @@ public abstract class TestcaseRunner {
         testcaseRun.setStartTime(testcaseRunStartTime);
         testcaseRunContext.setTestcaseRunStartTime(testcaseRunStartTime);
 
-        referenceableStringProperties = IronTestUtils.udpListToMap(testcase.getUdps());
+        referenceableStringProperties = GeneralUtils.udpListToMap(testcase.getUdps());
         udpNames = referenceableStringProperties.keySet();
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(testcaseRunStartTime));

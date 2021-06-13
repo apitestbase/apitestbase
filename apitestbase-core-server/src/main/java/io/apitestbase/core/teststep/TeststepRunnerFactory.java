@@ -11,7 +11,7 @@ import io.apitestbase.models.teststep.APIRequest;
 import io.apitestbase.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.TeststepRequestType;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.text.StrSubstitutor;
 
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class TeststepRunnerFactory {
         if (teststep.getOtherProperties() instanceof HTTPStubsSetupTeststepProperties) {
             HTTPStubsSetupTeststepProperties httpStubsSetupTeststepProperties =
                     (HTTPStubsSetupTeststepProperties) teststep.getOtherProperties();
-            IronTestUtils.substituteRequestBodyMainPatternValue(httpStubsSetupTeststepProperties.getHttpStubMappings());
+            GeneralUtils.substituteRequestBodyMainPatternValue(httpStubsSetupTeststepProperties.getHttpStubMappings());
         }
 
         //  resolve endpoint property if set on test step
@@ -97,7 +97,7 @@ public class TeststepRunnerFactory {
         List<String> undefinedStringProperties = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-        IronTestUtils.addMixInsForWireMock(objectMapper);
+        GeneralUtils.addMixInsForWireMock(objectMapper);
 
         //  resolve property references in teststep.otherProperties
         String otherPropertiesJSON = objectMapper.writeValueAsString(teststep.getOtherProperties());

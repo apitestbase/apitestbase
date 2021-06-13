@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
-import io.apitestbase.utils.IronTestUtils;
+import io.apitestbase.utils.GeneralUtils;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -72,7 +72,7 @@ public class MockServerResource {
                 if (serveEvent.getWasMatched()) {
                     return serveEvent;
                 } else {
-                    return IronTestUtils.updateUnmatchedStubRequest(serveEvent, wireMockServer);
+                    return GeneralUtils.updateUnmatchedStubRequest(serveEvent, wireMockServer);
                 }
             }
         }
