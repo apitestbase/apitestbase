@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>irontest-parent</artifactId>
-        <groupId>io.irontest</groupId>
+        <artifactId>apitestbase-parent</artifactId>
+        <groupId>io.apitestbase</groupId>
         <version>0.18.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>irontest-core-server</artifactId>
+    <artifactId>apitestbase-core-server</artifactId>
 
     <properties>
         <junit.jupiter.version>5.4.0</junit.jupiter.version>  <!-- JUnit 5 -->
@@ -33,8 +33,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.irontest</groupId>
-            <artifactId>irontest-common</artifactId>
+            <groupId>io.apitestbase</groupId>
+            <artifactId>apitestbase-common</artifactId>
             <version>${project.version}</version>
         </dependency>
 

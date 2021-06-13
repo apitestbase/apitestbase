@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.irontest</groupId>
-    <artifactId>irontest-parent</artifactId>
+    <groupId>io.apitestbase</groupId>
+    <artifactId>apitestbase-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.18.0-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>A web app for API test automation</description>
-    <url>https://github.com/zheng-wang/irontest</url>
+    <description>A simple tool for comprehensive API testing</description>
+    <url>https://github.com/zheng-wang/apitestbase</url>
 
     <developers>
         <developer>
@@ -28,9 +28,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/zheng-wang/irontest.git</connection>
-        <developerConnection>scm:git:git@github.com:zheng-wang/irontest.git</developerConnection>
-        <url>https://github.com/zheng-wang/irontest</url>
+        <connection>scm:git:git://github.com/zheng-wang/apitestbase.git</connection>
+        <developerConnection>scm:git:git@github.com:zheng-wang/apitestbase.git</developerConnection>
+        <url>https://github.com/zheng-wang/apitestbase</url>
     </scm>
 
     <distributionManagement>
@@ -45,7 +45,7 @@
     </distributionManagement>
 
     <properties>
-        <maven.install.skip>true</maven.install.skip>  <!-- Avoid installing Iron Test jars to Maven local repository -->
+        <maven.install.skip>true</maven.install.skip>  <!-- Avoid installing API Test Base jars to Maven local repository -->
     </properties>
 
     <dependencyManagement>
@@ -65,27 +65,27 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>irontest-common</module>
-                <module>irontest-core-server</module>
-                <module>irontest-core-ui</module>
-                <module>irontest-jms-solace</module>
-                <module>irontest-mqtt</module>
-                <module>irontest-assembly</module>
-                <module>irontest-iib</module>
-                <module>irontest-mq</module>
+                <module>apitestbase-common</module>
+                <module>apitestbase-core-server</module>
+                <module>apitestbase-core-ui</module>
+                <module>apitestbase-jms-solace</module>
+                <module>apitestbase-mqtt</module>
+                <module>apitestbase-assembly</module>
+                <module>apitestbase-iib</module>
+                <module>apitestbase-mq</module>
             </modules>
         </profile>
         <profile>
             <id>dev</id>
             <modules>
-                <module>irontest-common</module>
-                <module>irontest-core-server</module>
-                <module>irontest-core-ui</module>
-                <module>irontest-jms-solace</module>
-                <module>irontest-mqtt</module>
-                <module>irontest-assembly</module>
-                <module>irontest-iib</module>
-                <module>irontest-mq</module>
+                <module>apitestbase-common</module>
+                <module>apitestbase-core-server</module>
+                <module>apitestbase-core-ui</module>
+                <module>apitestbase-jms-solace</module>
+                <module>apitestbase-mqtt</module>
+                <module>apitestbase-assembly</module>
+                <module>apitestbase-iib</module>
+                <module>apitestbase-mq</module>
             </modules>
             <build>
                 <pluginManagement>
@@ -109,22 +109,22 @@
         <profile>
             <id>prod</id>
             <modules>
-                <module>irontest-common</module>
-                <module>irontest-core-server</module>
-                <module>irontest-core-ui</module>
-                <module>irontest-jms-solace</module>
-                <module>irontest-mqtt</module>
-                <module>irontest-upgrade</module>
-                <module>irontest-assembly</module>
+                <module>apitestbase-common</module>
+                <module>apitestbase-core-server</module>
+                <module>apitestbase-core-ui</module>
+                <module>apitestbase-jms-solace</module>
+                <module>apitestbase-mqtt</module>
+                <module>apitestbase-upgrade</module>
+                <module>apitestbase-assembly</module>
             </modules>
         </profile>
         <profile>
             <id>sonatype-ossrh</id>
             <modules>
-                <module>irontest-common</module>
-                <module>irontest-core-server</module>
-                <module>irontest-iib</module>
-                <module>irontest-mq</module>
+                <module>apitestbase-common</module>
+                <module>apitestbase-core-server</module>
+                <module>apitestbase-iib</module>
+                <module>apitestbase-mq</module>
             </modules>
             <build>
                 <plugins>

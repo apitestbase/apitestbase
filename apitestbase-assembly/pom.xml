@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>irontest-parent</artifactId>
-        <groupId>io.irontest</groupId>
+        <artifactId>apitestbase-parent</artifactId>
+        <groupId>io.apitestbase</groupId>
         <version>0.18.0-SNAPSHOT</version>
     </parent>
 
@@ -25,28 +25,28 @@
         <mq.jar.com.ibm.mq.headers>${lib.mq}/com.ibm.mq.headers.jar</mq.jar.com.ibm.mq.headers>
         <mq.jar.com.ibm.mq.pcf>${lib.mq}/com.ibm.mq.pcf.jar</mq.jar.com.ibm.mq.pcf>
         <distDir>dist</distDir>
-        <uberJarFileName>irontest-${project.version}</uberJarFileName>
+        <uberJarFileName>apitestbase-${project.version}</uberJarFileName>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>io.irontest</groupId>
-            <artifactId>irontest-core-server</artifactId>
+            <groupId>io.apitestbase</groupId>
+            <artifactId>apitestbase-core-server</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.irontest</groupId>
-            <artifactId>irontest-core-ui</artifactId>
+            <groupId>io.apitestbase</groupId>
+            <artifactId>apitestbase-core-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.irontest</groupId>
-            <artifactId>irontest-jms-solace</artifactId>
+            <groupId>io.apitestbase</groupId>
+            <artifactId>apitestbase-jms-solace</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.irontest</groupId>
-            <artifactId>irontest-mqtt</artifactId>
+            <groupId>io.apitestbase</groupId>
+            <artifactId>apitestbase-mqtt</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -70,8 +70,8 @@
 
             <dependencies>
                 <dependency>
-                    <groupId>io.irontest</groupId>
-                    <artifactId>irontest-mq</artifactId>
+                    <groupId>io.apitestbase</groupId>
+                    <artifactId>apitestbase-mq</artifactId>
                     <version>${project.version}</version>
                     <!-- exclude transitive dependencies -->
                     <exclusions>
@@ -82,8 +82,8 @@
                     </exclusions>
                 </dependency>
                 <dependency>
-                    <groupId>io.irontest</groupId>
-                    <artifactId>irontest-iib</artifactId>
+                    <groupId>io.apitestbase</groupId>
+                    <artifactId>apitestbase-iib</artifactId>
                     <version>${project.version}</version>
                     <!-- exclude transitive dependencies -->
                     <exclusions>
@@ -141,7 +141,7 @@
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                             <manifestEntries>
-                                                <Main-Class>io.irontest.IronTestApplication</Main-Class>
+                                                <Main-Class>io.apitestbase.APITestBaseApplication</Main-Class>
                                                 <Class-Path>${jdbc.driver.oracle.6} ${jdbc.driver.oracle.8} ${jdbc.driver.sqlserver} ${mq.jar.com.ibm.mq} ${mq.jar.com.ibm.mq.jmqi} ${mq.jar.com.ibm.mq.pcf} ${mq.jar.com.ibm.mq.headers}</Class-Path>
                                             </manifestEntries>
                                         </transformer>
@@ -179,14 +179,14 @@
                                         </resource>
                                         <!-- copy irontest-upgrade-to uber jar -->
                                         <resource>
-                                            <directory>../irontest-upgrade/target</directory>
+                                            <directory>../apitestbase-upgrade/target</directory>
                                             <includes>
-                                                <include>irontest-upgrade-to-${project.version}.jar</include>
+                                                <include>apitestbase-upgrade-to-${project.version}.jar</include>
                                             </includes>
                                         </resource>
                                         <!-- copy config.yml -->
                                         <resource>
-                                            <directory>../irontest-core-server</directory>
+                                            <directory>../apitestbase-core-server</directory>
                                             <includes>
                                                 <include>config.yml</include>
                                             </includes>
@@ -248,7 +248,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>io.irontest.IronTestApplication</mainClass>
+                                    <mainClass>io.apitestbase.APITestBaseApplication</mainClass>
                                     <additionalClasspathElements>
                                         <additionalClasspathElement>../${jdbc.driver.oracle.6}</additionalClasspathElement>
                                         <additionalClasspathElement>../${jdbc.driver.oracle.8}</additionalClasspathElement>
@@ -260,7 +260,7 @@
                                             <value>${dw.mode}</value>
                                         </systemProperty>
                                     </systemProperties>
-                                    <commandlineArgs>server irontest-core-server/config.yml</commandlineArgs>
+                                    <commandlineArgs>server apitestbase-core-server/config.yml</commandlineArgs>
                                 </configuration>
                             </execution>
                         </executions>
@@ -278,8 +278,8 @@
             <!-- These dependencies are to be obtained from the build target folders. -->
             <dependencies>
                 <dependency>
-                    <groupId>io.irontest</groupId>
-                    <artifactId>irontest-mq</artifactId>
+                    <groupId>io.apitestbase</groupId>
+                    <artifactId>apitestbase-mq</artifactId>
                     <version>${project.version}</version>
                 </dependency>
             </dependencies>
@@ -294,8 +294,8 @@
             <!-- These dependencies are to be obtained from the build target folders. -->
             <dependencies>
                 <dependency>
-                    <groupId>io.irontest</groupId>
-                    <artifactId>irontest-iib</artifactId>
+                    <groupId>io.apitestbase</groupId>
+                    <artifactId>apitestbase-iib</artifactId>
                     <version>${project.version}</version>
                 </dependency>
             </dependencies>
