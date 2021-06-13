@@ -3,9 +3,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of the specific test step controller.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('PropertyExtractorsController', ['$scope', 'IronTestUtils', 'PropertyExtractors',
+angular.module('apitestbase').controller('PropertyExtractorsController', ['$scope', 'GeneralUtils', 'PropertyExtractors',
     '$stateParams', 'uiGridConstants', '$timeout', '$rootScope',
-  function($scope, IronTestUtils, PropertyExtractors, $stateParams, uiGridConstants, $timeout, $rootScope) {
+  function($scope, GeneralUtils, PropertyExtractors, $stateParams, uiGridConstants, $timeout, $rootScope) {
     var clearCurrentPropertyExtractionResult = function() {
       delete $scope.propertyExtractionResult;
     };
@@ -14,9 +14,9 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       var propertyExtractor = $scope.propertyExtractor;
       propertyExtractor.$remove(function(response) {
         delete $scope.propertyExtractor;
-        IronTestUtils.deleteArrayElementByProperty($scope.propertyExtractors, 'id', propertyExtractor.id);
+        GeneralUtils.deleteArrayElementByProperty($scope.propertyExtractors, 'id', propertyExtractor.id);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -69,7 +69,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       $scope.propertyExtractor.$update(function(response) {
         $scope.$emit('successfullySaved');
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -77,7 +77,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       PropertyExtractors.query({ teststepId: $stateParams.teststepId }, function(returnPropertyExtractors) {
         $scope.propertyExtractors = returnPropertyExtractors;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -94,7 +94,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
     };
 
     $scope.createPropertyExtractor = function(type) {
-      var propertyName = IronTestUtils.getNextNameInSequence($scope.propertyExtractors, 'Property', 'propertyName');
+      var propertyName = GeneralUtils.getNextNameInSequence($scope.propertyExtractors, 'Property', 'propertyName');
       var propertyExtractor = new PropertyExtractors({
         propertyName: propertyName,
         type: type,
@@ -107,7 +107,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
         //  select newly created property extractor in grid
         selectPropertyExtractorInGridByPropertyName(propertyName);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -132,7 +132,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       PropertyExtractors.extract({ propertyExtractorId: propertyExtractor.id }, propertyExtractionRequest, function(response) {
         $scope.propertyExtractionResult = response;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 

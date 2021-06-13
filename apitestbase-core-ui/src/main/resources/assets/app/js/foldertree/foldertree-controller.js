@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootScope', '$state', 'IronTestUtils',
+angular.module('apitestbase').controller('FolderTreeController', ['$scope', '$rootScope', '$state', 'GeneralUtils',
     'FolderTreeNodes', '$timeout', '$transitions', 'Testcases', '$window', '$uibModal', 'Upload',
-  function($scope, $rootScope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases, $window,
+  function($scope, $rootScope, $state, GeneralUtils, FolderTreeNodes, $timeout, $transitions, Testcases, $window,
       $uibModal, Upload) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
@@ -30,7 +30,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
           tree.edit(newNodeId);
         });
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -49,7 +49,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
            displayNodeDetails(NODE_TYPE_TEST_CASE, newTestcaseId);
          });
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -90,7 +90,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
               displayNodeDetails(NODE_TYPE_TEST_CASE, testcaseId);
             });
           }, function errorCallback(response) {
-            IronTestUtils.openErrorHTTPResponseModal(response);
+            GeneralUtils.openErrorHTTPResponseModal(response);
           });
         }
       }, function dismissed() {
@@ -104,7 +104,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
       core: {
         multiple: false,
         error: function(error) {
-          IronTestUtils.openErrorMessageModal('Error from js tree.', angular.toJson(error));
+          GeneralUtils.openErrorMessageModal('Error from js tree.', angular.toJson(error));
         },
         check_callback: true
       },
@@ -275,7 +275,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
         }
       }, function(response) {
         var instruction = 'Please refresh the page. If problem is still there, please contact the system administrator.'
-        IronTestUtils.openErrorHTTPResponseModal(response, instruction);
+        GeneralUtils.openErrorHTTPResponseModal(response, instruction);
       });
     };
 
@@ -321,7 +321,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
         nodeRes.$update(function(response) {
           displayNodeDetails(node.type, node.data.idPerType);
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
           //  reload the tree to restore previous status
           $scope.reloadTreeData();
         });
@@ -347,7 +347,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
           tree.open_node(data.parent);
         });
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
         //  reload the tree to restore previous status
         $scope.reloadTreeData();
       });

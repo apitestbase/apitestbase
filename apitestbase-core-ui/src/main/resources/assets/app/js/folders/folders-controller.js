@@ -1,9 +1,9 @@
 'use strict';
 
 //  This controller is for managed endpoints.
-angular.module('irontest').controller('FoldersController', ['$scope', 'Folders', '$stateParams', '$state',
-    '$timeout', 'IronTestUtils',
-  function($scope, Folders, $stateParams, $state, $timeout, IronTestUtils) {
+angular.module('apitestbase').controller('FoldersController', ['$scope', 'Folders', '$stateParams', '$state',
+    '$timeout', 'GeneralUtils',
+  function($scope, Folders, $stateParams, $state, $timeout, GeneralUtils) {
     var timer;
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -18,7 +18,7 @@ angular.module('irontest').controller('FoldersController', ['$scope', 'Folders',
           $scope.$broadcast('successfullySaved');
           $scope.folder = response;
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -31,7 +31,7 @@ angular.module('irontest').controller('FoldersController', ['$scope', 'Folders',
       }, function(folder) {
         $scope.folder = folder;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
   }

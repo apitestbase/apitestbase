@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').controller('TeststepRunReportModalController', ['$scope', 'stepRunReport',
+angular.module('apitestbase').controller('TeststepRunReportModalController', ['$scope', 'stepRunReport',
   function($scope, stepRunReport) {
     $scope.stepRunReport = stepRunReport;
   }

@@ -3,9 +3,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('FTPTeststepActionController', ['$scope', 'IronTestUtils', '$timeout',
+angular.module('apitestbase').controller('FTPTeststepActionController', ['$scope', 'GeneralUtils', '$timeout',
     'Teststeps', 'Upload', '$window',
-  function($scope, IronTestUtils, $timeout, Teststeps, Upload, $window) {
+  function($scope, GeneralUtils, $timeout, Teststeps, Upload, $window) {
     var timer;
     $scope.steprun = {};
 
@@ -41,7 +41,7 @@ angular.module('irontest').controller('FTPTeststepActionController', ['$scope', 
         }, 15000);
       }, function(error) {
         $scope.steprun.status = 'failed';
-        IronTestUtils.openErrorHTTPResponseModal(error);
+        GeneralUtils.openErrorHTTPResponseModal(error);
       });
     };
 
@@ -55,7 +55,7 @@ angular.module('irontest').controller('FTPTeststepActionController', ['$scope', 
           $scope.$emit('successfullySaved');
           $scope.setTeststep(new Teststeps(response.data));
         }, function errorCallback(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       }
     };

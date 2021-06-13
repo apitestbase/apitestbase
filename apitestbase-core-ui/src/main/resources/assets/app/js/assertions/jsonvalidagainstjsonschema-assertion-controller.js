@@ -3,8 +3,8 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of AssertionsController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('JSONValidAgainstJSONSchemaController', ['$scope', 'IronTestUtils', 'Upload', '$window',
-  function($scope, IronTestUtils, Upload, $window) {
+angular.module('apitestbase').controller('JSONValidAgainstJSONSchemaController', ['$scope', 'GeneralUtils', 'Upload', '$window',
+  function($scope, GeneralUtils, Upload, $window) {
     $scope.uploadJSONSchemaFile = function(file) {
       if (file) {
         var url = 'api/assertions/' + $scope.assertionsModelObj.assertion.id + '/jsonSchemaFile';
@@ -16,7 +16,7 @@ angular.module('irontest').controller('JSONValidAgainstJSONSchemaController', ['
           $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
           $scope.findOne($scope.assertionsModelObj.reselectCurrentAssertionInGrid);   //  refresh the entire test step to reload the current assertion
         }, function errorCallback(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       }
     };

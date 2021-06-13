@@ -3,9 +3,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of AssertionsController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('XPathAssertionController', ['$scope', '$rootScope', 'uiGridConstants',
-    'IronTestUtils',
-  function($scope, $rootScope, uiGridConstants, IronTestUtils) {
+angular.module('apitestbase').controller('XPathAssertionController', ['$scope', '$rootScope', 'uiGridConstants',
+    'GeneralUtils',
+  function($scope, $rootScope, uiGridConstants, GeneralUtils) {
     var createNamespacePrefix = function(gridMenuEvent) {
       $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
@@ -17,7 +17,7 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', '$r
     var removeNamespacePrefix = function(gridMenuEvent) {
       var selectedRow = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows()[0];
       var namespacePrefixes = $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes;
-      IronTestUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRow.$$hashKey);
+      GeneralUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRow.$$hashKey);
       $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
       $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
     };

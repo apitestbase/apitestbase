@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'TestcaseRuns',
-    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils', '$sce', '$window', '$uibModal',
-  function($scope, Testcases, Teststeps, TestcaseRuns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils,
+angular.module('apitestbase').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'TestcaseRuns',
+    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'GeneralUtils', '$sce', '$window', '$uibModal',
+  function($scope, Testcases, Teststeps, TestcaseRuns, $stateParams, $state, uiGridConstants, $timeout, GeneralUtils,
       $sce, $window, $uibModal) {
     $scope.BASIC_INFO_TAB_INDEX = 0;
     $scope.PROPERTIES_TAB_INDEX = 1;
@@ -77,7 +77,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
             $scope.$broadcast('successfullySaved');
             $scope.testcase = response;   // this is necessary as server side will change sequence values of teststeps.
           }, function(response) {
-            IronTestUtils.openErrorHTTPResponseModal(response);
+            GeneralUtils.openErrorHTTPResponseModal(response);
           });
         });
 
@@ -91,7 +91,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
           $scope.$broadcast('successfullySaved');
           $scope.testcase = response;
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -109,7 +109,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
         $scope.testcaseRun = response;
       }, function(response) {
         $scope.testcaseRunStatus = 'failed';
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -132,7 +132,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
             }
           });
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
     };
 
@@ -141,7 +141,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       teststepService.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -151,7 +151,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       }, function(testcase) {
         $scope.testcase = testcase;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -165,7 +165,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       teststep.$save(function(response) {
         $state.go('teststep_edit', {testcaseId: $stateParams.testcaseId, teststepId: response.id, newlyCreated: true});
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 

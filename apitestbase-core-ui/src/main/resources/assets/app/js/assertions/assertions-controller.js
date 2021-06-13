@@ -5,9 +5,9 @@
 //      such as SOAPTeststepActionController or DBTeststepController.
 //    ng-include also creates a scope.
 //    If unspecified, all grid config is for the assertions grid
-angular.module('irontest').controller('AssertionsController', ['$scope', '$rootScope', 'uiGridConstants',
-    'IronTestUtils', '$http',
-  function($scope, $rootScope, uiGridConstants, IronTestUtils, $http) {
+angular.module('apitestbase').controller('AssertionsController', ['$scope', '$rootScope', 'uiGridConstants',
+    'GeneralUtils', '$http',
+  function($scope, $rootScope, uiGridConstants, GeneralUtils, $http) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {
       assertionVerificationResults: {}
@@ -23,7 +23,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
       if (currentAssertion) {
         //  set current assertion to null
         $scope.assertionsModelObj.assertion = null;
-        IronTestUtils.deleteArrayElementByProperty($scope.teststep.assertions, 'id', currentAssertion.id);
+        GeneralUtils.deleteArrayElementByProperty($scope.teststep.assertions, 'id', currentAssertion.id);
         $scope.update(true);
       }
     };
@@ -92,7 +92,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
     };
 
     $scope.assertionsModelObj.createAssertion = function(type) {
-      var name = IronTestUtils.getNextNameInSequence($scope.teststep.assertions, type + ' ');
+      var name = GeneralUtils.getNextNameInSequence($scope.teststep.assertions, type + ' ');
       var assertion = {
         name: name,
         type: type,
@@ -137,7 +137,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
           var data = response.data;
           $scope.assertionsModelObj.assertionVerificationResults[assertion.id] = data;
         }, function errorCallback(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
     };
   }

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('common')
-  .factory('IronTestUtils', function ($uibModal) {
+  .factory('GeneralUtils', function ($uibModal) {
     return {
       //  Search elements in the array using property, and delete the first element that has the property
       //  with the property value. The elements must be objects, and the property must be of primitive type.

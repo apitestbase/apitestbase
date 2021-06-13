@@ -1,9 +1,9 @@
 'use strict';
 
 //  This controller is for managed endpoints.
-angular.module('irontest').controller('EndpointsController', ['$scope', 'ManagedEndpoints', '$stateParams', '$state',
-    '$timeout', 'IronTestUtils',
-  function($scope, ManagedEndpoints, $stateParams, $state, $timeout, IronTestUtils) {
+angular.module('apitestbase').controller('EndpointsController', ['$scope', 'ManagedEndpoints', '$stateParams', '$state',
+    '$timeout', 'GeneralUtils',
+  function($scope, ManagedEndpoints, $stateParams, $state, $timeout, GeneralUtils) {
     $scope.endpointNewlyCreated = function() {
       return $stateParams.newlyCreated === true;
     };
@@ -22,7 +22,7 @@ angular.module('irontest').controller('EndpointsController', ['$scope', 'Managed
           $scope.$broadcast('successfullySaved');
           $scope.endpoint = response;
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -35,7 +35,7 @@ angular.module('irontest').controller('EndpointsController', ['$scope', 'Managed
       }, function(endpoint) {
         $scope.endpoint = endpoint;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 

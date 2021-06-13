@@ -3,7 +3,7 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsEndpointController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('IIBTeststepEndpointController', ['$scope',
+angular.module('apitestbase').controller('IIBTeststepEndpointController', ['$scope',
   function($scope) {
     $scope.endpointTypeChanged = function(isValid) {
       var endpoint = $scope.teststep.endpoint;

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').controller('ImportTestcaseModalController', ['$scope', '$uibModalInstance',
+angular.module('apitestbase').controller('ImportTestcaseModalController', ['$scope', '$uibModalInstance',
   function($scope, $uibModalInstance) {
     $scope.cancel = function () {
       $uibModalInstance.dismiss('cancel');

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').factory('DataTable', ['$resource',
+angular.module('apitestbase').factory('DataTable', ['$resource',
   function($resource) {
     return $resource('api/testcases/:testcaseId/datatable/:verb', {
     }, {

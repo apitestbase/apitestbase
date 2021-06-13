@@ -3,7 +3,7 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsEndpointController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('JMSTeststepEndpointController', ['$scope',
+angular.module('apitestbase').controller('JMSTeststepEndpointController', ['$scope',
   function($scope) {
     $scope.jmsProviderChanged = function(isValid) {
       var otherProperties = $scope.teststep.endpoint.otherProperties;

@@ -3,9 +3,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('DBTeststepActionController', ['$scope', 'Teststeps', 'IronTestUtils', '$timeout',
+angular.module('apitestbase').controller('DBTeststepActionController', ['$scope', 'Teststeps', 'GeneralUtils', '$timeout',
     '$http',
-  function($scope, Teststeps, IronTestUtils, $timeout, $http) {
+  function($scope, Teststeps, GeneralUtils, $timeout, $http) {
     var timer;
 
     $scope.$watch('teststepParameters.isSQLRequestSingleSelectStatement', function(newValue, oldValue) {
@@ -86,7 +86,7 @@ angular.module('irontest').controller('DBTeststepActionController', ['$scope', '
         }
       }, function(error) {
         $scope.steprun.status = 'failed';
-        IronTestUtils.openErrorHTTPResponseModal(error);
+        GeneralUtils.openErrorHTTPResponseModal(error);
       });
     };
 

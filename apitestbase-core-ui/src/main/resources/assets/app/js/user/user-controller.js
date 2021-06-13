@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').controller('UserController', ['$scope', '$rootScope', '$uibModal', 'Users',
+angular.module('apitestbase').controller('UserController', ['$scope', '$rootScope', '$uibModal', 'Users',
   function($scope, $rootScope, $uibModal, Users) {
     $scope.openLoginModal = function() {
       $uibModal.open({
@@ -29,7 +29,7 @@ angular.module('irontest').controller('UserController', ['$scope', '$rootScope',
         }, function successCallback(response) {
           $rootScope.logout();
         }, function errorCallback(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       }, function dismissed() {
         //  Modal dismissed. Do nothing.

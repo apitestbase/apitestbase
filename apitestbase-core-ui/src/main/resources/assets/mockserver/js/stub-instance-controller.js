@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('mockserver').controller('StubInstanceController', ['$scope', 'MockServer', 'IronTestUtils',
+angular.module('mockserver').controller('StubInstanceController', ['$scope', 'MockServer', 'GeneralUtils',
     '$stateParams',
-  function($scope, MockServer, IronTestUtils, $stateParams) {
+  function($scope, MockServer, GeneralUtils, $stateParams) {
     $scope.find = function() {
       MockServer.findStubInstanceById({ stubInstanceId: $stateParams.stubInstanceId }, function(stubInstance, responseHeadersFn, statusCode, statusText) {
         if (statusCode === 204) {    //  on 204 returned, stubInstance is a promise instead of null
           $scope.stubInstance = null;
         } else {
           $scope.stubInstance = stubInstance;
-          $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(
+          $scope.requestBodyMainPattern = GeneralUtils.getRequestBodyMainPattern(
             stubInstance.request.method, stubInstance.request.bodyPatterns);
 
           //  construct stubRequestHeadersStr
@@ -30,10 +30,10 @@ angular.module('mockserver').controller('StubInstanceController', ['$scope', 'Mo
           }
           $scope.stubRequestHeadersStr = stubRequestHeadersStr;
 
-          $scope.stubResponseHeadersStr = IronTestUtils.formatHTTPHeadersObj(stubInstance.response.headers);
+          $scope.stubResponseHeadersStr = GeneralUtils.formatHTTPHeadersObj(stubInstance.response.headers);
         }
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
   }

@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('mockserver').controller('MockServerController', ['$scope', 'MockServer', 'IronTestUtils', '$state',
+angular.module('mockserver').controller('MockServerController', ['$scope', 'MockServer', 'GeneralUtils', '$state',
     '$transitions', '$timeout',
-  function($scope, MockServer, IronTestUtils, $state, $transitions, $timeout) {
+  function($scope, MockServer, GeneralUtils, $state, $transitions, $timeout) {
     const DATA_REFRESH_INTERVAL = 1500;   //  in milliseconds
     var findAllStubInstancesTimer;
     var findAllUnmatchedStubRequestsTimer;
@@ -22,7 +22,7 @@ angular.module('mockserver').controller('MockServerController', ['$scope', 'Mock
 
         findAllStubInstancesTimer = $timeout(findAllStubInstances, DATA_REFRESH_INTERVAL);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -39,7 +39,7 @@ angular.module('mockserver').controller('MockServerController', ['$scope', 'Mock
 
         findAllUnmatchedStubRequestsTimer = $timeout(findAllUnmatchedStubRequests, DATA_REFRESH_INTERVAL);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -58,7 +58,7 @@ angular.module('mockserver').controller('MockServerController', ['$scope', 'Mock
 
           findMatchedRequestsForSelectedStubInstanceTimer = $timeout(findMatchedRequestsForSelectedStubInstance, DATA_REFRESH_INTERVAL);
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       }
     };
@@ -95,7 +95,7 @@ angular.module('mockserver').controller('MockServerController', ['$scope', 'Mock
         findMatchedRequestsForSelectedStubInstance();
         findAllUnmatchedStubRequests();
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 

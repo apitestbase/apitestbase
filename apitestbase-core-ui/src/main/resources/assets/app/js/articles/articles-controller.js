@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').controller('ArticlesController', ['$scope', 'Articles', '$stateParams', '$state', 'uiGridConstants',
+angular.module('apitestbase').controller('ArticlesController', ['$scope', 'Articles', '$stateParams', '$state', 'uiGridConstants',
   function($scope, Articles, $stateParams, $state, uiGridConstants) {
     $scope.schema = {
       type: "object",

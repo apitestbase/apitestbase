@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('irontest').controller('UsersController', ['$scope', '$rootScope', 'Users', '$state', 'uiGridConstants',
-    'IronTestUtils', '$uibModal',
-  function($scope, $rootScope, Users, $state, uiGridConstants, IronTestUtils, $uibModal) {
+angular.module('apitestbase').controller('UsersController', ['$scope', '$rootScope', 'Users', '$state', 'uiGridConstants',
+    'GeneralUtils', '$uibModal',
+  function($scope, $rootScope, Users, $state, uiGridConstants, GeneralUtils, $uibModal) {
     $rootScope.$on('userLoggedOut', function() {
       if ($state.current.name === 'user_all') {
         $state.go('home');
@@ -38,7 +38,7 @@ angular.module('irontest').controller('UsersController', ['$scope', '$rootScope'
         user.$save(function(response) {
           $state.go($state.current, {}, {reload: true});
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       }, function dismissed() {
         //  Modal dismissed. Do nothing.
@@ -51,7 +51,7 @@ angular.module('irontest').controller('UsersController', ['$scope', '$rootScope'
           $scope.$broadcast('successfullySaved');
           $scope.user = response;
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -62,7 +62,7 @@ angular.module('irontest').controller('UsersController', ['$scope', '$rootScope'
       user.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -70,7 +70,7 @@ angular.module('irontest').controller('UsersController', ['$scope', '$rootScope'
       Users.query(function(users) {
         $scope.users = users;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -80,7 +80,7 @@ angular.module('irontest').controller('UsersController', ['$scope', '$rootScope'
       }, function(user) {
         $scope.user = user;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };*/
   }

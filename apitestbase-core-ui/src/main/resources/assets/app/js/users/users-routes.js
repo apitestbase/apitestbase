@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').config(['$stateProvider', function ($stateProvider) {
+angular.module('apitestbase').config(['$stateProvider', function ($stateProvider) {
     $stateProvider
         .state('user_all', {
             url: '/users',

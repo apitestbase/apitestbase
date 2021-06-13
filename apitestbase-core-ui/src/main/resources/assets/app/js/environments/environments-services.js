@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').factory('Environments', ['$resource',
+angular.module('apitestbase').factory('Environments', ['$resource',
   function($resource) {
     return $resource('api/environments/:environmentId', {
       environmentId: '@id'

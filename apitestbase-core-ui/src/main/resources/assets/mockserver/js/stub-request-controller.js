@@ -1,16 +1,16 @@
 'use strict';
 
-angular.module('mockserver').controller('StubRequestController', ['$scope', 'MockServer', 'IronTestUtils',
+angular.module('mockserver').controller('StubRequestController', ['$scope', 'MockServer', 'GeneralUtils',
     '$stateParams',
-  function($scope, MockServer, IronTestUtils, $stateParams) {
+  function($scope, MockServer, GeneralUtils, $stateParams) {
     $scope.find = function() {
       MockServer.findStubRequestById({ stubRequestId: $stateParams.stubRequestId }, function(stubRequest) {
         $scope.stubRequest = stubRequest;
 
-        $scope.stubRequestHeadersStr = IronTestUtils.formatHTTPHeadersObj(stubRequest.request.headers);
-        $scope.stubResponseHeadersStr = IronTestUtils.formatHTTPHeadersObj(stubRequest.response.headers);
+        $scope.stubRequestHeadersStr = GeneralUtils.formatHTTPHeadersObj(stubRequest.request.headers);
+        $scope.stubResponseHeadersStr = GeneralUtils.formatHTTPHeadersObj(stubRequest.response.headers);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
   }

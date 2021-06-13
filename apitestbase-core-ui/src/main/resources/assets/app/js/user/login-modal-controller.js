@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').controller('UserLoginModalController', ['$scope', '$rootScope', '$uibModalInstance',
+angular.module('apitestbase').controller('UserLoginModalController', ['$scope', '$rootScope', '$uibModalInstance',
     '$window', '$http',
   function($scope, $rootScope, $uibModalInstance, $window, $http) {
     $scope.authenticationFailed = null;

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').factory('FolderTreeNodes', ['$resource',
+angular.module('apitestbase').factory('FolderTreeNodes', ['$resource',
   function($resource) {
     return $resource('api/foldertreenodes', {}, {
       update: {

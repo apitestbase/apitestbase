@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').controller('SelectManagedEndpointModalController', ['$scope', 'uiGridConstants',
+angular.module('apitestbase').controller('SelectManagedEndpointModalController', ['$scope', 'uiGridConstants',
     '$uibModalInstance', 'endpointType', 'ManagedEndpoints', 'titleSuffix',
   function($scope, uiGridConstants, $uibModalInstance, endpointType, ManagedEndpoints, titleSuffix) {
     $scope.endpointType = endpointType;
@@ -11,7 +11,7 @@ angular.module('irontest').controller('SelectManagedEndpointModalController', ['
       function successCallback(response) {
         $scope.endpoints = response;
       }, function errorCallback(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
 
     $scope.endpointModalGridColumnDefs = [

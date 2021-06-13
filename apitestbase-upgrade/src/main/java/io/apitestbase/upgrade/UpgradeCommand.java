@@ -16,20 +16,20 @@ import java.nio.file.Paths;
 @CommandLine.Command(name = "upgrade", description = "Upgrade API Test Base")
 public class UpgradeCommand implements Runnable {
     @CommandLine.Parameters(description = "Home directory of the API Test Base instance to be upgraded.")
-    private String ironTestHome;
+    private String apiTestBaseHome;
 
     @Override
     public void run() {
         SystemDatabaseYml systemDBConfiguration;
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         try {
-            ConfigYml configYml = mapper.readValue(new File(ironTestHome, "config.yml"), ConfigYml.class);
+            ConfigYml configYml = mapper.readValue(new File(apiTestBaseHome, "config.yml"), ConfigYml.class);
             systemDBConfiguration = configYml.getSystemDatabase();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read config.yml under " + ironTestHome, e);
+            throw new RuntimeException("Failed to read config.yml under " + apiTestBaseHome, e);
         }
 
-        String fullyQualifiedSystemDBURL = getFullyQualifiedSystemDBURL(ironTestHome, systemDBConfiguration.getUrl());
+        String fullyQualifiedSystemDBURL = getFullyQualifiedSystemDBURL(apiTestBaseHome, systemDBConfiguration.getUrl());
         DefaultArtifactVersion systemDBVersion = getSystemDBVersionStr(fullyQualifiedSystemDBURL, systemDBConfiguration.getUser(),
                 systemDBConfiguration.getPassword());
         DefaultArtifactVersion jarFileVersion = new DefaultArtifactVersion(Version.VERSION);
@@ -47,20 +47,20 @@ public class UpgradeCommand implements Runnable {
         } else {    //  system database version is smaller than the jar file version
             UpgradeActions upgradeActions = new UpgradeActions();
             try {
-                upgradeActions.upgrade(systemDBVersion, jarFileVersion, ironTestHome, fullyQualifiedSystemDBURL,
+                upgradeActions.upgrade(systemDBVersion, jarFileVersion, apiTestBaseHome, fullyQualifiedSystemDBURL,
                         systemDBConfiguration.getUser(), systemDBConfiguration.getPassword());
             } catch (Exception e) {
-                throw new RuntimeException("Failed to upgrade API Test Base under " + ironTestHome, e);
+                throw new RuntimeException("Failed to upgrade API Test Base under " + apiTestBaseHome, e);
             }
         }
     }
 
-    private String getFullyQualifiedSystemDBURL(String ironTestHome, String originalSystemDBURL) {
+    private String getFullyQualifiedSystemDBURL(String apiTestBaseHome, String originalSystemDBURL) {
         String systemDBBaseURL = originalSystemDBURL.split(";")[0];
         String systemDBPath = systemDBBaseURL.replace("jdbc:h2:", "");
         String fullyQualifiedSystemDBPath = systemDBPath;
         if (systemDBPath.startsWith("./")) {
-            fullyQualifiedSystemDBPath = Paths.get(ironTestHome, systemDBPath.replace("./", "")).toString();
+            fullyQualifiedSystemDBPath = Paths.get(apiTestBaseHome, systemDBPath.replace("./", "")).toString();
         }
         String fullyQualifiedSystemDBURL = "jdbc:h2:" + fullyQualifiedSystemDBPath + ";IFEXISTS=TRUE";
         return fullyQualifiedSystemDBURL;

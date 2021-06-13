@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('irontest').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
-    'IronTestUtils',
-  function($scope, Teststeps, $stateParams, $timeout, IronTestUtils) {
+angular.module('apitestbase').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
+    'GeneralUtils',
+  function($scope, Teststeps, $stateParams, $timeout, GeneralUtils) {
     $scope.INVOCATION_TAB_INDEX = 2;
 
     $scope.teststep = {
@@ -41,7 +41,7 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
           }
         }, function(response) {
           $scope.savingStatus.changeUnsaved = false;
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.savingStatus.changeUnsaved = false;
@@ -66,7 +66,7 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
           successCallback();
         }
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 

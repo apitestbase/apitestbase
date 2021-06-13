@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').factory('ManagedEndpoints', ['$resource',
+angular.module('apitestbase').factory('ManagedEndpoints', ['$resource',
   function($resource) {
     return $resource('api/endpoints/:endpointId', {
       endpointId: '@id'

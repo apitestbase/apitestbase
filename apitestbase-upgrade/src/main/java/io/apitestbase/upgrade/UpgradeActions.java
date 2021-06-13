@@ -17,7 +17,7 @@ public class UpgradeActions {
     private static final Logger LOGGER = Logger.getLogger("Upgrade");
 
     protected void upgrade(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
-                           String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password)
+                           String apiTestBaseHome, String fullyQualifiedSystemDBURL, String user, String password)
             throws Exception {
         Formatter logFormatter = new LogFormatter();
         LOGGER.getParent().getHandlers()[0].setFormatter(logFormatter);    //  set formatter for console logging
@@ -37,30 +37,30 @@ public class UpgradeActions {
         Files.createDirectory(newFolderInTempUpgradeDir);
 
         //  system DB upgrade includes schema change and/or data migration
-        boolean needsSystemDBUpgrade = upgradeSystemDBInTempDirIfNeeded(systemDatabaseVersion, jarFileVersion, ironTestHome,
+        boolean needsSystemDBUpgrade = upgradeSystemDBInTempDirIfNeeded(systemDatabaseVersion, jarFileVersion, apiTestBaseHome,
                 fullyQualifiedSystemDBURL, user, password, oldFolderInTempUpgradeDir, newFolderInTempUpgradeDir);
 
         boolean clearBrowserCacheNeeded = clearBrowserCacheIfNeeded(systemDatabaseVersion, jarFileVersion);
 
-        //  ------------------------- below steps will modify files in <IronTest_Home> -------------------------
+        //  ------------------------- below steps will modify files in <APITestBase_Home> -------------------------
 
-        copyFilesToBeUpgraded(ironTestHome, systemDatabaseVersion, jarFileVersion);
+        copyFilesToBeUpgraded(apiTestBaseHome, systemDatabaseVersion, jarFileVersion);
 
-        deleteOldJarsFromIronTestHome(ironTestHome);
+        deleteOldJarsFromAPITestBaseHome(apiTestBaseHome);
 
-        copyNewJarFromDistToIronTestHome(jarFileVersion, ironTestHome);
+        copyNewJarFromDistToAPITestBaseHome(jarFileVersion, apiTestBaseHome);
 
         //  request user to execute pre system database change (upgrade, or simply version update) general manual upgrades if needed
         preSystemDBChangeGeneralManualUpgrades(systemDatabaseVersion, jarFileVersion);
 
-        if (needsSystemDBUpgrade) {            //  copy files from the temp 'new' folder to <IronTest_Home>
+        if (needsSystemDBUpgrade) {            //  copy files from the temp 'new' folder to <APITestBase_Home>
             String systemDBFileName = getSystemDBFileName(fullyQualifiedSystemDBURL);
-            Path ironTestHomeSystemDatabaseFolder = Paths.get(ironTestHome, "database");
+            Path apiTestBaseHomeSystemDatabaseFolder = Paths.get(apiTestBaseHome, "database");
             Path sourceFilePath = Paths.get(newFolderInTempUpgradeDir.toString(), "database", systemDBFileName);
-            Path targetFilePath = Paths.get(ironTestHomeSystemDatabaseFolder.toString(), systemDBFileName);
+            Path targetFilePath = Paths.get(apiTestBaseHomeSystemDatabaseFolder.toString(), systemDBFileName);
             Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
             LOGGER.info("Copied " + sourceFilePath + " to " + targetFilePath + ".");
-        } else {    //  only update version of system database under <IronTest_Home>
+        } else {    //  only update version of system database under <APITestBase_Home>
             Jdbi jdbi = Jdbi.create(fullyQualifiedSystemDBURL, user, password);
             updateVersionTableInSystemDatabase(jdbi, fullyQualifiedSystemDBURL, jarFileVersion);
         }
@@ -78,13 +78,13 @@ public class UpgradeActions {
     }
 
     private boolean upgradeSystemDBInTempDirIfNeeded(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
-                                            String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password,
+                                            String apiTestBaseHome, String fullyQualifiedSystemDBURL, String user, String password,
                                             Path oldFolderInTempUpgradeDir, Path newFolderInTempUpgradeDir) throws IOException {
         List<ResourceFile> applicableSystemDBUpgrades =
                 getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "db", "SystemDB", "sql");
         boolean needsSystemDBUpgrade = !applicableSystemDBUpgrades.isEmpty();
         if (needsSystemDBUpgrade) {
-            LOGGER.info("Please manually backup <IronTest_Home>/database folder to your normal maintenance backup location. To confirm backup completion, type y and then Enter.");
+            LOGGER.info("Please manually backup <APITestBase_Home>/database folder to your normal maintenance backup location. To confirm backup completion, type y and then Enter.");
             Scanner scanner = new Scanner(System.in);
             String line = null;
             while (!"y".equalsIgnoreCase(line)) {
@@ -92,7 +92,7 @@ public class UpgradeActions {
             }
             LOGGER.info("User confirmed system database backup completion.");
 
-            upgradeSystemDBInTempDir(ironTestHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
+            upgradeSystemDBInTempDir(apiTestBaseHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
                     oldFolderInTempUpgradeDir, newFolderInTempUpgradeDir, jarFileVersion);
 
             return true;
@@ -126,18 +126,18 @@ public class UpgradeActions {
         return clearBrowserCacheNeeded;
     }
 
-    private void copyNewJarFromDistToIronTestHome(DefaultArtifactVersion newJarFileVersion, String ironTestHome)
+    private void copyNewJarFromDistToAPITestBaseHome(DefaultArtifactVersion newJarFileVersion, String apiTestBaseHome)
             throws IOException {
         String newJarFileName = "apitestbase-" + newJarFileVersion + ".jar";
         Path soureFilePath = Paths.get(".", newJarFileName).toAbsolutePath();
-        Path targetFilePath = Paths.get(ironTestHome, newJarFileName).toAbsolutePath();
+        Path targetFilePath = Paths.get(apiTestBaseHome, newJarFileName).toAbsolutePath();
         Files.copy(soureFilePath, targetFilePath);
         LOGGER.info("Copied " + soureFilePath + " to " + targetFilePath + ".");
     }
 
-    private void deleteOldJarsFromIronTestHome(String ironTestHome) throws IOException {
+    private void deleteOldJarsFromAPITestBaseHome(String apiTestBaseHome) throws IOException {
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(
-                Paths.get(ironTestHome), "irontest-*.jar")) {
+                Paths.get(apiTestBaseHome), "irontest-*.jar")) {
             dirStream.forEach(filePath -> {
                 try {
                     Files.delete(filePath);
@@ -149,7 +149,7 @@ public class UpgradeActions {
         }
     }
 
-    private void copyFilesToBeUpgraded(String ironTestHome, DefaultArtifactVersion oldVersion,
+    private void copyFilesToBeUpgraded(String apiTestBaseHome, DefaultArtifactVersion oldVersion,
                                        DefaultArtifactVersion newVersion) throws IOException {
         List<CopyFilesForOneVersionUpgrade> applicableCopyFiles =
                 new CopyFiles().getApplicableCopyFiles(oldVersion, newVersion);
@@ -157,7 +157,7 @@ public class UpgradeActions {
             Map<String, String> filePathMap = filesForOneVersionUpgrade.getFilePathMap();
             for (Map.Entry<String, String> mapEntry: filePathMap.entrySet()) {
                 Path sourceFilePath = Paths.get(".", mapEntry.getKey()).toAbsolutePath();
-                Path targetFilePath = Paths.get(ironTestHome, mapEntry.getValue()).toAbsolutePath();
+                Path targetFilePath = Paths.get(apiTestBaseHome, mapEntry.getValue()).toAbsolutePath();
                 Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
                 LOGGER.info("Copied " + sourceFilePath + " to " + targetFilePath + ".");
             }
@@ -217,7 +217,7 @@ public class UpgradeActions {
         return systemDBFileName;
     }
 
-    private void upgradeSystemDBInTempDir(String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password,
+    private void upgradeSystemDBInTempDir(String apiTestBaseHome, String fullyQualifiedSystemDBURL, String user, String password,
                                  List<ResourceFile> applicableSystemDBUpgrades, Path oldDir, Path newDir,
                                  DefaultArtifactVersion jarFileVersion)
             throws IOException {
@@ -225,7 +225,7 @@ public class UpgradeActions {
         Path newDatabaseFolder = Files.createDirectory(Paths.get(newDir.toString(), "database"));
         String systemDBFileName = getSystemDBFileName(fullyQualifiedSystemDBURL);
 
-        Path sourceFile = Paths.get(ironTestHome, "database", systemDBFileName);
+        Path sourceFile = Paths.get(apiTestBaseHome, "database", systemDBFileName);
         Path targetOldFile = Paths.get(oldDatabaseFolder.toString(), systemDBFileName);
         Path targetNewFile = Paths.get(newDatabaseFolder.toString(), systemDBFileName);
         Files.copy(sourceFile, targetOldFile);

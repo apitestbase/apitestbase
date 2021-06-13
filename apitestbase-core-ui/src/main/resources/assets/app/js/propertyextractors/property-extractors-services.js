@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').factory('PropertyExtractors', ['$resource',
+angular.module('apitestbase').factory('PropertyExtractors', ['$resource',
   function($resource) {
     return $resource('api/teststeps/:teststepId/propertyExtractors', {
     }, {

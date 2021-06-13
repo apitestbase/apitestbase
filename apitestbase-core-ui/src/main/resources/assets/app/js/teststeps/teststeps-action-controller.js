@@ -3,7 +3,7 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('TeststepsActionController', ['$scope',
+angular.module('apitestbase').controller('TeststepsActionController', ['$scope',
   function($scope) {
     $scope.showBottomPane = false;
     $scope.bottomButtonModel = { selectedButton: null};

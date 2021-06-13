@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest')
+angular.module('apitestbase')
   .directive('irtSuccessfulMessage', function ($timeout) {
     return {
       template: 'Successfully saved',

@@ -3,7 +3,7 @@
 /*
   The element's height is dynamically adjusted when there is another element being inserted/removed from the column (tab content).
 */
-angular.module('irontest').directive('heightAdjustableElementInColumn', function () {
+angular.module('apitestbase').directive('heightAdjustableElementInColumn', function () {
   return {
     link: function(scope, element, attrs) {
       //  Determine the initial height of the element, by using nearest absolute height node.

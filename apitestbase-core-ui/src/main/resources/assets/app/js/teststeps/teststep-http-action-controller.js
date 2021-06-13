@@ -4,9 +4,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('TeststepHTTPActionController', ['$scope', '$rootScope', 'Teststeps',
-    'IronTestUtils', '$uibModal', 'uiGridConstants', '$timeout', '$window',
-  function($scope, $rootScope, Teststeps, IronTestUtils, $uibModal, uiGridConstants, $timeout, $window) {
+angular.module('apitestbase').controller('TeststepHTTPActionController', ['$scope', '$rootScope', 'Teststeps',
+    'GeneralUtils', '$uibModal', 'uiGridConstants', '$timeout', '$window',
+  function($scope, $rootScope, Teststeps, GeneralUtils, $uibModal, uiGridConstants, $timeout, $window) {
     const HTTP_HEADER_GRID_NAME_COLUMN_WIDTH = '30%';
     switch ($scope.teststep.type) {
       case 'SOAP':
@@ -43,7 +43,7 @@ angular.module('irontest').controller('TeststepHTTPActionController', ['$scope',
     var deleteHTTPHeader = function(gridMenuEvent) {
       var selectedRow = $scope.requestHTTPHeaderGridApi.selection.getSelectedRows()[0];
       var httpHeaders = $scope.teststep.otherProperties.httpHeaders;
-      IronTestUtils.deleteArrayElementByProperty(httpHeaders, '$$hashKey', selectedRow.$$hashKey);
+      GeneralUtils.deleteArrayElementByProperty(httpHeaders, '$$hashKey', selectedRow.$$hashKey);
       $scope.update(true);
     };
 
@@ -175,7 +175,7 @@ angular.module('irontest').controller('TeststepHTTPActionController', ['$scope',
         $scope.steprun.response = basicTeststepRun.response;
       }, function(error) {
         $scope.steprun.status = 'failed';
-        IronTestUtils.openErrorHTTPResponseModal(error);
+        GeneralUtils.openErrorHTTPResponseModal(error);
       });
     };
   }

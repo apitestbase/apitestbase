@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').factory('HTTPStubs', ['$resource',
+angular.module('apitestbase').factory('HTTPStubs', ['$resource',
   function($resource) {
     return $resource('api/testcases/:testcaseId/httpstubs/:httpStubId', {
     }, {

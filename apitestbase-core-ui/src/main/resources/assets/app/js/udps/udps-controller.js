@@ -2,9 +2,9 @@
 
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController.
-angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'IronTestUtils', '$stateParams',
+angular.module('apitestbase').controller('UDPsController', ['$scope', 'UDPs', 'GeneralUtils', '$stateParams',
     '$uibModal',
-  function($scope, UDPs, IronTestUtils, $stateParams, $uibModal) {
+  function($scope, UDPs, GeneralUtils, $stateParams, $uibModal) {
     //  user defined properties of the test case
     $scope.udps = [];
 
@@ -12,7 +12,7 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
       udp.$update(function(response) {
         $scope.$emit('successfullySaved');
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -78,7 +78,7 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
             $scope.$emit('successfullySaved');
             $scope.udps = response;  // this is necessary as server side will change sequence values of udps (including the dragged udp and some not-dragged upds).
           }, function(response) {
-            IronTestUtils.openErrorHTTPResponseModal(response);
+            GeneralUtils.openErrorHTTPResponseModal(response);
           });
         });
 
@@ -96,7 +96,7 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
       UDPs.query({ testcaseId: $stateParams.testcaseId }, function(returnUDPs) {
         $scope.udps = returnUDPs;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -105,15 +105,15 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
       udp.$save({ testcaseId: $stateParams.testcaseId }, function(returnUDP) {
         $scope.udps.push(returnUDP);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
     $scope.removeUDP = function(udp) {
       udp.$remove(function(response) {
-        IronTestUtils.deleteArrayElementByProperty($scope.udps, 'id', udp.id);
+        GeneralUtils.deleteArrayElementByProperty($scope.udps, 'id', udp.id);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 

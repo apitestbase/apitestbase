@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class IronTestUtilsTest {
+public class GeneralUtilsTest {
     @Test
     void prettyPrintJSONOrXML_NullInput() throws Exception {
         String input = null;

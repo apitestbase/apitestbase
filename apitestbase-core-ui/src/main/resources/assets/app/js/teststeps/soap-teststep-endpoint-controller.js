@@ -3,7 +3,7 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsEndpointController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('SOAPTeststepEndpointController', ['$scope', '$rootScope',
+angular.module('apitestbase').controller('SOAPTeststepEndpointController', ['$scope', '$rootScope',
   function($scope, $rootScope) {
     $scope.toggleWSDLURLByConvention = function(isValid) {
       var endpoint = $scope.teststep.endpoint;

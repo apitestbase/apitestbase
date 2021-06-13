@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').factory('UDPs', ['$resource',
+angular.module('apitestbase').factory('UDPs', ['$resource',
   function($resource) {
     return $resource('api/testcases/:testcaseId/udps', {
     }, {

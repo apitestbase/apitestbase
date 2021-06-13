@@ -3,9 +3,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('MQTTTeststepActionController', ['$scope', 'IronTestUtils', 'Teststeps',
+angular.module('apitestbase').controller('MQTTTeststepActionController', ['$scope', 'GeneralUtils', 'Teststeps',
     '$timeout',
-  function($scope, IronTestUtils, Teststeps, $timeout) {
+  function($scope, GeneralUtils, Teststeps, $timeout) {
     var timer;
     $scope.steprun = {};
 
@@ -35,7 +35,7 @@ angular.module('irontest').controller('MQTTTeststepActionController', ['$scope',
         }, 15000);
       }, function(error) {
         $scope.steprun.status = 'failed';
-        IronTestUtils.openErrorHTTPResponseModal(error);
+        GeneralUtils.openErrorHTTPResponseModal(error);
       });
     };
   }

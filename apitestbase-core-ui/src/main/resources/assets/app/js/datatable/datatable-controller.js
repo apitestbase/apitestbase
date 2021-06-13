@@ -2,9 +2,9 @@
 
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController.
-angular.module('irontest').controller('DataTableController', ['$scope', 'IronTestUtils', '$stateParams', 'DataTable',
+angular.module('apitestbase').controller('DataTableController', ['$scope', 'GeneralUtils', '$stateParams', 'DataTable',
     '$timeout', '$uibModal', '$rootScope',
-  function($scope, IronTestUtils, $stateParams, DataTable, $timeout, $uibModal, $rootScope) {
+  function($scope, GeneralUtils, $stateParams, DataTable, $timeout, $uibModal, $rootScope) {
     var DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE = 'dataTableGridEditableHeaderCellTemplate.html';
 
     var stringCellUpdate = function(dataTableCellId, newValue) {
@@ -16,7 +16,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       }, function() {
         $scope.$emit('successfullySaved');
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -43,7 +43,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
               updateDataTableGrid(dataTable);
               $scope.dataTable = dataTable;    // this is necessary as server side will change sequence values of data table columns (including the dragged column and some not-dragged columns).
           }, function(response) {
-            IronTestUtils.openErrorHTTPResponseModal(response);
+            GeneralUtils.openErrorHTTPResponseModal(response);
           });
         });
 
@@ -70,7 +70,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         $scope.$emit('successfullySaved');
         updateDataTableGrid(dataTable);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -157,7 +157,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         //  show the grid
         $scope.dataTable = dataTable;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -165,7 +165,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       DataTable.addColumn({ testcaseId: $stateParams.testcaseId, columnType: columnType }, {}, function(dataTable) {
         updateDataTableGrid(dataTable, true);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -192,7 +192,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
           updateDataTableGrid(dataTable);
           refreshDataTableGrid();
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         refreshDataTableGrid();
@@ -204,7 +204,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         $scope.$emit('successfullySaved');
         updateDataTableGrid(dataTable);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -214,7 +214,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         $scope.$emit('successfullySaved');
         updateDataTableGrid(dataTable);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -278,7 +278,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
           rowEntity[columnName].endpoint = selectedEndpoint;
           $scope.$emit('successfullySaved');
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       }, function dismissed() {
         //  Modal dismissed. Do nothing.

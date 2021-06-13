@@ -1,5 +1,5 @@
-# Iron Test
-Iron Test is an open source tool for integration testing a variety of APIs. It is suitable for Integration, ESB, Microservices and SOA testing.
+# API Test Base
+API Test Base is an open source tool for integration testing a variety of APIs. It is suitable for Integration, ESB, Microservices and SOA testing.
 
 Supported API types
 * HTTP
@@ -36,22 +36,22 @@ Table of Contents:
 - [License](#license)
         
 ## Download
-Download the [latest Iron Test release](https://github.com/zheng-wang/irontest/releases/latest/download/irontest-dist.zip) and unpack it. The created folder will be referred to as `<IronTest_Home>` hereafter.
+Download the [latest API Test Base release](https://github.com/zheng-wang/apitestbase/releases/latest/download/apitestbase-dist.zip) and unpack it. The created folder will be referred to as `<APITestBase_Home>` hereafter.
 
-Alternatively, you can also [build Iron Test by yourself](https://github.com/zheng-wang/irontest/wiki/Build-Iron-Test-by-Yourself).
+Alternatively, you can also [build API Test Base by yourself](https://github.com/zheng-wang/apitestbase/wiki/Build-API-Test-Base-by-Yourself).
 
 ## Launch
 Prerequisites: JRE (Java SE Runtime Environment) or JDK 8+.
 
-Open a command line window, cd to `<IronTest_Home>` and run below command
+Open a command line window, cd to `<APITestBase_Home>` and run below command
 
-`java -Djava.net.useSystemProxies=true -jar irontest-<version>.jar server config.yml`
+`java -Djava.net.useSystemProxies=true -jar apitestbase-<version>.jar server config.yml`
 
-On Windows, alternatively you can simply run `<IronTest_Home>\start.bat`.
+On Windows, alternatively you can simply run `<APITestBase_Home>\start.bat`.
 
 Once the application is successfully launched, there will be a log like below displayed in the command line output
 
-`Iron Test started with UI address http://localhost:8090/ui`
+`API Test Base started with UI address http://localhost:8090/ui`
 
 Open a web browser (Google Chrome preferred), and go to the UI address. 
 
@@ -66,14 +66,14 @@ To create a new test case, right click on a folder in the tree, select Create Te
 
 Suppose you want to invoke a REST API. On the right pane of the screen, i.e. the test case edit view, under the Test Steps tab, click Create dropdown button and select HTTP Step. The test step edit view opens.
 
-Under the Basic Info tab, set the test step name. Under the Invocation tab, select Method like `GET`, set URL like `http://localhost:8090/api/articles` (an Iron Test bundled API) and click Invoke button.
+Under the Basic Info tab, set the test step name. Under the Invocation tab, select Method like `GET`, set URL like `http://localhost:8090/api/articles` (an API Test Base bundled API) and click Invoke button.
 
 ![Ad Hoc HTTP Invocation](screenshots/basic-use/ad-hoc-http-invocation.png)
 
 ### Automated Test Case
 We are going to demo how to test a REST API that updates an article in database. 
 
-The API is the sample Article API that is bundled with Iron Test. It does CRUD operations against the Article table in a sample H2 database. The sample database is automatically created under `<IronTest_Home>/database` when Iron Test is launched for the first time.
+The API is the sample Article API that is bundled with API Test Base. It does CRUD operations against the Article table in a sample H2 database. The sample database is automatically created under `<APITestBase_Home>/database` when API Test Base is launched for the first time.
  
 We are planning to have three test steps in our test case 
 ```
@@ -94,7 +94,7 @@ Under the Test Steps tab, click Create dropdown button and select Database Step.
 #### Populate Step 1 
 Click the name of step 1 to open its edit view.
           
-Under the Endpoint Details tab, set JDBC URL `jdbc:h2:./database/sample;AUTO_SERVER=TRUE` which will be used by the test step to connect to the sample database. Here `./database/sample` in the URL equals to `<IronTest_Home>/database/sample`, as Iron Test application is launched from directory `<IronTest_Home>`. Then set Username and Password which can be found in `<IronTest_Home>/config.yml`.
+Under the Endpoint Details tab, set JDBC URL `jdbc:h2:./database/sample;AUTO_SERVER=TRUE` which will be used by the test step to connect to the sample database. Here `./database/sample` in the URL equals to `<APITestBase_Home>/database/sample`, as API Test Base application is launched from directory `<APITestBase_Home>`. Then set Username and Password which can be found in `<APITestBase_Home>/config.yml`.
 
 Under the Invocation tab, enter below SQL script.
 ```
@@ -137,14 +137,14 @@ Click the Assertions button to open the assertions pane. In the assertions pane,
 
 ![HTTP Invocation and Assertion](screenshots/basic-use/http-invocation-and-assertion.png)
 
-More information about assertions can be found on this [wiki page](https://github.com/zheng-wang/irontest/wiki/Assertions).
+More information about assertions can be found on this [wiki page](https://github.com/zheng-wang/apitestbase/wiki/Assertions).
 
 Click the Back link to return to the test case edit view.
 
 #### Populate Step 3  
 Click the name of step 3 to open its edit view. 
  
-Under the Endpoint Details tab, enter exactly the same information as in step 1 because we are interacting with the same database. The information duplication can be avoided by using `managed endpoints`. Refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Endpoints-Management) for more details.
+Under the Endpoint Details tab, enter exactly the same information as in step 1 because we are interacting with the same database. The information duplication can be avoided by using `managed endpoints`. Refer to this [wiki page](https://github.com/zheng-wang/apitestbase/wiki/Endpoints-Management) for more details.
 
 Under the Invocation tab, enter SQL query `select id, title, content from article;`.
 
@@ -172,18 +172,18 @@ Click the link for a test step in the bottom pane to open a modal and see the st
 Click the result link beside the Run button to see the whole test case run report. This report can be saved as HTML file and used as test evidence in other places such as HP ALM.
 
 ### More Usages and Testing Practices
-Refer to the [wiki pages](https://github.com/zheng-wang/irontest/wiki).
+Refer to the [wiki pages](https://github.com/zheng-wang/apitestbase/wiki).
 
 ## Maintain
-The first time you launch the application, two new folders are created automatically under `<IronTest_Home>`.
+The first time you launch the application, two new folders are created automatically under `<APITestBase_Home>`.
 
     database - where system database and a sample database are located. Both are H2 databases. 
-        System database is used to store all test cases, environments, endpoints, etc. you create using Iron Test.
-        Sample database is for you to play with Iron Test basic features such as REST API testing or database testing. An Article table is in it.
+        System database is used to store all test cases, environments, endpoints, etc. you create using API Test Base.
+        Sample database is for you to play with API Test Base basic features such as REST API testing or database testing. An Article table is in it.
     
-    logs - where Iron Test application runtime logs are located.
+    logs - where API Test Base application runtime logs are located.
     
-**It is highly recommended that you back up `<IronTest_Home>/database` folder regularly.** Remember to shut down the application before backing up.
+**It is highly recommended that you back up `<APITestBase_Home>/database` folder regularly.** Remember to shut down the application before backing up.
 
 To shut down the application
     
@@ -191,9 +191,9 @@ To shut down the application
     
     On Linux/Unix: kill -SIGINT <pid>
     
-You can tune Iron Test application to suit your runtime needs by changing contents of the config.yml under `<IronTest_Home>`. For example, you can change the UI port number through the property `server > applicationConnectors > port` in config.yml. Refer to [Dropwizard doc](https://www.dropwizard.io/1.3.4/docs/manual/configuration.html) for more information. Re-launch Iron Test for the changes to take effect.
+You can tune API Test Base application to suit your runtime needs by changing contents of the config.yml under `<APITestBase_Home>`. For example, you can change the UI port number through the property `server > applicationConnectors > port` in config.yml. Refer to [Dropwizard doc](https://www.dropwizard.io/1.3.4/docs/manual/configuration.html) for more information. Re-launch API Test Base for the changes to take effect.
     
-To move Iron Test to a different folder or computer/VM, just shut down the application, copy the whole `<IronTest_Home>` folder over, and launch the application from there.
+To move API Test Base to a different folder or computer/VM, just shut down the application, copy the whole `<APITestBase_Home>` folder over, and launch the application from there.
 
 ## License
 Apache License 2.0, see [LICENSE](LICENSE).

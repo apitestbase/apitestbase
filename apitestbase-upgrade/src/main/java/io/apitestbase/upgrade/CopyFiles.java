@@ -10,14 +10,9 @@ public class CopyFiles {
 
     public CopyFiles() {
         CopyFilesForOneVersionUpgrade filesForOneVersion = new CopyFilesForOneVersionUpgrade(
-                new DefaultArtifactVersion("0.14.0"), new DefaultArtifactVersion("0.15.0"));
+                new DefaultArtifactVersion("0.17.1"), new DefaultArtifactVersion("0.18.0"));
         filesForOneVersion.getFilePathMap().put("start.bat", "start.bat");
         filesForOneVersion.getFilePathMap().put("start-team.bat", "start-team.bat");
-        allFiles.add(filesForOneVersion);
-
-        filesForOneVersion = new CopyFilesForOneVersionUpgrade(
-                new DefaultArtifactVersion("0.16.1"), new DefaultArtifactVersion("0.16.2"));
-        filesForOneVersion.getFilePathMap().put("start.bat", "start.bat");
         allFiles.add(filesForOneVersion);
     }
 

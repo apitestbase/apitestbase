@@ -10,7 +10,7 @@
         <version>0.18.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>irontest-assembly</artifactId>
+    <artifactId>apitestbase-assembly</artifactId>
 
     <properties>
         <lib.iib>lib/iib</lib.iib>
@@ -170,14 +170,14 @@
                                     <includeEmptyDirs>true</includeEmptyDirs>
                                     <outputDirectory>${distDir}</outputDirectory>
                                     <resources>
-                                        <!-- copy irontest uber jar -->
+                                        <!-- copy apitestbase uber jar -->
                                         <resource>
                                             <directory>target</directory>
                                             <includes>
                                                 <include>${uberJarFileName}.jar</include>
                                             </includes>
                                         </resource>
-                                        <!-- copy irontest-upgrade-to uber jar -->
+                                        <!-- copy apitestbase-upgrade-to uber jar -->
                                         <resource>
                                             <directory>../apitestbase-upgrade/target</directory>
                                             <includes>

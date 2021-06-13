@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').controller('ArticlesController2', ['$scope', 'Articles', '$stateParams', '$location', '$state', 'uiGridConstants',
+angular.module('apitestbase').controller('ArticlesController2', ['$scope', 'Articles', '$stateParams', '$location', '$state', 'uiGridConstants',
   function($scope, Articles, $stateParams, $location, $state, uiGridConstants) {
     $scope.article = {};
 

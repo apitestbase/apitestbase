@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Environments',
-    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'ManagedEndpoints', 'IronTestUtils',
-  function($scope, Environments, $stateParams, $state, uiGridConstants, $timeout, ManagedEndpoints, IronTestUtils) {
+angular.module('apitestbase').controller('EnvironmentsController', ['$scope', 'Environments',
+    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'ManagedEndpoints', 'GeneralUtils',
+  function($scope, Environments, $stateParams, $state, uiGridConstants, $timeout, ManagedEndpoints, GeneralUtils) {
 
     var timer;
     $scope.autoSave = function(isValid) {
@@ -52,7 +52,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
       environment.$save(function(response) {
         $state.go('environment_edit', {environmentId: response.id, newlyCreated: true});
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -62,7 +62,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
           $scope.$broadcast('successfullySaved');
           $scope.environment = response;
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -73,7 +73,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
       environment.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -81,7 +81,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
       Environments.query(function(environments) {
         $scope.environments = environments;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -96,7 +96,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
       }, function(environment) {
         $scope.environment = environment;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -108,7 +108,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
         $state.go('endpoint_edit', {environmentId: $stateParams.environmentId, endpointId: returnEndpoint.id,
           newlyCreated: true});
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -117,7 +117,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
       endpoint.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
   }

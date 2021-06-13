@@ -3,9 +3,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
-    '$uibModal', 'IronTestUtils', 'Environments', 'Teststeps',
-  function($scope, $uibModal, IronTestUtils, Environments, Teststeps) {
+angular.module('apitestbase').controller('TeststepsEndpointController', ['$scope',
+    '$uibModal', 'GeneralUtils', 'Environments', 'Teststeps',
+  function($scope, $uibModal, GeneralUtils, Environments, Teststeps) {
     $scope.selectManagedEndpoint = function() {
       var endpointType = $scope.teststep.endpoint.type;
 
@@ -41,11 +41,11 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
           $scope.environments = environments;
           $scope.teststep.endpoint.environment = environments[0];
         } else {
-          IronTestUtils.openErrorMessageModal('No environment yet.',
+          GeneralUtils.openErrorMessageModal('No environment yet.',
               'To share the endpoint, please create an environment first.');
         }
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -78,7 +78,7 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
         $scope.$emit('successfullySaved');
         $scope.setTeststep(response);
       }, function(error) {
-        IronTestUtils.openErrorHTTPResponseModal(error);
+        GeneralUtils.openErrorHTTPResponseModal(error);
       });
     };
 
@@ -108,7 +108,7 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
         $scope.$emit('successfullySaved');
         $scope.setTeststep(response);
       }, function(error) {
-        IronTestUtils.openErrorHTTPResponseModal(error);
+        GeneralUtils.openErrorHTTPResponseModal(error);
       });
     };
 
@@ -123,7 +123,7 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
         $scope.$emit('successfullySaved');
         $scope.setTeststep(response);
       }, function(error) {
-        IronTestUtils.openErrorHTTPResponseModal(error);
+        GeneralUtils.openErrorHTTPResponseModal(error);
       });
     };
   }

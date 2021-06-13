@@ -32,7 +32,7 @@ wireMock:
 
 logging:
   loggers:
-    "io.irontest.WireMockFileNotifier":
+    "io.apitestbase.WireMockFileNotifier":
       additive: false
       appenders:
         - type: file

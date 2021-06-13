@@ -1,9 +1,9 @@
 'use strict';
 
 //  For HTTP stub edit view.
-angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStubs', 'IronTestUtils', '$stateParams',
+angular.module('apitestbase').controller('HTTPStubController', ['$scope', 'HTTPStubs', 'GeneralUtils', '$stateParams',
     '$timeout', '$rootScope', 'uiGridConstants',
-  function($scope, HTTPStubs, IronTestUtils, $stateParams, $timeout, $rootScope, uiGridConstants) {
+  function($scope, HTTPStubs, GeneralUtils, $stateParams, $timeout, $rootScope, uiGridConstants) {
     const SPEC_TAB_INDEX = 1;
     $scope.activeTabIndex = SPEC_TAB_INDEX;
     $scope.isStubStateful = false;
@@ -26,7 +26,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
             successCallback();
           }
         }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+          GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -53,7 +53,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
           $scope.isRequestURLRegexMatching = false;
         }
 
-        $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(request.method, request.bodyPatterns);
+        $scope.requestBodyMainPattern = GeneralUtils.getRequestBodyMainPattern(request.method, request.bodyPatterns);
 
         //  set request and response headers
         var requestHeaders = request.headers;
@@ -72,7 +72,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
           });
         }
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -92,7 +92,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
 
     $scope.requestBodyApplicable = function() {
       if ($scope.httpStub) {     //  when the view is on loading, there is no $scope.httpStub
-        return IronTestUtils.requestBodyApplicable($scope.httpStub.spec.request.method);
+        return GeneralUtils.requestBodyApplicable($scope.httpStub.spec.request.method);
       } else {
         return true;
       }
@@ -102,7 +102,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       var request = $scope.httpStub.spec.request;
       if ($scope.requestBodyApplicable()) {
         if (!$scope.requestBodyMainPattern) {
-          $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(request.method);
+          $scope.requestBodyMainPattern = GeneralUtils.getRequestBodyMainPattern(request.method);
         }
       } else {
         delete request.bodyPatterns;
@@ -126,18 +126,18 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       var request = $scope.httpStub.spec.request;
       if (newMainPatternName === 'any') {
         delete request.bodyPatterns;
-        $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern($scope.httpStub.spec.request.method);
+        $scope.requestBodyMainPattern = GeneralUtils.getRequestBodyMainPattern($scope.httpStub.spec.request.method);
       } else {
         request.bodyPatterns = [];
         var bodyPatterns = request.bodyPatterns;
         var bodyPattern = new Object();
         var hiddenMainPatternValue;
         if (newMainPatternName === 'equalToXml') {
-          hiddenMainPatternValue = '<IronTest_ToBeSubstitutedDuringStepRun/>';
+          hiddenMainPatternValue = '<APITestBase_ToBeSubstitutedDuringStepRun/>';
           bodyPattern.enablePlaceholders = true;
           bodyPattern.placeholderOpeningDelimiterRegex = "#\\{";
         } else if (newMainPatternName === 'equalToJson') {
-          hiddenMainPatternValue = "\"IronTest_ToBeSubstitutedDuringStepRun\"";
+          hiddenMainPatternValue = "\"APITestBase_ToBeSubstitutedDuringStepRun\"";
         }
         bodyPattern[newMainPatternName] = hiddenMainPatternValue;
         bodyPatterns.push(bodyPattern);
@@ -175,7 +175,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       if (!request.headers) {
         request.headers = {};
       }
-      var newHeaderName = IronTestUtils.getNextNameInSequence(headersInGrid, 'name');
+      var newHeaderName = GeneralUtils.getNextNameInSequence(headersInGrid, 'name');
       var newHeaderValue = '';
       request.headers[newHeaderName] = { equalTo: newHeaderValue };
       headersInGrid.push({ name: newHeaderName, operator: 'equalTo', value: newHeaderValue });
@@ -190,7 +190,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       var headersInGrid = $scope.requestHeaderGridOptions.data;
       var headersObj = $scope.httpStub.spec.request.headers;
       delete headersObj[selectedRow.name];
-      IronTestUtils.deleteArrayElementByProperty(headersInGrid, '$$hashKey', selectedRow.$$hashKey);
+      GeneralUtils.deleteArrayElementByProperty(headersInGrid, '$$hashKey', selectedRow.$$hashKey);
       $scope.update(true);
     };
 
@@ -201,7 +201,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
         response.headers = {};
       }
       var headersObj = response.headers;
-      var newHeaderName = IronTestUtils.getNextNameInSequence(headersInGrid, 'name');
+      var newHeaderName = GeneralUtils.getNextNameInSequence(headersInGrid, 'name');
       var newHeaderValue = '';
       headersObj[newHeaderName] = newHeaderValue;
       headersInGrid.push({ name: newHeaderName, value: newHeaderValue });
@@ -216,7 +216,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       var headersInGrid = $scope.responseHeaderGridOptions.data;
       var headersObj = $scope.httpStub.spec.response.headers;
       delete headersObj[selectedRow.name];
-      IronTestUtils.deleteArrayElementByProperty(headersInGrid, '$$hashKey', selectedRow.$$hashKey);
+      GeneralUtils.deleteArrayElementByProperty(headersInGrid, '$$hashKey', selectedRow.$$hashKey);
       $scope.update(true);
     };
 

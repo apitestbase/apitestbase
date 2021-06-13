@@ -1,4 +1,4 @@
-angular.module('irontest', ['common', 'ngSanitize', 'ui.grid', 'ui.grid.resizeColumns',
+angular.module('apitestbase', ['common', 'ngSanitize', 'ui.grid', 'ui.grid.resizeColumns',
     'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.selection',
     'ui.grid.draggable-rows', 'ngFileUpload', 'ngJsTree'])
   .factory('authInterceptor', ['$q', '$rootScope', function($q, $rootScope) {
@@ -30,7 +30,7 @@ angular.module('irontest', ['common', 'ngSanitize', 'ui.grid', 'ui.grid.resizeCo
       }
     };
   })
-  .run(['$rootScope', '$http', '$window', 'IronTestUtils', function($rootScope, $http, $window, IronTestUtils) {
+  .run(['$rootScope', '$http', '$window', 'GeneralUtils', function($rootScope, $http, $window, GeneralUtils) {
     $rootScope.$on('pageLoaded', function(event, args) {
       //  adjust main panes height on page loaded
       var wrapperObj = document.getElementById('wrapper');
@@ -79,7 +79,7 @@ angular.module('irontest', ['common', 'ngSanitize', 'ui.grid', 'ui.grid.resizeCo
       .then(function successCallback(response) {
         $rootScope.appStatus.appMode = response.data.appMode;
       }, function errorCallback(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
 
     $rootScope.logout = function() {

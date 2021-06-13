@@ -3,9 +3,9 @@
 //  For HTTP stub grid on test case edit view.
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController.
-angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStubs', 'IronTestUtils', '$stateParams',
+angular.module('apitestbase').controller('HTTPStubsController', ['$scope', 'HTTPStubs', 'GeneralUtils', '$stateParams',
     '$state', '$timeout',
-  function($scope, HTTPStubs, IronTestUtils, $stateParams, $state, $timeout) {
+  function($scope, HTTPStubs, GeneralUtils, $stateParams, $state, $timeout) {
     $scope.httpStubs = [];
 
     $scope.httpStubGridOptions = {
@@ -46,7 +46,7 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
             $scope.$emit('successfullySaved');
             $scope.httpStubs = response;  // this is necessary as server side will change number values of http stubs.
           }, function(response) {
-            IronTestUtils.openErrorHTTPResponseModal(response);
+            GeneralUtils.openErrorHTTPResponseModal(response);
           });
         });
 
@@ -64,7 +64,7 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
       HTTPStubs.query({ testcaseId: $stateParams.testcaseId }, function(httpStubs) {
         $scope.httpStubs = httpStubs;
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -73,15 +73,15 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
       httpStub.$save({ testcaseId: $stateParams.testcaseId }, function(httpStub) {
         $state.go('httpstub_edit', {testcaseId: $stateParams.testcaseId, httpStubId: httpStub.id});
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
     $scope.removeHTTPStub = function(httpStub) {
       httpStub.$remove(function(response) {
-        IronTestUtils.deleteArrayElementByProperty($scope.httpStubs, 'id', httpStub.id);
+        GeneralUtils.deleteArrayElementByProperty($scope.httpStubs, 'id', httpStub.id);
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -96,7 +96,7 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
         }, 10000);
       }, function errorCallback(response) {
         $scope.stubsLoadingStatus = null;
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
   }

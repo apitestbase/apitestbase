@@ -3,8 +3,8 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('JMSTeststepActionController', ['$scope', '$timeout', 'IronTestUtils', 'Teststeps',
-  function($scope, $timeout, IronTestUtils, Teststeps) {
+angular.module('apitestbase').controller('JMSTeststepActionController', ['$scope', '$timeout', 'GeneralUtils', 'Teststeps',
+  function($scope, $timeout, GeneralUtils, Teststeps) {
     $scope.requestMessageActiveTabIndex = 1;
     $scope.responseMessageActiveTabIndex = 2;
     var timer;
@@ -63,7 +63,7 @@ angular.module('irontest').controller('JMSTeststepActionController', ['$scope', 
         }, 15000);
       }, function(error) {
         $scope.steprun.status = 'failed';
-        IronTestUtils.openErrorHTTPResponseModal(error);
+        GeneralUtils.openErrorHTTPResponseModal(error);
       });
     };
 
@@ -81,7 +81,7 @@ angular.module('irontest').controller('JMSTeststepActionController', ['$scope', 
           _doAction();
         }, function(error) {
           $scope.steprun.status = 'failed';
-          IronTestUtils.openErrorHTTPResponseModal(error);
+          GeneralUtils.openErrorHTTPResponseModal(error);
         });
       } else {
         _doAction();
@@ -124,7 +124,7 @@ angular.module('irontest').controller('JMSTeststepActionController', ['$scope', 
     };
 
     $scope.deleteRequestProperty = function(property) {
-      IronTestUtils.deleteArrayElementByProperty($scope.teststep.apiRequest.properties, '$$hashKey', property.$$hashKey);
+      GeneralUtils.deleteArrayElementByProperty($scope.teststep.apiRequest.properties, '$$hashKey', property.$$hashKey);
 
       //  update test step immediately (no timeout)
       $scope.update(true);

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').factory('Teststeps', ['$resource',
+angular.module('apitestbase').factory('Teststeps', ['$resource',
   function($resource) {
     return $resource('api/testcases/:testcaseId/teststeps/:teststepId/:verb', {
       testcaseId: '@testcaseId', teststepId: '@id'
