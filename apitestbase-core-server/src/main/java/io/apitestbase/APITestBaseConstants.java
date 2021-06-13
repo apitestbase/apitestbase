@@ -31,6 +31,6 @@ public interface APITestBaseConstants {
     int KDF_KEY_LENGTH = 256;
     String USER_ROLE_ADMIN = "admin";
 
-    String WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID = "ironTestId";
-    String WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER = "ironTestNumber";
+    String WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_ID = "apiTestBaseId";
+    String WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_NUMBER = "apiTestBaseNumber";
 }

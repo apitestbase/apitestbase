@@ -46,13 +46,13 @@ public class IIBTeststepRunner extends TeststepRunner {
         ClassLoader classLoader;
         TeststepRunner actualRunner;
         if (Endpoint.TYPE_IIB.equals(endpoint.getType())) {    //  it is an IIB 10.0 endpoint
-            actualRunnerClassName = "io.irontest.core.teststep.IIB100TeststepRunner";
+            actualRunnerClassName = "io.apitestbase.core.teststep.IIB100TeststepRunner";
             classLoader = iib100ClassLoader;
             Class actualRunnerClass = Class.forName(actualRunnerClassName, false, classLoader);
             Constructor<TeststepRunner> constructor = actualRunnerClass.getConstructor(Endpoint.class, String.class);
             actualRunner = constructor.newInstance(endpoint, getDecryptedEndpointPassword());
         } else {    //  it is an IIB 9.0 endpoint
-            actualRunnerClassName = "io.irontest.core.teststep.IIB90TeststepRunner";
+            actualRunnerClassName = "io.apitestbase.core.teststep.IIB90TeststepRunner";
             classLoader = iib90ClassLoader;
             Class actualRunnerClass = Class.forName(actualRunnerClassName, false, classLoader);
             Constructor<TeststepRunner> constructor = actualRunnerClass.getConstructor(Endpoint.class);

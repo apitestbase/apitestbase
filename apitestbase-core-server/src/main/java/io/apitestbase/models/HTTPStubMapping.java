@@ -13,7 +13,7 @@ public class HTTPStubMapping {
     @JsonView({ResourceJsonViews.HTTPStubUIGrid.class, ResourceJsonViews.TestcaseExport.class})
     private StubMapping spec;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
-    private String requestBodyMainPatternValue;     //  this is to enable using Iron Test properties in request body patterns like equalToXml and equalToJson.
+    private String requestBodyMainPatternValue;     //  this is to enable using API Test Base properties in request body patterns like equalToXml and equalToJson.
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private short expectedHitCount;
 

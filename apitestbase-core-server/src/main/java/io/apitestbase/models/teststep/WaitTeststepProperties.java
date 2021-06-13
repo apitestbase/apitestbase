@@ -6,7 +6,7 @@ import io.apitestbase.resources.ResourceJsonViews;
 
 @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
 public class WaitTeststepProperties extends Properties {
-    private String milliseconds;  //  String instead of long to allow Iron Test property to be used in this field
+    private String milliseconds;  //  String instead of long to allow API Test Base property to be used in this field
 
     public WaitTeststepProperties() {}
 

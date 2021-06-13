@@ -26,7 +26,7 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
-import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID;
+import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_ID;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class HTTPStubResource {
@@ -109,7 +109,7 @@ public class HTTPStubResource {
             for (HTTPStubMapping stub: finalStubs) {
                 //  delete old instances if exist
                 List<StubMapping> existingInstances = wireMockServer.findStubMappingsByMetadata(
-                        matchingJsonPath("$." + WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID,
+                        matchingJsonPath("$." + WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_ID,
                                 equalTo(Long.toString(stub.getId()))));
                 for (StubMapping existingInstance: existingInstances) {
                     wireMockServer.removeStubMapping(existingInstance);

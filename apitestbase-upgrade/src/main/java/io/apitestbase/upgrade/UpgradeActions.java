@@ -21,10 +21,10 @@ public class UpgradeActions {
             throws Exception {
         Formatter logFormatter = new LogFormatter();
         LOGGER.getParent().getHandlers()[0].setFormatter(logFormatter);    //  set formatter for console logging
-        LOGGER.info("Upgrading Iron Test from v" + systemDatabaseVersion + " to v" + jarFileVersion + ".");
+        LOGGER.info("Upgrading API Test Base from v" + systemDatabaseVersion + " to v" + jarFileVersion + ".");
 
         //  set up temp upgrade directory
-        Path upgradeWorkspace = Files.createTempDirectory("irontest-upgrade-");
+        Path upgradeWorkspace = Files.createTempDirectory("apitestbase-upgrade-");
         Path logFilePath = Paths.get(upgradeWorkspace.toString(),
                 "upgrade-from-v" + systemDatabaseVersion + "-to-v" + jarFileVersion + ".log");
         FileHandler logFileHandler = new FileHandler(logFilePath.toString());
@@ -69,9 +69,9 @@ public class UpgradeActions {
         LOGGER.info(lineDelimiter);
         LOGGER.info("UPGRADE SUCCESS");
         LOGGER.info(lineDelimiter);
-        LOGGER.info("You can start Iron Test now.");
+        LOGGER.info("You can start API Test Base now.");
         if (clearBrowserCacheNeeded) {
-            LOGGER.info("If Iron Test page is already open, refresh the page (no need to restart browser).");
+            LOGGER.info("If API Test Base page is already open, refresh the page (no need to restart browser).");
         }
         LOGGER.info(lineDelimiter);
         LOGGER.info("Refer to " + logFilePath + " for upgrade logs.");
@@ -128,7 +128,7 @@ public class UpgradeActions {
 
     private void copyNewJarFromDistToIronTestHome(DefaultArtifactVersion newJarFileVersion, String ironTestHome)
             throws IOException {
-        String newJarFileName = "irontest-" + newJarFileVersion + ".jar";
+        String newJarFileName = "apitestbase-" + newJarFileVersion + ".jar";
         Path soureFilePath = Paths.get(".", newJarFileName).toAbsolutePath();
         Path targetFilePath = Paths.get(ironTestHome, newJarFileName).toAbsolutePath();
         Files.copy(soureFilePath, targetFilePath);

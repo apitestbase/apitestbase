@@ -21,7 +21,7 @@ public class MQTTTeststepRunner extends TeststepRunner {
         }
 
         Endpoint endpoint = teststep.getEndpoint();
-        MqttClient mqttClient = new MqttClient(endpoint.getUrl(), "irontest-mqtt-teststep");
+        MqttClient mqttClient = new MqttClient(endpoint.getUrl(), "apitestbase-mqtt-teststep");
         MqttConnectOptions connOpts = new MqttConnectOptions();
         connOpts.setCleanSession(true);
         connOpts.setUserName(endpoint.getUsername());

@@ -225,7 +225,7 @@ public class MQTeststepRunner extends TeststepRunner {
             //  when there is no message on the queue, keep the response object as null (i.e. there is no response)
             result = new MQDequeueResponse();
 
-            //  parse the MQMessage to Iron Test model
+            //  parse the MQMessage to API Test Base model
             MQRFH2Header mqrfh2Header = null;
             MQHeaderIterator it = new MQHeaderIterator(message);
             while (it.hasNext()) {

@@ -6,7 +6,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 
-public class IronTestUtilsFreeMarkerAdapter {
+public class GeneralUtilsFreeMarkerAdapter {
     public String prettyPrintJSONOrXML(String input) throws XPathExpressionException, TransformerException, IOException {
         return GeneralUtils.prettyPrintJSONOrXML(input);
     }

@@ -63,7 +63,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
 
     @Override
     public String getName() {
-        return "Iron Test";
+        return "API Test Base";
     }
 
     @Override
@@ -119,7 +119,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         Integer versionTableCount = systemDBJdbi.withHandle(handle ->
                 handle.createQuery("select count(*) from information_schema.tables where table_name = 'VERSION'")
                       .mapTo(Integer.class).findOnly());
-        if (versionTableCount == 1) {      //  VERSION table exists in the system database (i.e. we are not starting a brand new Iron Test build)
+        if (versionTableCount == 1) {      //  VERSION table exists in the system database (i.e. we are not starting a brand new API Test Base build)
             if (!checkVersion(systemDBJdbi)) {
                 System.out.println("Press Enter to exit.");
                 System.in.read();
@@ -156,7 +156,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Iron Test started with UI address http://localhost:" +  + getLocalPort(server) + "/ui");
+                System.out.println("API Test Base started with UI address http://localhost:" +  + getLocalPort(server) + "/ui");
                 System.out.println();
             }
         });
@@ -182,9 +182,9 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         } else {    //  system database version is smaller than the jar file version
             System.out.printf("System database version %1$s is smaller than jar file version %2$s.%n", systemDBVersion,
                     jarFileVersion);
-            System.out.println("Please download and build the latest release of Iron Test. Under the dist directory, " +
-                    "run command 'java -jar <jarFileName> upgrade <IronTest_Home>' to upgrade your existing " +
-                    "Iron Test instance.");
+            System.out.println("Please download and build the latest release of API Test Base. Under the dist directory, " +
+                    "run command 'java -jar <jarFileName> upgrade <APITestBase_Home>' to upgrade your existing " +
+                    "API Test Base instance.");
             System.out.println("Follow the instructions to finish upgrade. In the end, you should see in the " +
                     "command line output 'UPGRADE SUCCESS'.");
             return false;
@@ -300,7 +300,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
             environment.jersey().register(new UserResource(userDAO));
         }
 
-        //  if turned on in config.yml, register jersey LoggingFilter (used for logging Iron Test resource oriented HTTP API requests and responses)
+        //  if turned on in config.yml, register jersey LoggingFilter (used for logging API Test Base resource oriented HTTP API requests and responses)
         DefaultLoggingFactory defaultLoggingFactory = (DefaultLoggingFactory) configuration.getLoggingFactory();
         if (defaultLoggingFactory.getLoggers().containsKey(LoggingFilter.class.getName())) {
             environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));

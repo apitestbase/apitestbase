@@ -31,7 +31,7 @@ public class IIBTeststepRunnerClassLoader extends URLClassLoader {
 
         //  the class is not in this class loader's classpath
         if (c == null) {
-            if (name.startsWith("io.irontest.core.teststep.IIB")) {
+            if (name.startsWith("io.apitestbase.core.teststep.IIB")) {
                 //  use parent class loader to get the class bytes, but use this class loader to load it
                 InputStream in = null;
                 try {

@@ -13,7 +13,7 @@ import java.util.UUID;
 public class TestcaseRunContext {
     private Date testcaseRunStartTime;
     private Date testcaseIndividualRunStartTime;
-    private WireMockServer wireMockServer;            //  the universal WireMock server inside the Iron Test instance
+    private WireMockServer wireMockServer;            //  the universal WireMock server inside the API Test Base instance
     private Map<Short, UUID> httpStubMappingInstanceIds = new HashMap<>();  //  mapping from stub mapping number to stub mapping instance UUID (after loaded into mock server)
 
     public Date getTestcaseRunStartTime() {

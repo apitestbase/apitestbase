@@ -6,8 +6,8 @@ import io.apitestbase.resources.ResourceJsonViews;
 
 @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
 public class SubstringAssertionProperties extends Properties {
-    private String beginIndex;           //  String instead of int to allow Iron Test property to be used in this field
-    private String endIndex;             //  String instead of int to allow Iron Test property to be used in this field
+    private String beginIndex;           //  String instead of int to allow API Test Base property to be used in this field
+    private String endIndex;             //  String instead of int to allow API Test Base property to be used in this field
     private String expectedValue;
 
     public String getBeginIndex() {

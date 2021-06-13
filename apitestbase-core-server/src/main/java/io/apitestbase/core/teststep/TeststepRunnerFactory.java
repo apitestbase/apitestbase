@@ -32,9 +32,9 @@ public class TeststepRunnerFactory {
     private String resolveTeststepRunnerClassName(Teststep teststep) {
         if (Teststep.TYPE_JMS.equals(teststep.getType())) {
             JMSEndpointProperties endpointProperties = (JMSEndpointProperties) teststep.getEndpoint().getOtherProperties();
-            return "io.irontest.core.teststep." + teststep.getType() + endpointProperties.getJmsProvider() + "TeststepRunner";
+            return "io.apitestbase.core.teststep." + teststep.getType() + endpointProperties.getJmsProvider() + "TeststepRunner";
         } else {
-            return "io.irontest.core.teststep." + teststep.getType() + "TeststepRunner";
+            return "io.apitestbase.core.teststep." + teststep.getType() + "TeststepRunner";
         }
     }
 

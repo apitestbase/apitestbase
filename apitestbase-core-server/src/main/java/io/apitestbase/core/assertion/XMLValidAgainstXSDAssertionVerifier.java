@@ -57,7 +57,7 @@ public class XMLValidAgainstXSDAssertionVerifier extends AssertionVerifier {
 
         } else {        //  the XSD(s) are in a zip file
             //  extract the zip file in a temp directory
-            tempDir = Files.createTempDirectory("irontest");
+            tempDir = Files.createTempDirectory("apitestbase");
             File zipFile = new File(tempDir.toFile(), assertionProperties.getFileName());
             FileUtils.writeByteArrayToFile(zipFile, assertionProperties.getFileBytes());
             new ZipFile(zipFile).extractAll(tempDir.toString());

@@ -6,10 +6,10 @@ import javax.xml.namespace.NamespaceContext;
 import java.util.Iterator;
 import java.util.List;
 
-public class IronTestNamespaceContext implements NamespaceContext {
+public class APITestBaseNamespaceContext implements NamespaceContext {
     private List<NamespacePrefix> namespacePrefixes;
 
-    public IronTestNamespaceContext(List<NamespacePrefix> namespacePrefixes) {
+    public APITestBaseNamespaceContext(List<NamespacePrefix> namespacePrefixes) {
         this.namespacePrefixes = namespacePrefixes;
     }
 

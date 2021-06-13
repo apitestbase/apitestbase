@@ -3,7 +3,7 @@
     Body:
   </div>
   <div class="col-lg-11">
-    <textarea class="form-control message-body-textarea" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(teststep.request) }</textarea>
+    <textarea class="form-control message-body-textarea" readonly>${ generalUtilsAdatper.prettyPrintJSONOrXML(teststep.request) }</textarea>
   </div>
 </div>
 <#if stepOtherProperties.rfh2Header??>
@@ -16,7 +16,7 @@
       <#list stepOtherProperties.rfh2Header.folders as mqrfh2Folder>
         <div class="row">
           <div class="col-lg-12">
-            <textarea class="form-control" rows="8" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(mqrfh2Folder.string) }</textarea>
+            <textarea class="form-control" rows="8" readonly>${ generalUtilsAdatper.prettyPrintJSONOrXML(mqrfh2Folder.string) }</textarea>
           </div>
         </div>
         <div class="form-group"></div> <#-- spacer -->

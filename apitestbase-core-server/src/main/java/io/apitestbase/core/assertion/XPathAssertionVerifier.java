@@ -1,6 +1,6 @@
 package io.apitestbase.core.assertion;
 
-import io.apitestbase.core.IronTestNamespaceContext;
+import io.apitestbase.core.APITestBaseNamespaceContext;
 import io.apitestbase.models.NamespacePrefix;
 import io.apitestbase.models.TestResult;
 import io.apitestbase.models.assertion.AssertionVerificationResultWithActualValue;
@@ -49,7 +49,7 @@ public class XPathAssertionVerifier extends AssertionVerifier {
                                          List<NamespacePrefix> namespacePrefixes,
                                          AssertionVerificationResultWithActualValue result) throws TransformerException, XPathExpressionException {
         XPath xpath = XPathFactory.newInstance().newXPath();
-        xpath.setNamespaceContext(new IronTestNamespaceContext(namespacePrefixes));
+        xpath.setNamespaceContext(new APITestBaseNamespaceContext(namespacePrefixes));
 
         InputSource inputSource = new InputSource(new StringReader(xmlInput));
 

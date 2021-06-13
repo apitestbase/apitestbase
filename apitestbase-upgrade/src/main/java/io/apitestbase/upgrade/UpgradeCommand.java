@@ -13,9 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-@CommandLine.Command(name = "upgrade", description = "Upgrade Iron Test")
+@CommandLine.Command(name = "upgrade", description = "Upgrade API Test Base")
 public class UpgradeCommand implements Runnable {
-    @CommandLine.Parameters(description = "Home directory of the Iron Test instance to be upgraded.")
+    @CommandLine.Parameters(description = "Home directory of the API Test Base instance to be upgraded.")
     private String ironTestHome;
 
     @Override
@@ -50,7 +50,7 @@ public class UpgradeCommand implements Runnable {
                 upgradeActions.upgrade(systemDBVersion, jarFileVersion, ironTestHome, fullyQualifiedSystemDBURL,
                         systemDBConfiguration.getUser(), systemDBConfiguration.getPassword());
             } catch (Exception e) {
-                throw new RuntimeException("Failed to upgrade Iron Test under " + ironTestHome, e);
+                throw new RuntimeException("Failed to upgrade API Test Base under " + ironTestHome, e);
             }
         }
     }

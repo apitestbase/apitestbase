@@ -8,19 +8,19 @@ import io.apitestbase.models.testrun.TestcaseRun;
  */
 public class TestcaseRunView extends View {
     private final TestcaseRun testcaseRun;
-    private IronTestUtilsFreeMarkerAdapter ironTestUtilsAdapter;
+    private GeneralUtilsFreeMarkerAdapter generalUtilsAdapter;
 
     public TestcaseRunView(TestcaseRun testcaseRun) {
         super("../views/testcaseRun.ftl");
         this.testcaseRun = testcaseRun;
-        this.ironTestUtilsAdapter = new IronTestUtilsFreeMarkerAdapter();
+        this.generalUtilsAdapter = new GeneralUtilsFreeMarkerAdapter();
     }
 
     public TestcaseRun getTestcaseRun() {
         return testcaseRun;
     }
 
-    public IronTestUtilsFreeMarkerAdapter getIronTestUtilsAdatper() {
-        return ironTestUtilsAdapter;
+    public GeneralUtilsFreeMarkerAdapter getGeneralUtilsAdatper() {
+        return generalUtilsAdapter;
     }
 }

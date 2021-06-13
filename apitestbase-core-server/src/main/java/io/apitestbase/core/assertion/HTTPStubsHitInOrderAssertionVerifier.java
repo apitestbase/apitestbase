@@ -9,7 +9,7 @@ import io.apitestbase.models.assertion.HTTPStubsHitInOrderAssertionVerificationR
 
 import java.util.*;
 
-import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER;
+import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_NUMBER;
 
 public class HTTPStubsHitInOrderAssertionVerifier extends AssertionVerifier {
     @Override
@@ -24,7 +24,7 @@ public class HTTPStubsHitInOrderAssertionVerifier extends AssertionVerifier {
             if (serveEvent.getWasMatched()) {
                 StubMapping stubMapping = serveEvent.getStubMapping();
                 hitMap.put(serveEvent.getRequest().getLoggedDate(),
-                        (Short) stubMapping.getMetadata().get(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER));
+                        (Short) stubMapping.getMetadata().get(WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_NUMBER));
             }
         }
 

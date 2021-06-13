@@ -63,7 +63,7 @@
     <div role="tabpanel" class="tab-pane active" id="step-run-${ stepRun.id?string.computer }-response-body">
       <div class="form-group">
         <div class="col-lg-12">
-          <textarea class="form-control message-body-textarea" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(response.body) }</textarea>
+          <textarea class="form-control message-body-textarea" readonly>${ generalUtilsAdatper.prettyPrintJSONOrXML(response.body) }</textarea>
         </div>
       </div>
     </div>

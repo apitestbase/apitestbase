@@ -54,8 +54,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
-import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID;
-import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER;
+import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_ID;
+import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_NUMBER;
 
 public final class GeneralUtils {
     /**
@@ -284,16 +284,16 @@ public final class GeneralUtils {
 
     /**
      * Create (clone) a new instance out of the stub spec, with UUID generated for the instance.
-     * The instance also has the ironTestId as metadata.
+     * The instance also has the apiTestBaseId as metadata.
      * The spec is not changed.
      * @param spec
      * @return
      */
-    public static StubMapping createStubInstance(long ironTestId, short ironTestNumber, StubMapping spec) {
+    public static StubMapping createStubInstance(long apiTestBaseId, short apiTestBaseNumber, StubMapping spec) {
         StubMapping stubInstance = StubMapping.buildFrom(StubMapping.buildJsonStringFor(spec));
         stubInstance.setMetadata(metadata()
-                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID, ironTestId)
-                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER, ironTestNumber)
+                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_ID, apiTestBaseId)
+                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_NUMBER, apiTestBaseNumber)
                 .build());
         stubInstance.setDirty(false);
         return stubInstance;
