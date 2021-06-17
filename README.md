@@ -36,9 +36,9 @@ Table of Contents:
 - [License](#license)
         
 ## Download
-Download the [latest API Test Base release](https://github.com/zheng-wang/apitestbase/releases/latest/download/apitestbase-dist.zip) and unpack it. The created folder will be referred to as `<APITestBase_Home>` hereafter.
+Download the [latest API Test Base release](https://github.com/apitestbase/apitestbase/releases/latest/download/apitestbase-dist.zip) and unpack it. The created folder will be referred to as `<APITestBase_Home>` hereafter.
 
-Alternatively, you can also [build API Test Base by yourself](https://github.com/zheng-wang/apitestbase/wiki/Build-API-Test-Base-by-Yourself).
+Alternatively, you can also [build API Test Base by yourself](https://github.com/apitestbase/apitestbase/wiki/Build-API-Test-Base-by-Yourself).
 
 ## Launch
 Prerequisites: JRE (Java SE Runtime Environment) or JDK 8+.
@@ -137,14 +137,14 @@ Click the Assertions button to open the assertions pane. In the assertions pane,
 
 ![HTTP Invocation and Assertion](screenshots/basic-use/http-invocation-and-assertion.png)
 
-More information about assertions can be found on this [wiki page](https://github.com/zheng-wang/apitestbase/wiki/Assertions).
+More information about assertions can be found on this [wiki page](https://github.com/apitestbase/apitestbase/wiki/Assertions).
 
 Click the Back link to return to the test case edit view.
 
 #### Populate Step 3  
 Click the name of step 3 to open its edit view. 
  
-Under the Endpoint Details tab, enter exactly the same information as in step 1 because we are interacting with the same database. The information duplication can be avoided by using `managed endpoints`. Refer to this [wiki page](https://github.com/zheng-wang/apitestbase/wiki/Endpoints-Management) for more details.
+Under the Endpoint Details tab, enter exactly the same information as in step 1 because we are interacting with the same database. The information duplication can be avoided by using `managed endpoints`. Refer to this [wiki page](https://github.com/apitestbase/apitestbase/wiki/Endpoints-Management) for more details.
 
 Under the Invocation tab, enter SQL query `select id, title, content from article;`.
 
@@ -172,7 +172,7 @@ Click the link for a test step in the bottom pane to open a modal and see the st
 Click the result link beside the Run button to see the whole test case run report. This report can be saved as HTML file and used as test evidence in other places such as HP ALM.
 
 ### More Usages and Testing Practices
-Refer to the [wiki pages](https://github.com/zheng-wang/apitestbase/wiki).
+Refer to the [wiki pages](https://github.com/apitestbase/apitestbase/wiki).
 
 ## Maintain
 The first time you launch the application, two new folders are created automatically under `<APITestBase_Home>`.
