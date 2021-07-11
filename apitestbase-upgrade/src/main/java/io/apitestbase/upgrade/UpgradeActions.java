@@ -137,7 +137,7 @@ public class UpgradeActions {
 
     private void deleteOldJarsFromAPITestBaseHome(String apiTestBaseHome) throws IOException {
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(
-                Paths.get(apiTestBaseHome), "irontest-*.jar")) {
+                Paths.get(apiTestBaseHome), "apitestbase-*.jar")) {
             dirStream.forEach(filePath -> {
                 try {
                     Files.delete(filePath);
