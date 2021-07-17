@@ -7,7 +7,7 @@
     <parent>
         <artifactId>apitestbase-parent</artifactId>
         <groupId>io.apitestbase</groupId>
-        <version>0.18.2-SNAPSHOT</version>
+        <version>0.18.2</version>
     </parent>
 
     <artifactId>apitestbase-jms-solace</artifactId>
