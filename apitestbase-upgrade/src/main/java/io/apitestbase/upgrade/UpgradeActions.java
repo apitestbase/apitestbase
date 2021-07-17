@@ -1,5 +1,6 @@
 package io.apitestbase.upgrade;
 
+import io.apitestbase.upgrade.files.*;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jdbi.v3.core.Jdbi;
 import org.reflections.Reflections;
@@ -45,6 +46,8 @@ public class UpgradeActions {
         //  ------------------------- below steps will modify files in <APITestBase_Home> -------------------------
 
         copyFilesToBeUpgraded(apiTestBaseHome, systemDatabaseVersion, jarFileVersion);
+
+        deleteObsoleteFiles(apiTestBaseHome, systemDatabaseVersion, jarFileVersion);
 
         deleteOldJarsFromAPITestBaseHome(apiTestBaseHome);
 
@@ -151,15 +154,33 @@ public class UpgradeActions {
 
     private void copyFilesToBeUpgraded(String apiTestBaseHome, DefaultArtifactVersion oldVersion,
                                        DefaultArtifactVersion newVersion) throws IOException {
-        List<CopyFilesForOneVersionUpgrade> applicableCopyFiles =
-                new CopyFiles().getApplicableCopyFiles(oldVersion, newVersion);
-        for (CopyFilesForOneVersionUpgrade filesForOneVersionUpgrade: applicableCopyFiles) {
-            Map<String, String> filePathMap = filesForOneVersionUpgrade.getFilePathMap();
+        List<FilesOperationForOneVersionUpgrade> applicableCopyFiles =
+                new CopyFiles().getApplicableFilesOperations(oldVersion, newVersion);
+        for (FilesOperationForOneVersionUpgrade filesForOneVersionUpgrade: applicableCopyFiles) {
+            CopyFilesForOneVersionUpgrade copyFilesForOneVersionUpgrade =
+                    (CopyFilesForOneVersionUpgrade) filesForOneVersionUpgrade;
+            Map<String, String> filePathMap = copyFilesForOneVersionUpgrade.getFilePathMap();
             for (Map.Entry<String, String> mapEntry: filePathMap.entrySet()) {
                 Path sourceFilePath = Paths.get(".", mapEntry.getKey()).toAbsolutePath();
                 Path targetFilePath = Paths.get(apiTestBaseHome, mapEntry.getValue()).toAbsolutePath();
                 Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
                 LOGGER.info("Copied " + sourceFilePath + " to " + targetFilePath + ".");
+            }
+        }
+    }
+
+    private void deleteObsoleteFiles(String apiTestBaseHome, DefaultArtifactVersion oldVersion,
+                                       DefaultArtifactVersion newVersion) throws IOException {
+        List<FilesOperationForOneVersionUpgrade> applicableDeleteFiles =
+                new DeleteFiles().getApplicableFilesOperations(oldVersion, newVersion);
+        for (FilesOperationForOneVersionUpgrade filesForOneVersionUpgrade: applicableDeleteFiles) {
+            DeleteFilesForOneVersionUpgrade deleteFilesForOneVersionUpgrade =
+                    (DeleteFilesForOneVersionUpgrade) filesForOneVersionUpgrade;
+            List<String> filePathList = deleteFilesForOneVersionUpgrade.getFilePathList();
+            for (String filePath: filePathList) {
+                Path file = Paths.get(apiTestBaseHome, filePath).toAbsolutePath();
+                Files.delete(file);
+                LOGGER.info("Deleted " + file + ".");
             }
         }
     }

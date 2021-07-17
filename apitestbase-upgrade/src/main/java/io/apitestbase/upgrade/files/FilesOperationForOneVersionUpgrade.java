@@ -1,16 +1,12 @@
-package io.apitestbase.upgrade;
+package io.apitestbase.upgrade.files;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class CopyFilesForOneVersionUpgrade {
+public class FilesOperationForOneVersionUpgrade {
     private DefaultArtifactVersion fromVersion;
     private DefaultArtifactVersion toVersion;
-    private Map<String, String> filePathMap = new HashMap<>();
 
-    public CopyFilesForOneVersionUpgrade(DefaultArtifactVersion fromVersion, DefaultArtifactVersion toVersion) {
+    public FilesOperationForOneVersionUpgrade(DefaultArtifactVersion fromVersion, DefaultArtifactVersion toVersion) {
         this.fromVersion = fromVersion;
         this.toVersion = toVersion;
     }
@@ -21,9 +17,5 @@ public class CopyFilesForOneVersionUpgrade {
 
     public DefaultArtifactVersion getToVersion() {
         return toVersion;
-    }
-
-    public Map<String, String> getFilePathMap() {
-        return filePathMap;
     }
 }
