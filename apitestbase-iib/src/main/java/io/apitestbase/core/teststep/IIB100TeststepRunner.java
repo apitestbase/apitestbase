@@ -81,8 +81,6 @@ public class IIB100TeststepRunner extends TeststepRunner {
                 default:
                     throw new Exception("Unrecognized action " + action);
             }
-        } catch (Exception e) {
-            System.out.println(e);
         } finally {
             if (brokerProxy != null) {
                 brokerProxy.disconnect();
