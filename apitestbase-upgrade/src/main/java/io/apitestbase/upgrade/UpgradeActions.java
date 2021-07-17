@@ -1,6 +1,7 @@
 package io.apitestbase.upgrade;
 
 import io.apitestbase.upgrade.files.*;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jdbi.v3.core.Jdbi;
 import org.reflections.Reflections;
@@ -178,9 +179,15 @@ public class UpgradeActions {
                     (DeleteFilesForOneVersionUpgrade) filesForOneVersionUpgrade;
             List<String> filePathList = deleteFilesForOneVersionUpgrade.getFilePathList();
             for (String filePath: filePathList) {
-                Path file = Paths.get(apiTestBaseHome, filePath).toAbsolutePath();
-                Files.delete(file);
-                LOGGER.info("Deleted " + file + ".");
+                Path path = Paths.get(apiTestBaseHome, filePath).toAbsolutePath();
+                if (Files.exists(path)) {
+                    if (Files.isDirectory(path)) {
+                        FileUtils.deleteDirectory(path.toFile());
+                    } else {
+                        Files.delete(path);
+                    }
+                    LOGGER.info("Deleted " + path + ".");
+                }
             }
         }
     }
