@@ -1,12 +1,15 @@
-package io.apitestbase.upgrade.files;
+package io.apitestbase.upgrade.operations;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
-public class FilesOperationForOneVersionUpgrade {
+/**
+ * Operation for one version upgrade.
+ */
+public class Operation {
     private DefaultArtifactVersion fromVersion;
     private DefaultArtifactVersion toVersion;
 
-    public FilesOperationForOneVersionUpgrade(DefaultArtifactVersion fromVersion, DefaultArtifactVersion toVersion) {
+    public Operation(DefaultArtifactVersion fromVersion, DefaultArtifactVersion toVersion) {
         this.fromVersion = fromVersion;
         this.toVersion = toVersion;
     }

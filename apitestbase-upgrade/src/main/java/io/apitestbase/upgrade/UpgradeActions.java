@@ -1,6 +1,6 @@
 package io.apitestbase.upgrade;
 
-import io.apitestbase.upgrade.files.*;
+import io.apitestbase.upgrade.operations.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jdbi.v3.core.Jdbi;
@@ -106,17 +106,8 @@ public class UpgradeActions {
     }
 
     private boolean clearBrowserCacheIfNeeded(DefaultArtifactVersion oldVersion, DefaultArtifactVersion newVersion) {
-        boolean clearBrowserCacheNeeded = false;
-        ClearBrowserCache cleanBrowserCache = new ClearBrowserCache();
-        Map<DefaultArtifactVersion, DefaultArtifactVersion> versionMap = cleanBrowserCache.getVersionMap();
-        for (Map.Entry<DefaultArtifactVersion, DefaultArtifactVersion> entry: versionMap.entrySet()) {
-            DefaultArtifactVersion fromVersion = entry.getKey();
-            DefaultArtifactVersion toVersion = entry.getValue();
-            if (fromVersion.compareTo(oldVersion) >= 0 && toVersion.compareTo(newVersion) <=0) {
-                clearBrowserCacheNeeded = true;
-                break;
-            }
-        }
+        boolean clearBrowserCacheNeeded =
+                new ClearBrowserCacheOperationList().hasAtLeastOneApplicableOperation(oldVersion, newVersion);
         if (clearBrowserCacheNeeded) {
             LOGGER.info("Please clear browser cached images and files (last hour is enough). To confirm clear completion, type y and then Enter.");
             Scanner scanner = new Scanner(System.in);
@@ -155,12 +146,12 @@ public class UpgradeActions {
 
     private void copyFilesToBeUpgraded(String apiTestBaseHome, DefaultArtifactVersion oldVersion,
                                        DefaultArtifactVersion newVersion) throws IOException {
-        List<FilesOperationForOneVersionUpgrade> applicableCopyFiles =
-                new CopyFiles().getApplicableFilesOperations(oldVersion, newVersion);
-        for (FilesOperationForOneVersionUpgrade filesForOneVersionUpgrade: applicableCopyFiles) {
-            CopyFilesForOneVersionUpgrade copyFilesForOneVersionUpgrade =
-                    (CopyFilesForOneVersionUpgrade) filesForOneVersionUpgrade;
-            Map<String, String> filePathMap = copyFilesForOneVersionUpgrade.getFilePathMap();
+        List<Operation> applicableCopyFiles =
+                new CopyFilesOperationList().getApplicableOperations(oldVersion, newVersion);
+        for (Operation filesForOneVersionUpgrade: applicableCopyFiles) {
+            CopyFilesOperation copyFilesOperation =
+                    (CopyFilesOperation) filesForOneVersionUpgrade;
+            Map<String, String> filePathMap = copyFilesOperation.getFilePathMap();
             for (Map.Entry<String, String> mapEntry: filePathMap.entrySet()) {
                 Path sourceFilePath = Paths.get(".", mapEntry.getKey()).toAbsolutePath();
                 Path targetFilePath = Paths.get(apiTestBaseHome, mapEntry.getValue()).toAbsolutePath();
@@ -172,12 +163,12 @@ public class UpgradeActions {
 
     private void deleteObsoleteFiles(String apiTestBaseHome, DefaultArtifactVersion oldVersion,
                                        DefaultArtifactVersion newVersion) throws IOException {
-        List<FilesOperationForOneVersionUpgrade> applicableDeleteFiles =
-                new DeleteFiles().getApplicableFilesOperations(oldVersion, newVersion);
-        for (FilesOperationForOneVersionUpgrade filesForOneVersionUpgrade: applicableDeleteFiles) {
-            DeleteFilesForOneVersionUpgrade deleteFilesForOneVersionUpgrade =
-                    (DeleteFilesForOneVersionUpgrade) filesForOneVersionUpgrade;
-            List<String> filePathList = deleteFilesForOneVersionUpgrade.getFilePathList();
+        List<Operation> applicableDeleteFiles =
+                new DeleteFilesOperationList().getApplicableOperations(oldVersion, newVersion);
+        for (Operation filesForOneVersionUpgrade: applicableDeleteFiles) {
+            DeleteFilesOperation deleteFilesOperation =
+                    (DeleteFilesOperation) filesForOneVersionUpgrade;
+            List<String> filePathList = deleteFilesOperation.getFilePathList();
             for (String filePath: filePathList) {
                 Path path = Paths.get(apiTestBaseHome, filePath).toAbsolutePath();
                 if (Files.exists(path)) {

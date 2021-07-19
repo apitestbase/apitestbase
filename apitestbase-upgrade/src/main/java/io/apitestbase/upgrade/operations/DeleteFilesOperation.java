@@ -1,14 +1,14 @@
-package io.apitestbase.upgrade.files;
+package io.apitestbase.upgrade.operations;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeleteFilesForOneVersionUpgrade extends FilesOperationForOneVersionUpgrade {
+public class DeleteFilesOperation extends Operation {
     private List<String> filePathList = new ArrayList<>();
 
-    public DeleteFilesForOneVersionUpgrade(DefaultArtifactVersion fromVersion, DefaultArtifactVersion toVersion) {
+    public DeleteFilesOperation(DefaultArtifactVersion fromVersion, DefaultArtifactVersion toVersion) {
         super(fromVersion, toVersion);
     }
 
