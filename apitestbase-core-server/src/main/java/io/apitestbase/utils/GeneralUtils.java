@@ -11,7 +11,6 @@ import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.github.tomakehurst.wiremock.verification.notmatched.PlainTextStubNotMatchedRenderer;
-import com.google.common.net.UrlEscapers;
 import io.apitestbase.core.teststep.HTTPAPIResponse;
 import io.apitestbase.db.SQLStatementType;
 import io.apitestbase.models.*;
@@ -131,27 +130,24 @@ public final class GeneralUtils {
             throw new RuntimeException("Invalid URL");
         }
 
-        //  to allow special characters like whitespace in query parameters
-        String safeUrl = UrlEscapers.urlFragmentEscaper().escape(url);
-
         //  create HTTP request object and set body if applicable
         HttpUriRequest httpRequest;
         switch (httpMethod) {
             case GET:
-                httpRequest = new HttpGet(safeUrl);
+                httpRequest = new HttpGet(url);
                 break;
             case POST:
-                HttpPost httpPost = new HttpPost(safeUrl);
+                HttpPost httpPost = new HttpPost(url);
                 httpPost.setEntity(httpBody == null ? null : new StringEntity(httpBody, "UTF-8"));    //  StringEntity doesn't accept null string (exception is thrown)
                 httpRequest = httpPost;
                 break;
             case PUT:
-                HttpPut httpPut = new HttpPut(safeUrl);
+                HttpPut httpPut = new HttpPut(url);
                 httpPut.setEntity(httpBody == null ? null : new StringEntity(httpBody, "UTF-8"));     //  StringEntity doesn't accept null string (exception is thrown)
                 httpRequest = httpPut;
                 break;
             case DELETE:
-                httpRequest = new HttpDelete(safeUrl);
+                httpRequest = new HttpDelete(url);
                 break;
             default:
                 throw new IllegalArgumentException("Unrecognized HTTP method " + httpMethod);
