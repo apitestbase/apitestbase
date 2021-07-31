@@ -132,7 +132,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
             BytesXMLMessage msg;
 
             do {
-                msg = receiver.receive(100);      //  this timeout is only affecting the time wait after fetching the last message, or when the queue is empty
+                msg = receiver.receive(250);      //  this timeout is only affecting the time wait after fetching the last message, or when the queue is empty
                 if (msg != null) {
                     clearedMessagesCount++;
                 }
@@ -159,7 +159,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
 
             BrowserProperties properties = new BrowserProperties();
             properties.setEndpoint(queue);
-            properties.setWaitTimeout(200);                   //  50 is too small and often causes incomplete depth check
+            properties.setWaitTimeout(250);                   //  50 is too small and often causes incomplete depth check
             Browser browser = session.createBrowser(properties);
             BytesXMLMessage message;
             do {
