@@ -13,7 +13,7 @@ public class HTTPTeststepProperties extends Properties {
     private HTTPMethod httpMethod;
 
     //  using List instead of Map here to ease the display on ui-grid
-    private List<HTTPHeader> httpHeaders = new ArrayList<HTTPHeader>();
+    private List<HTTPHeader> httpHeaders = new ArrayList<>();
 
     public HTTPMethod getHttpMethod() {
         return httpMethod;

@@ -1,5 +1,6 @@
 package io.apitestbase.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.resources.ResourceJsonViews;
@@ -7,6 +8,7 @@ import io.apitestbase.resources.ResourceJsonViews;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Testcase {
     private long id;
     @JsonView(ResourceJsonViews.TestcaseExport.class)

@@ -1,11 +1,13 @@
 package io.apitestbase.models.assertion;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.models.Properties;
 import io.apitestbase.resources.ResourceJsonViews;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Assertion {
     public static final String TYPE_STATUS_CODE_EQUAL = "StatusCodeEqual";
     public static final String TYPE_CONTAINS = "Contains";

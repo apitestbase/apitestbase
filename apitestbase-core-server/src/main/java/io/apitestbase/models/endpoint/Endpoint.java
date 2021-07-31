@@ -1,11 +1,13 @@
 package io.apitestbase.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.models.Environment;
 import io.apitestbase.resources.ResourceJsonViews;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Endpoint {
     public static final String TYPE_HTTP = "HTTP";
     public static final String TYPE_SOAP = "SOAP";

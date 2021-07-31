@@ -1,5 +1,6 @@
 package io.apitestbase.models.teststep;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -12,6 +13,7 @@ import io.apitestbase.resources.ResourceJsonViews;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Teststep {
     public static final String TYPE_HTTP = "HTTP";
     public static final String TYPE_SOAP = "SOAP";

@@ -92,13 +92,17 @@ angular.module('apitestbase').controller('AssertionsController', ['$scope', '$ro
     };
 
     $scope.assertionsModelObj.createAssertion = function(type) {
-      var name = GeneralUtils.getNextNameInSequence($scope.teststep.assertions, type + ' ');
+      if (!$scope.teststep.assertions) {
+        $scope.teststep.assertions = [];
+      }
+      var assertions = $scope.teststep.assertions;
+      var name = GeneralUtils.getNextNameInSequence(assertions, type + ' ');
       var assertion = {
         name: name,
         type: type,
         otherProperties: {}  //  adding this property here to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
       };
-      $scope.teststep.assertions.push(assertion);
+      assertions.push(assertion);
       var selectNewlyCreatedAssertionInGrid = function() {
         selectAssertionInGridByProperty('name', name);
       };
