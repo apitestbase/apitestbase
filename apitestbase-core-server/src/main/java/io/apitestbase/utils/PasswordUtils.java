@@ -1,6 +1,8 @@
 package io.apitestbase.utils;
 
+import io.apitestbase.APITestBaseConstants;
 import io.apitestbase.core.HashedPassword;
+import io.apitestbase.models.endpoint.Endpoint;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.SecretKey;
@@ -39,7 +41,7 @@ public final class PasswordUtils {
     }
 
     private static String hashPassword(String password, byte[] salt) {
-        SecretKey secretKey = null;
+        SecretKey secretKey;
         try {
             SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(DEFAULT_PASSWORD_HASHING_ALGORITHM);
             PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, DEFAULT_KDF_ITERATIONS, KDF_KEY_LENGTH);
@@ -49,5 +51,11 @@ public final class PasswordUtils {
         }
         byte[] derivedKey = secretKey.getEncoded();
         return Base64.encodeBase64String(derivedKey);
+    }
+
+    public static void maskEndpointPasswordForAPIResponse(Endpoint endpoint) {
+        if (endpoint != null && endpoint.getPassword() != null && !"".equals(endpoint.getPassword())) {
+            endpoint.setPassword(APITestBaseConstants.PASSWORD_MASK);
+        }
     }
 }

@@ -4,6 +4,7 @@ import io.apitestbase.APITestBaseConstants;
 import io.apitestbase.models.AppMode;
 import io.apitestbase.models.endpoint.*;
 import io.apitestbase.models.teststep.Teststep;
+import io.apitestbase.utils.PasswordUtils;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -132,9 +133,7 @@ public interface EndpointDAO {
 
     default Endpoint findById_MaskingPassword(long id) {
         Endpoint endpoint = findById_NotMaskingPassword(id);
-        if (endpoint != null && endpoint.getPassword() != null && !"".equals(endpoint.getPassword())) {
-            endpoint.setPassword(APITestBaseConstants.PASSWORD_MASK);
-        }
+        PasswordUtils.maskEndpointPasswordForAPIResponse(endpoint);
         return endpoint;
     }
 
