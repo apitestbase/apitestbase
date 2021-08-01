@@ -1,5 +1,6 @@
 package io.apitestbase.db;
 
+import io.apitestbase.APITestBaseConstants;
 import io.apitestbase.models.AppMode;
 import io.apitestbase.models.endpoint.*;
 import io.apitestbase.models.teststep.Teststep;
@@ -109,7 +110,7 @@ public interface EndpointDAO {
     @SqlUpdate("update endpoint set environment_id = :evId, name = :ep.name, type = :ep.type, " +
             "description = :ep.description, url = :ep.url, host = :ep.host, port = :ep.port, " +
             "username = :ep.username, password = CASE " +
-                "WHEN COALESCE(password, '') <> COALESCE(:ep.password, '') " + // encrypt only when password is changed
+                "WHEN COALESCE(:ep.password, '') <> '" + APITestBaseConstants.PASSWORD_MASK + "' " + // encrypt only when password is changed
                     "THEN ENCRYPT('AES', '" + ENDPOINT_PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)) " +
                 "ELSE password END, " +
             "other_properties = :ep.otherProperties, updated = CURRENT_TIMESTAMP where id = :ep.id")
@@ -127,7 +128,15 @@ public interface EndpointDAO {
             "select ep.*, ev.name as environment_name " +
             "from endpoint ep left outer join environment ev on ep.environment_id = ev.id " +
             "where ep.id = :id")
-    Endpoint findById(@Bind("id") long id);
+    Endpoint findById_NotMaskingPassword(@Bind("id") long id);
+
+    default Endpoint findById_MaskingPassword(long id) {
+        Endpoint endpoint = findById_NotMaskingPassword(id);
+        if (endpoint != null && endpoint.getPassword() != null && !"".equals(endpoint.getPassword())) {
+            endpoint.setPassword(APITestBaseConstants.PASSWORD_MASK);
+        }
+        return endpoint;
+    }
 
     @SqlQuery("select id, environment_id, name, type, description from endpoint where environment_id = :environmentId")
     List<Endpoint> findByEnvironmentId_EnvironmentEditView(@Bind("environmentId") long environmentId);

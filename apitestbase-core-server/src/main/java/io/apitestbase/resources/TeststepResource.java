@@ -2,6 +2,7 @@ package io.apitestbase.resources;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.apitestbase.APITestBaseConstants;
 import io.apitestbase.core.teststep.*;
 import io.apitestbase.db.*;
 import io.apitestbase.models.AppInfo;
@@ -12,6 +13,7 @@ import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.teststep.*;
 import io.apitestbase.utils.GeneralUtils;
 import io.apitestbase.utils.XMLUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -93,6 +95,12 @@ public class TeststepResource {
         } else {
             teststep = teststepDAO.findById_Complete(teststepId);
         }
+
+        Endpoint endpoint = teststep.getEndpoint();
+        if (endpoint != null && endpoint.getPassword() != null && !"".equals(endpoint.getPassword())) {
+            endpoint.setPassword(APITestBaseConstants.PASSWORD_MASK);
+        }
+
         return teststep;
     }
 
@@ -117,8 +125,7 @@ public class TeststepResource {
         teststepDAO.update(teststep);
 
         TeststepWrapper wrapper = new TeststepWrapper();
-        Teststep newTeststep = teststep.getRequestType() == TeststepRequestType.FILE ?
-                teststepDAO.findById_NoRequest(teststep.getId()) : teststepDAO.findById_Complete(teststep.getId());
+        Teststep newTeststep = _findById(teststep.getId());
         wrapper.setTeststep(newTeststep);
         populateParametersInWrapper(wrapper);
 

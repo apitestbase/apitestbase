@@ -1,5 +1,6 @@
 package io.apitestbase.resources;
 
+import io.apitestbase.APITestBaseConstants;
 import io.apitestbase.db.EndpointDAO;
 import io.apitestbase.models.AppInfo;
 import io.apitestbase.models.AppMode;
@@ -52,7 +53,7 @@ public class ManagedEndpointResource {
     @PermitAll
     public Endpoint update(Endpoint endpoint) {
         endpointDAO.update(endpoint);
-        return endpointDAO.findById(endpoint.getId());
+        return findById(endpoint.getId());
     }
 
     @DELETE @Path("endpoints/{endpointId}")
@@ -63,7 +64,7 @@ public class ManagedEndpointResource {
 
     @GET @Path("endpoints/{endpointId}")
     public Endpoint findById(@PathParam("endpointId") long endpointId) {
-        Endpoint endpoint = endpointDAO.findById(endpointId);
+        Endpoint endpoint = endpointDAO.findById_MaskingPassword(endpointId);
         return endpoint;
     }
 

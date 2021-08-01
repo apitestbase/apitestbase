@@ -81,7 +81,7 @@ public class DataTableResource {
 
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/updateCell")
-    public void updateCell(DataTableCell dataTableCell) throws InterruptedException {
+    public void updateCell(DataTableCell dataTableCell) {
         dataTableCellDAO.update(dataTableCell,
                 dataTableCell.getEndpoint() == null ? null : dataTableCell.getEndpoint().getId());
     }

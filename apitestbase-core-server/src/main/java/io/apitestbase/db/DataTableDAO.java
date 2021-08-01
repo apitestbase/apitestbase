@@ -41,7 +41,7 @@ public interface DataTableDAO extends CrossReferenceDAO {
                 short rowSequence = cellInColumn.getRowSequence();
 
                 if (column.getType() != DataTableColumnType.STRING && cellInColumn.getEndpoint() != null) {
-                    cellInColumn.setEndpoint(endpointDAO().findById(cellInColumn.getEndpoint().getId()));
+                    cellInColumn.setEndpoint(endpointDAO().findById_NotMaskingPassword(cellInColumn.getEndpoint().getId()));
                 }
 
                 if (!rowSequenceMap.containsKey(rowSequence)) {

@@ -463,7 +463,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default void populateTeststepWithOtherDetails(Teststep teststep) {
-        Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
+        Endpoint endpoint = endpointDAO().findById_NotMaskingPassword(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
         teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
         teststep.setPropertyExtractors(propertyExtractorDAO().findByTeststepId(teststep.getId()));

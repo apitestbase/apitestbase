@@ -1,11 +1,13 @@
 package io.apitestbase.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.resources.ResourceJsonViews;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Environment {
     private long id;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.DataTableUIGrid.class})

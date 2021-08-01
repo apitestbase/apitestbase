@@ -33,4 +33,6 @@ public interface APITestBaseConstants {
 
     String WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_ID = "apiTestBaseId";
     String WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_NUMBER = "apiTestBaseNumber";
+
+    String PASSWORD_MASK = "ATB-password-mask-1627810872357";
 }
