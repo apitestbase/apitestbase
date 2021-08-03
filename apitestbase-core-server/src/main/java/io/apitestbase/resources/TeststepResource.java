@@ -39,15 +39,17 @@ public class TeststepResource {
     private UtilsDAO utilsDAO;
     private DataTableDAO dataTableDAO;
     private AssertionDAO assertionDAO;
+    private EndpointDAO endpointDAO;
 
     public TeststepResource(AppInfo appInfo, TeststepDAO teststepDAO, UserDefinedPropertyDAO udpDAO, UtilsDAO utilsDAO,
-                            DataTableDAO dataTableDAO, AssertionDAO assertionDAO) {
+                            DataTableDAO dataTableDAO, AssertionDAO assertionDAO, EndpointDAO endpointDAO) {
         this.appInfo = appInfo;
         this.teststepDAO = teststepDAO;
         this.udpDAO = udpDAO;
         this.utilsDAO = utilsDAO;
         this.dataTableDAO = dataTableDAO;
         this.assertionDAO = assertionDAO;
+        this.endpointDAO = endpointDAO;
     }
 
     @POST
@@ -158,6 +160,11 @@ public class TeststepResource {
         //  fetch API request binary if its type is file
         if (Teststep.TYPE_FTP.equals(teststep.getType()) && teststep.getApiRequest() instanceof FtpPutRequestFileFromFile) {
             teststep.setApiRequest(teststepDAO.getAPIRequestById(teststep.getId()));
+        }
+
+        Endpoint endpoint = teststep.getEndpoint();
+        if (endpoint != null) {
+            endpoint.setPassword(endpointDAO.getEncryptedPasswordById(endpoint.getId()));
         }
 
         //  gather referenceable string properties and endpoint properties

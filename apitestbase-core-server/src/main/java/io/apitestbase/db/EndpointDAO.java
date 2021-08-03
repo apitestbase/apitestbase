@@ -172,4 +172,7 @@ public interface EndpointDAO {
             "and e.id is not null and e.environment_id is not null")
     @GetGeneratedKeys
     long duplicateManagedEndpointIntoUnmanaged(@Bind("teststepId") long teststepId);
+
+    @SqlQuery("select password from endpoint where id = :id")
+    String getEncryptedPasswordById(@Bind("id") long id);
 }
