@@ -1,6 +1,8 @@
-package io.apitestbase.models.teststep;
+package io.apitestbase.models.teststep.apirequest;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.apitestbase.models.teststep.JMSMessageProperty;
+import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.resources.ResourceJsonViews;
 
 import java.util.ArrayList;

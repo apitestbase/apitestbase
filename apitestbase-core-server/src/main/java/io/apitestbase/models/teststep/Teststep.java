@@ -8,6 +8,7 @@ import io.apitestbase.models.Properties;
 import io.apitestbase.models.assertion.Assertion;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.propertyextractor.PropertyExtractor;
+import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.resources.ResourceJsonViews;
 
 import java.util.ArrayList;

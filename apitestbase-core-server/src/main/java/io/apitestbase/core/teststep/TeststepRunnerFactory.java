@@ -7,7 +7,7 @@ import io.apitestbase.core.testcase.TestcaseRunContext;
 import io.apitestbase.db.UtilsDAO;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.endpoint.JMSEndpointProperties;
-import io.apitestbase.models.teststep.APIRequest;
+import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.TeststepRequestType;

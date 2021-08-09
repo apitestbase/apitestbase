@@ -10,6 +10,7 @@ import io.apitestbase.models.UserDefinedProperty;
 import io.apitestbase.models.assertion.Assertion;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.teststep.*;
+import io.apitestbase.models.teststep.apirequest.FtpPutRequestFileFromFile;
 import io.apitestbase.utils.GeneralUtils;
 import io.apitestbase.utils.PasswordUtils;
 import io.apitestbase.utils.XMLUtils;

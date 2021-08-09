@@ -2,7 +2,7 @@ package io.apitestbase.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apitestbase.models.endpoint.Endpoint;
-import io.apitestbase.models.teststep.APIRequest;
+import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.TeststepRequestType;
 import io.apitestbase.utils.GeneralUtils;

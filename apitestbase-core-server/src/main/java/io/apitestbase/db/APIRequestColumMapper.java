@@ -1,7 +1,7 @@
 package io.apitestbase.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.apitestbase.models.teststep.APIRequest;
+import io.apitestbase.models.teststep.apirequest.APIRequest;
 import org.jdbi.v3.core.mapper.ColumnMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 

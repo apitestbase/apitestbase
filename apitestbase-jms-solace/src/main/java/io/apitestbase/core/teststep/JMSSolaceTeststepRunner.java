@@ -6,6 +6,8 @@ import com.solacesystems.jms.SolJmsUtility;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.endpoint.JMSSolaceEndpointProperties;
 import io.apitestbase.models.teststep.*;
+import io.apitestbase.models.teststep.apirequest.APIRequest;
+import io.apitestbase.models.teststep.apirequest.JMSRequest;
 
 import javax.jms.Connection;
 import javax.jms.MessageProducer;

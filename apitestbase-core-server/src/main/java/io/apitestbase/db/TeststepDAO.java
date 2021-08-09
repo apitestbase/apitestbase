@@ -11,6 +11,7 @@ import io.apitestbase.models.assertion.IntegerEqualAssertionProperties;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.propertyextractor.PropertyExtractor;
 import io.apitestbase.models.teststep.*;
+import io.apitestbase.models.teststep.apirequest.*;
 import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.io.IOUtils;
 import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;

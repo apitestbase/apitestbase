@@ -1,7 +1,7 @@
 package io.apitestbase.core.teststep;
 
 import io.apitestbase.models.endpoint.Endpoint;
-import io.apitestbase.models.teststep.MQTTRequest;
+import io.apitestbase.models.teststep.apirequest.MQTTRequest;
 import io.apitestbase.models.teststep.MQTTTeststepProperties;
 import io.apitestbase.models.teststep.Teststep;
 import org.apache.commons.lang3.StringUtils;
