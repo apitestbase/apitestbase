@@ -92,6 +92,14 @@ angular.module('apitestbase').controller('JMSTeststepActionController', ['$scope
       data: 'teststep.apiRequest.properties', enableColumnMenus: false,
       columnDefs: [
         {
+          name: 'type', width: '10%', enableCellEdit: true, enableCellEditOnFocus: true,
+          editableCellTemplate: 'ui-grid/dropdownEditor', editDropdownOptionsArray: [
+            { id: 'String', value: 'String'}, { id: 'Boolean', value: 'Boolean' },
+            { id: 'Short', value: 'Short'}, { id: 'Integer', value: 'Integer' },
+            { id: 'Long', value: 'Long'}, { id: 'Float', value: 'Float' }, { id: 'Double', value: 'Double' }
+          ]
+        },
+        {
           name: 'name', width: '30%', enableCellEdit: true, enableCellEditOnFocus: true,
           editableCellTemplate: 'requestPropertiesGridEditableCellTemplate.html'
         },

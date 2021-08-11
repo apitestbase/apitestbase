@@ -2,7 +2,6 @@ package io.apitestbase.models.teststep.apirequest;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.models.teststep.JMSMessageProperty;
-import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.resources.ResourceJsonViews;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class JMSRequest extends APIRequest {
     private String body;
 
     //  using List instead of Map here to ease the display on ui-grid
-    private List<JMSMessageProperty> properties = new ArrayList<JMSMessageProperty>();
+    private List<JMSMessageProperty> properties = new ArrayList<>();
 
     public String getBody() {
         return body;

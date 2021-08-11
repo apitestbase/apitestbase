@@ -7,6 +7,7 @@ import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.endpoint.JMSSolaceEndpointProperties;
 import io.apitestbase.models.teststep.*;
 import io.apitestbase.models.teststep.apirequest.APIRequest;
+import io.apitestbase.models.teststep.apirequest.JMSMessagePropertyType;
 import io.apitestbase.models.teststep.apirequest.JMSRequest;
 
 import javax.jms.Connection;
@@ -192,7 +193,31 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
             JMSRequest request = (JMSRequest) apiRequest;
             javax.jms.TextMessage message = session.createTextMessage(request.getBody());
             for (JMSMessageProperty property: request.getProperties()) {
-                message.setStringProperty(property.getName(), property.getValue());
+                switch (property.getType()) {
+                    case STRING:
+                        message.setStringProperty(property.getName(), property.getValue());
+                        break;
+                    case BOOLEAN:
+                        message.setBooleanProperty(property.getName(), Boolean.parseBoolean(property.getValue()));
+                        break;
+                    case SHORT:
+                        message.setShortProperty(property.getName(), Short.parseShort(property.getValue()));
+                        break;
+                    case INTEGER:
+                        message.setIntProperty(property.getName(), Integer.parseInt(property.getValue()));
+                        break;
+                    case LONG:
+                        message.setLongProperty(property.getName(), Long.parseLong(property.getValue()));
+                        break;
+                    case FLOAT:
+                        message.setFloatProperty(property.getName(), Float.parseFloat(property.getValue()));
+                        break;
+                    case DOUBLE:
+                        message.setDoubleProperty(property.getName(), Double.parseDouble(property.getValue()));
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unrecognized property type " + property.getType() + ".");
+                }
             }
 
             messageProducer.send(message);
@@ -251,7 +276,11 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
                     Enumeration propertyNames = message.getPropertyNames();
                     while (propertyNames.hasMoreElements()) {
                         String propertyName = (String) propertyNames.nextElement();
-                        response.getProperties().put(propertyName, message.getStringProperty(propertyName));
+                        System.out.println();
+                        JMSMessageProperty jmsMessageProperty = new JMSMessageProperty(propertyName,
+                                message.getStringProperty(propertyName), JMSMessagePropertyType.getByText(
+                                        message.getObjectProperty(propertyName).getClass().getSimpleName()));
+                        response.getProperties().add(jmsMessageProperty);
                     }
 
                     //  set body

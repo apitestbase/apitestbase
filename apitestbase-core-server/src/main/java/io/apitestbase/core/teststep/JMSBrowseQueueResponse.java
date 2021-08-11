@@ -1,12 +1,15 @@
 package io.apitestbase.core.teststep;
 
+import io.apitestbase.models.teststep.JMSMessageProperty;
+
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class JMSBrowseQueueResponse extends APIResponse {
     private Map<String, String> header = new LinkedHashMap();
-    private Map<String, String> properties = new TreeMap();
+    private List<JMSMessageProperty> properties = new ArrayList<>();
     private String body;
 
     public Map<String, String> getHeader() {
@@ -17,11 +20,11 @@ public class JMSBrowseQueueResponse extends APIResponse {
         this.header = header;
     }
 
-    public Map<String, String> getProperties() {
+    public List<JMSMessageProperty> getProperties() {
         return properties;
     }
 
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(List<JMSMessageProperty> properties) {
         this.properties = properties;
     }
 
