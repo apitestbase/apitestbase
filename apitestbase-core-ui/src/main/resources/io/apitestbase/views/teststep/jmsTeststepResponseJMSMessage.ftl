@@ -43,15 +43,17 @@
           <table class="table table-condensed table-bordered table-hover">
             <thead>
               <tr>
+                <th width="10%">Type</th>
                 <th width="25%">Name</th>
                 <th>Value</th>
               </tr>
             </thead>
             <tbody>
-              <#list response.properties as propertyName, propertyValue>
+              <#list response.properties as property>
                 <tr>
-                  <td>${ propertyName }</td>
-                  <td>${ (propertyValue??)?then(propertyValue, '') }</td>
+                  <td>${ property.type }</td>
+                  <td>${ property.name }</td>
+                  <td>${ (property.value??)?then(property.value, '') }</td>
                 </tr>
               </#list>
             </tbody>

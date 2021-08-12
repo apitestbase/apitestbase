@@ -21,6 +21,7 @@
             <table class="table table-condensed table-bordered table-hover">
               <thead>
                 <tr>
+                  <th width="10%">Type</th>
                   <th width="30%">Name</th>
                   <th>Value</th>
                 </tr>
@@ -28,6 +29,7 @@
               <tbody>
                 <#list apiRequest.properties as property>
                   <tr>
+                    <td>${ property.type }</td>
                     <td>${ property.name }</td>
                     <td>${ property.value }</td>
                   </tr>
