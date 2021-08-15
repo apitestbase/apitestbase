@@ -2,8 +2,8 @@ package io.apitestbase.core.teststep;
 
 import io.apitestbase.models.HTTPMethod;
 import io.apitestbase.models.endpoint.Endpoint;
-import io.apitestbase.models.teststep.SOAPTeststepProperties;
 import io.apitestbase.models.teststep.Teststep;
+import io.apitestbase.models.teststep.apirequest.SOAPRequest;
 import io.apitestbase.utils.GeneralUtils;
 
 public class SOAPTeststepRunner extends TeststepRunner {
@@ -11,10 +11,10 @@ public class SOAPTeststepRunner extends TeststepRunner {
         Teststep teststep = getTeststep();
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         Endpoint endpoint = teststep.getEndpoint();
-        SOAPTeststepProperties otherProperties = (SOAPTeststepProperties) teststep.getOtherProperties();
+        SOAPRequest apiRequest = (SOAPRequest) teststep.getApiRequest();
         HTTPAPIResponse apiResponse = GeneralUtils.invokeHTTPAPI(
                 endpoint.getUrl(), endpoint.getUsername(), getDecryptedEndpointPassword(),
-                HTTPMethod.POST, otherProperties.getHttpHeaders(), (String) teststep.getRequest());
+                HTTPMethod.POST, apiRequest.getHeaders(), apiRequest.getBody());
         basicTeststepRun.setResponse(apiResponse);
 
         return basicTeststepRun;

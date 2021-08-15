@@ -18,7 +18,7 @@ public class Testcase {
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String description;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
-    private List<UserDefinedProperty> udps;
+    private List<UserDefinedProperty> udps = new ArrayList<>();
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<Teststep> teststeps;
     @JsonView(ResourceJsonViews.TestcaseExport.class)

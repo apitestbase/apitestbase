@@ -13,7 +13,7 @@
   <div ng-if="teststep.type === 'HTTP'">
     <label for="method" class="col-lg-1 control-label">Method</label>
     <div class="col-lg-1">
-      <select name="method" id="method" class="form-control" ng-model="teststep.otherProperties.httpMethod"
+      <select name="method" id="method" class="form-control" ng-model="teststep.apiRequest.method"
               ng-change="update(teststepForm.$valid)"
               ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
         <option value="GET">GET</option>
@@ -66,7 +66,7 @@ selected by default). -->
 
 <div class="form-group form-group-reduced-bottom-margin" height-adjustable-element-in-column="0.8">
   <div class="col-lg-6 full-height">
-    <textarea id="requestBody" name="requestBody" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
+    <textarea id="requestBody" name="requestBody" ng-model="teststep.apiRequest.body" ng-change="autoSave(teststepForm.$valid)"
               placeholder="Request Body" class="form-control full-height-important" spellcheck="false"
               ng-readonly="appStatus.isForbidden()" ng-show="showRequestBodyArea()"></textarea>
   </div>

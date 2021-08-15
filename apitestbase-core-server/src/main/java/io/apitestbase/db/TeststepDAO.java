@@ -94,10 +94,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
         String sampleRequest = null;
         switch (teststep.getType()) {
             case Teststep.TYPE_HTTP:
-                otherProperties = new HTTPTeststepProperties();
+                apiRequest = new HTTPRequest();
                 break;
             case Teststep.TYPE_SOAP:
-                otherProperties = new SOAPTeststepProperties();
+                apiRequest = new SOAPRequest();
                 break;
             case Teststep.TYPE_DB:
                 sampleRequest = "select * from ? where ?";
@@ -164,6 +164,12 @@ public interface TeststepDAO extends CrossReferenceDAO {
                                   @Bind("apiRequest") String apiRequest,
                                   @Bind("endpointId") Long endpointId);
 
+    @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
+            "api_request = :apiRequest, endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, " +
+            "updated = CURRENT_TIMESTAMP where id = :t.id")
+    void _updateWithRequest(@BindBean("t") Teststep teststep, @Bind("apiRequest") String apiRequest,
+                                  @Bind("endpointId") Long endpointId);
+
     @SqlUpdate("update teststep set name = :t.name, description = :t.description, request_type = :requestType, " +
             "request_filename = :t.requestFilename, action = :t.action, endpoint_id = :endpointId, " +
             "endpoint_property = :t.endpointProperty, other_properties = :t.otherProperties, updated = CURRENT_TIMESTAMP " +
@@ -199,12 +205,17 @@ public interface TeststepDAO extends CrossReferenceDAO {
         Endpoint newEndpoint = teststep.getEndpoint();
         Long newEndpointId = newEndpoint == null ? null : newEndpoint.getId();
 
-        if (teststep.getRequestType() == TeststepRequestType.FILE) {    // update teststep without file request (this can save memory, as file could be big)
-            _updateWithoutRequest(teststep, teststep.getRequestType().toString(), newEndpointId);
-        } else {       // update teststep with string request
-            Object request = teststep.getRequest() == null ? null : ((String) teststep.getRequest()).getBytes();
+        if (Teststep.TYPE_HTTP.equals(teststep.getType()) || Teststep.TYPE_SOAP.equals(teststep.getType())) {
             String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-            _updateWithStringRequest(teststep, request, teststep.getRequestType().toString(), apiRequest, newEndpointId);
+            _updateWithRequest(teststep, apiRequest, newEndpointId);
+        } else {
+            if (teststep.getRequestType() == TeststepRequestType.FILE) {    // update teststep without file request (this can save memory, as file could be big)
+                _updateWithoutRequest(teststep, teststep.getRequestType().toString(), newEndpointId);
+            } else {       // update teststep with string request
+                Object request = teststep.getRequest() == null ? null : ((String) teststep.getRequest()).getBytes();
+                String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
+                _updateWithStringRequest(teststep, request, teststep.getRequestType().toString(), apiRequest, newEndpointId);
+            }
         }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);
@@ -248,15 +259,17 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     default void processHTTPTeststepBackupRestore(Teststep oldTeststep, Teststep teststep) {
-        HTTPMethod oldHTTPMethod = ((HTTPTeststepProperties) oldTeststep.getOtherProperties()).getHttpMethod();
-        HTTPMethod newHTTPMethod = ((HTTPTeststepProperties) teststep.getOtherProperties()).getHttpMethod();
+        HTTPRequest newApiRequest = (HTTPRequest) teststep.getApiRequest();
+        HTTPMethod oldHTTPMethod = ((HTTPRequest) oldTeststep.getApiRequest()).getMethod();
+        HTTPMethod newHTTPMethod = newApiRequest.getMethod();
+
         if ((oldHTTPMethod == HTTPMethod.POST || oldHTTPMethod == HTTPMethod.PUT) &&
-                (newHTTPMethod == HTTPMethod.GET || newHTTPMethod == HTTPMethod.DELETE)) {  // backup and then clear request
-            saveStepDataBackupById(teststep.getId(), (String) teststep.getRequest());
-            teststep.setRequest(null);
+                (newHTTPMethod == HTTPMethod.GET || newHTTPMethod == HTTPMethod.DELETE)) {  // backup and then clear request body
+            saveStepDataBackupById(teststep.getId(), newApiRequest.getBody());
+            newApiRequest.setBody(null);
         } else if ((oldHTTPMethod == HTTPMethod.GET || oldHTTPMethod == HTTPMethod.DELETE) &&
-                (newHTTPMethod == HTTPMethod.POST || newHTTPMethod == HTTPMethod.PUT)) {  // restore request and then clear backup which is no longer useful
-            teststep.setRequest(getStepDataBackupById(teststep.getId()));
+                (newHTTPMethod == HTTPMethod.POST || newHTTPMethod == HTTPMethod.PUT)) {  // restore request body and then clear backup which is no longer useful
+            newApiRequest.setBody(getStepDataBackupById(teststep.getId()));
             saveStepDataBackupById(teststep.getId(), null);
         }
     }

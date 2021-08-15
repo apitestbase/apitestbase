@@ -20,7 +20,8 @@ public class TeststepMapper implements RowMapper<Teststep> {
 
         Teststep teststep;
         String type = rs.getString("type");
-        if (fields.contains("other_properties") && rs.getString("other_properties") != null) {
+        if (!Teststep.TYPE_HTTP.equals(type) && !Teststep.TYPE_SOAP.equals(type) &&
+                fields.contains("other_properties") && rs.getString("other_properties") != null) {
             String tempTeststepJSON = "{\"type\":\"" + type + "\",\"otherProperties\":" +
                     rs.getString("other_properties") + "}";
             try {
@@ -39,17 +40,21 @@ public class TeststepMapper implements RowMapper<Teststep> {
         teststep.setType(type);
         teststep.setDescription(rs.getString("description"));
         teststep.setAction(fields.contains("action") ? rs.getString("action") : null);
-        //  this line must go before the 'if (fields.contains("request")) {' block
-        teststep.setRequestType(fields.contains("request_type") ?
-                TeststepRequestType.getByText(rs.getString("request_type")) : null);
-        if (fields.contains("request")) {
-            byte[] requestBytes = rs.getBytes("request");
-            if (requestBytes != null) {
-                Object request = teststep.getRequestType() == TeststepRequestType.FILE ?
-                        requestBytes : new String(requestBytes);
-                teststep.setRequest(request);
+
+        if (!Teststep.TYPE_HTTP.equals(type) && !Teststep.TYPE_SOAP.equals(type)) {
+            //  this line must go before the 'if (fields.contains("request")) {' block
+            teststep.setRequestType(fields.contains("request_type") ?
+                    TeststepRequestType.getByText(rs.getString("request_type")) : null);
+            if (fields.contains("request")) {
+                byte[] requestBytes = rs.getBytes("request");
+                if (requestBytes != null) {
+                    Object request = teststep.getRequestType() == TeststepRequestType.FILE ?
+                            requestBytes : new String(requestBytes);
+                    teststep.setRequest(request);
+                }
             }
         }
+
         if (fields.contains("api_request") && rs.getString("api_request") != null) {
             try {
                 teststep.setApiRequest(new ObjectMapper().readValue(rs.getString("api_request"), APIRequest.class));

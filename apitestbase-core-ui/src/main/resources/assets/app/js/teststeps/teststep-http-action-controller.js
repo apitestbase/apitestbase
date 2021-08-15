@@ -25,16 +25,16 @@ angular.module('apitestbase').controller('TeststepHTTPActionController', ['$scop
 
     $scope.showRequestBodyArea = function() {
       var teststep = $scope.teststep;
-      return teststep.type === 'SOAP' || (teststep.type === 'HTTP' && (!teststep.otherProperties.httpMethod ||
-        teststep.otherProperties.httpMethod === 'POST' || teststep.otherProperties.httpMethod === 'PUT'));
+      return teststep.type === 'SOAP' || (teststep.type === 'HTTP' && (!teststep.apiRequest.method ||
+        teststep.apiRequest.method === 'POST' || teststep.apiRequest.method === 'PUT'));
     };
 
     var createHTTPHeader = function(gridMenuEvent) {
-      $scope.teststep.otherProperties.httpHeaders.push(
+      $scope.teststep.apiRequest.headers.push(
         { name: 'name1', value: 'value1' }
       );
       $scope.update(true, function selectTheNewRow() {
-        var headers = $scope.teststep.otherProperties.httpHeaders;
+        var headers = $scope.teststep.apiRequest.headers;
         $scope.requestHTTPHeaderGridApi.grid.modifyRows(headers);
         $scope.requestHTTPHeaderGridApi.selection.selectRow(headers[headers.length - 1]);
       });
@@ -42,13 +42,13 @@ angular.module('apitestbase').controller('TeststepHTTPActionController', ['$scop
 
     var deleteHTTPHeader = function(gridMenuEvent) {
       var selectedRow = $scope.requestHTTPHeaderGridApi.selection.getSelectedRows()[0];
-      var httpHeaders = $scope.teststep.otherProperties.httpHeaders;
+      var httpHeaders = $scope.teststep.apiRequest.headers;
       GeneralUtils.deleteArrayElementByProperty(httpHeaders, '$$hashKey', selectedRow.$$hashKey);
       $scope.update(true);
     };
 
-    $scope.$watch('teststep.otherProperties.httpHeaders', function() {
-      $scope.requestHTTPHeaderGridOptions.data = $scope.teststep.otherProperties.httpHeaders;
+    $scope.$watch('teststep.apiRequest.headers', function() {
+      $scope.requestHTTPHeaderGridOptions.data = $scope.teststep.apiRequest.headers;
     });
 
     $scope.requestHTTPHeaderGridOptions = {
@@ -158,7 +158,7 @@ angular.module('apitestbase').controller('TeststepHTTPActionController', ['$scop
       //  handle result from modal dialog
       modalInstance.result.then(function closed(operationInfo) {
         //  save the generated request to teststep (in parent scope/controller)
-        $scope.teststep.request = operationInfo.sampleRequest;
+        $scope.teststep.apiRequest.body = operationInfo.sampleRequest;
         $scope.update(true);  //  save immediately (no timeout)
       }, function dismissed() {
         //  Modal dismissed. Do nothing.
