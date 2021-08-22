@@ -1,6 +1,8 @@
 package io.apitestbase.upgrade;
 
 import io.apitestbase.upgrade.operations.*;
+import io.apitestbase.upgrade.operations.db.SystemDBOperation;
+import io.apitestbase.upgrade.operations.db.SystemDBOperationList;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jdbi.v3.core.Jdbi;
@@ -84,9 +86,8 @@ public class UpgradeActions {
     private boolean upgradeSystemDBInTempDirIfNeeded(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
                                             String apiTestBaseHome, String fullyQualifiedSystemDBURL, String user, String password,
                                             Path oldFolderInTempUpgradeDir, Path newFolderInTempUpgradeDir) throws IOException {
-        List<ResourceFile> applicableSystemDBUpgrades =
-                getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "db", "SystemDB", "sql");
-        boolean needsSystemDBUpgrade = !applicableSystemDBUpgrades.isEmpty();
+        boolean needsSystemDBUpgrade = new SystemDBOperationList()
+                .hasAtLeastOneApplicableOperation(systemDatabaseVersion, jarFileVersion);
         if (needsSystemDBUpgrade) {
             LOGGER.info("Please manually backup <APITestBase_Home>/database folder to your normal maintenance backup location. To confirm backup completion, type y and then Enter.");
             Scanner scanner = new Scanner(System.in);
@@ -96,7 +97,8 @@ public class UpgradeActions {
             }
             LOGGER.info("User confirmed system database backup completion.");
 
-            upgradeSystemDBInTempDir(apiTestBaseHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
+            upgradeSystemDBInTempDir(apiTestBaseHome, fullyQualifiedSystemDBURL, user, password,
+                    new SystemDBOperationList().getApplicableOperations(systemDatabaseVersion, jarFileVersion),
                     oldFolderInTempUpgradeDir, newFolderInTempUpgradeDir, jarFileVersion);
 
             return true;
@@ -213,10 +215,8 @@ public class UpgradeActions {
                     versionsInUpgradeFileName[1].replace("_", "."));
             if (fromVersionInUpgradeFileName.compareTo(oldVersion) >= 0 &&
                     toVersionInUpgradeFileName.compareTo(newVersion) <=0) {
-                ResourceFile upgradeResourceFile = new ResourceFile();
-                upgradeResourceFile.setResourcePath(upgradeFilePath);
-                upgradeResourceFile.setFromVersion(fromVersionInUpgradeFileName);
-                upgradeResourceFile.setToVersion(toVersionInUpgradeFileName);
+                ResourceFile upgradeResourceFile = new ResourceFile(
+                        fromVersionInUpgradeFileName, toVersionInUpgradeFileName, upgradeFilePath);
                 result.add(upgradeResourceFile);
             }
         }
@@ -236,9 +236,10 @@ public class UpgradeActions {
         return systemDBFileName;
     }
 
-    private void upgradeSystemDBInTempDir(String apiTestBaseHome, String fullyQualifiedSystemDBURL, String user, String password,
-                                 List<ResourceFile> applicableSystemDBUpgrades, Path oldDir, Path newDir,
-                                 DefaultArtifactVersion jarFileVersion)
+    private void upgradeSystemDBInTempDir(String apiTestBaseHome, String fullyQualifiedSystemDBURL,
+                                          String user, String password,
+                                          List<Operation> applicableSystemDBOperations, Path oldDir, Path newDir,
+                                          DefaultArtifactVersion jarFileVersion)
             throws IOException {
         Path oldDatabaseFolder = Files.createDirectory(Paths.get(oldDir.toString(), "database"));
         Path newDatabaseFolder = Files.createDirectory(Paths.get(newDir.toString(), "database"));
@@ -248,18 +249,17 @@ public class UpgradeActions {
         Path targetOldFile = Paths.get(oldDatabaseFolder.toString(), systemDBFileName);
         Path targetNewFile = Paths.get(newDatabaseFolder.toString(), systemDBFileName);
         Files.copy(sourceFile, targetOldFile);
-        LOGGER.info("Copied current system database to " + oldDatabaseFolder.toString());
+        LOGGER.info("Copied current system database to " + oldDatabaseFolder);
         Files.copy(sourceFile, targetNewFile);
-        LOGGER.info("Copied current system database to " + newDatabaseFolder.toString());
+        LOGGER.info("Copied current system database to " + newDatabaseFolder);
 
         String newSystemDBURL = "jdbc:h2:" + targetNewFile.toString().replace(".mv.db", "") + ";IFEXISTS=TRUE";
         Jdbi jdbi = Jdbi.create(newSystemDBURL, user, password);
 
-        //  run SQL scripts against the system database in the 'new' folder
-        for (ResourceFile sqlFile: applicableSystemDBUpgrades) {
-            String sqlScript = sqlFile.getResourceAsText();
-            jdbi.withHandle(handle -> handle.createScript(sqlScript).execute());
-            LOGGER.info("Executed SQL script " + sqlFile.getResourcePath() + " in " + newSystemDBURL + ".");
+        //  run System DB operations against the system database in the 'new' folder
+        for (Operation operation: applicableSystemDBOperations) {
+            SystemDBOperation systemDBOperation =  (SystemDBOperation) operation;
+            systemDBOperation.run(jdbi, newSystemDBURL);
         }
 
         updateVersionTableInSystemDatabase(jdbi, newSystemDBURL, jarFileVersion);
@@ -277,7 +277,7 @@ public class UpgradeActions {
         List<ResourceFile> applicableGeneralManualUpgrades =
                 getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "manual", "GeneralPreSystemDBChange", "txt");
         for (ResourceFile manualStep: applicableGeneralManualUpgrades) {
-            LOGGER.info(manualStep.getResourceAsText());    //  display manual step details to user
+            LOGGER.info(GeneralUtils.getResourceAsText(manualStep.getResourcePath()));   //  display manual step details to user
             Scanner scanner = new Scanner(System.in);
             String line = null;
             while (!"y".equalsIgnoreCase(line)) {

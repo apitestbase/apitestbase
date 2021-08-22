@@ -5,8 +5,8 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperationList {
-    private List<Operation> operationList = new ArrayList();
+public abstract class OperationList {
+    private List<Operation> operationList = new ArrayList();      //  use ArrayList to keep order
 
     protected List<Operation> getOperationList() {
         return operationList;
