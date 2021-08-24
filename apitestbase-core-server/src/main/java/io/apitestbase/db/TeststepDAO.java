@@ -26,7 +26,6 @@ import org.jdbi.v3.sqlobject.transaction.Transaction;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import static io.apitestbase.APITestBaseConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
@@ -43,8 +42,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, " +
-            "endpoint_property VARCHAR(200), request BLOB, request_type VARCHAR(20) NOT NULL DEFAULT 'Text', " +
-            "request_filename VARCHAR(200), api_request CLOB, other_properties CLOB, step_data_backup CLOB, " +
+            "endpoint_property VARCHAR(200), request BLOB, api_request CLOB, " +
+            "other_properties CLOB, step_data_backup CLOB, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
@@ -73,15 +72,14 @@ public interface TeststepDAO extends CrossReferenceDAO {
     long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("request") Object request,
                             @Bind("endpointId") Long endpointId, @Bind("apiRequest") String apiRequest);
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, request_type, " +
-            "request_filename, api_request, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, " +
+            "api_request, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
             "select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId, :t.name, " +
-            ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :apiRequest, " +
+            ":t.type, :t.description, :t.action, :request, :apiRequest, " +
             ":endpointId, :t.endpointProperty, :t.otherProperties)")
     @GetGeneratedKeys
     long _insertWithName(@BindBean("t") Teststep teststep, @Bind("request") byte[] request,
-                         @Bind("requestType") String requestType, @Bind("apiRequest") String apiRequest,
-                         @Bind("endpointId") Long endpointId);
+                         @Bind("apiRequest") String apiRequest, @Bind("endpointId") Long endpointId);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
@@ -90,7 +88,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     default long insert(Teststep teststep, AppMode appMode) throws JsonProcessingException {
         //  set initial/default values
         Properties otherProperties = new Properties();
-        APIRequest apiRequest = new APIRequest();
+        APIRequest apiRequest = null;
         String sampleRequest = null;
         switch (teststep.getType()) {
             case Teststep.TYPE_HTTP:
@@ -138,12 +136,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
         String requestString = (String) teststep.getRequest();
         byte[] request = null;
         if (requestString != null) {
-            request = teststep.getRequestType() == TeststepRequestType.FILE ?
-                    Base64.getDecoder().decode(requestString) : requestString.getBytes();
+            request = requestString.getBytes();
         }
         String apiRequestJSONString = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-        long teststepId = _insertWithName(teststep, request, teststep.getRequestType().toString(), apiRequestJSONString,
-                endpointId);
+        long teststepId = _insertWithName(teststep, request, apiRequestJSONString, endpointId);
 
         for (Assertion assertion : teststep.getAssertions()) {
             assertion.setTeststepId(teststepId);
@@ -155,14 +151,12 @@ public interface TeststepDAO extends CrossReferenceDAO {
         }
     }
 
-    @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, request = :request, " +
-            "request_type = :requestType, request_filename = :t.requestFilename, api_request = :apiRequest, " +
-            "endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, other_properties = :t.otherProperties, " +
+    @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
+            "request = :request, api_request = :apiRequest, endpoint_id = :endpointId, " +
+            "endpoint_property = :t.endpointProperty, other_properties = :t.otherProperties, " +
             "updated = CURRENT_TIMESTAMP where id = :t.id")
     void _updateWithStringRequest(@BindBean("t") Teststep teststep, @Bind("request") Object request,
-                                  @Bind("requestType") String requestType,
-                                  @Bind("apiRequest") String apiRequest,
-                                  @Bind("endpointId") Long endpointId);
+                                  @Bind("apiRequest") String apiRequest, @Bind("endpointId") Long endpointId);
 
     @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
             "api_request = :apiRequest, endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, " +
@@ -170,16 +164,14 @@ public interface TeststepDAO extends CrossReferenceDAO {
     void _updateWithRequest(@BindBean("t") Teststep teststep, @Bind("apiRequest") String apiRequest,
                                   @Bind("endpointId") Long endpointId);
 
-    @SqlUpdate("update teststep set name = :t.name, description = :t.description, request_type = :requestType, " +
-            "request_filename = :t.requestFilename, action = :t.action, endpoint_id = :endpointId, " +
-            "endpoint_property = :t.endpointProperty, other_properties = :t.otherProperties, updated = CURRENT_TIMESTAMP " +
-            "where id = :t.id")
-    void _updateWithoutRequest(@BindBean("t") Teststep teststep, @Bind("requestType") String requestType,
-                               @Bind("endpointId") Long endpointId);
+    @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
+            "endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, " +
+            "other_properties = :t.otherProperties, updated = CURRENT_TIMESTAMP where id = :t.id")
+    void _updateWithoutRequest(@BindBean("t") Teststep teststep, @Bind("endpointId") Long endpointId);
 
     @Transaction
     default void update(Teststep teststep) throws Exception {
-        Teststep oldTeststep = findById_NoRequest(teststep.getId());  //  old request is not read into memory, to save memory
+        Teststep oldTeststep = findById_NoRequest(teststep.getId());
 
         switch (teststep.getType()) {
             case Teststep.TYPE_HTTP:
@@ -209,12 +201,12 @@ public interface TeststepDAO extends CrossReferenceDAO {
             String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
             _updateWithRequest(teststep, apiRequest, newEndpointId);
         } else {
-            if (teststep.getRequestType() == TeststepRequestType.FILE) {    // update teststep without file request (this can save memory, as file could be big)
-                _updateWithoutRequest(teststep, teststep.getRequestType().toString(), newEndpointId);
-            } else {       // update teststep with string request
+            if (teststep.getApiRequest() instanceof MQEnqueueOrPublishFromFileRequest) {
+                _updateWithoutRequest(teststep, newEndpointId);
+            } else {
                 Object request = teststep.getRequest() == null ? null : ((String) teststep.getRequest()).getBytes();
                 String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-                _updateWithStringRequest(teststep, request, teststep.getRequestType().toString(), apiRequest, newEndpointId);
+                _updateWithStringRequest(teststep, request, apiRequest, newEndpointId);
             }
         }
 
@@ -296,107 +288,105 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     default void processMQTeststep(Teststep oldTeststep, Teststep teststep) throws IOException {
-        if (teststep.getAction() != null) {      //  newly created MQ test step does not have action and does not need the processing
-            String newAction = teststep.getAction();
-            if (!newAction.equals(oldTeststep.getAction()) ||
-                    teststep.getRequestType() != oldTeststep.getRequestType()) {    //  action or 'message from' is switched, so clear things
-                teststep.setRequest(null);
-                teststep.setRequestFilename(null);
-                teststep.getAssertions().clear();
-                MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
-                properties.setRfh2Header(null);
-
-                backupRestoreMQTeststepActionData(oldTeststep, teststep);
-            } else if (TeststepRequestType.TEXT == teststep.getRequestType() && (
-                    Teststep.ACTION_ENQUEUE.equals(newAction) || Teststep.ACTION_PUBLISH.equals(newAction))) {
-                processMQTeststepRFH2Folders(teststep);
-            }
-        }
-    }
-
-    default void processMQTeststepRFH2Folders(Teststep teststep) {
-        MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
-        MQRFH2Header rfh2Header = mqTeststepProperties.getRfh2Header();
-        if (rfh2Header != null) {
-            List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
-            for (MQRFH2Folder folder : rfh2Folders) {
-                GeneralUtils.validateMQRFH2FolderStringAndSetFolderName(folder);
-            }
-        }
-    }
-
-    default void backupRestoreMQTeststepActionData(Teststep oldTeststep, Teststep teststep) throws IOException {
-        long teststepId = teststep.getId();
         String oldAction = oldTeststep.getAction();
         String newAction = teststep.getAction();
-        String backupStr = getStepDataBackupById(teststepId);
-        MQTeststepActionDataBackup newBackup = new MQTeststepActionDataBackup();
-        MQTeststepActionDataBackup oldBackup = null;
-        if (backupStr != null) {
-            ObjectMapper mapper = new ObjectMapper();
-            oldBackup = mapper.readValue(backupStr, MQTeststepActionDataBackup.class);
-        }
-        boolean persistNewBackup = false;
+        MQTeststepProperties newOtherProperties = (MQTeststepProperties) teststep.getOtherProperties();
+        MQDestinationType newDestinationType = newOtherProperties.getDestinationType();
+        MQRequest oldApiRequest = (MQRequest) oldTeststep.getApiRequest();
+        MQRequest newApiRequest = (MQRequest) teststep.getApiRequest();
 
-        // backup old action's data
-        // for assertions, no need to backup primary keys or foreign keys
-        List<Assertion> oldAssertions = oldTeststep.getAssertions();
-        for (Assertion oldAssertion: oldAssertions) {
-            oldAssertion.setId(null);
-            oldAssertion.setTeststepId(null);
+        //  initialize things in the new teststep
+        if (!Teststep.ACTION_ENQUEUE.equals(newAction) && !Teststep.ACTION_PUBLISH.equals(newAction)) {
+            newApiRequest = null;
+            teststep.setApiRequest(null);
         }
-        if (Teststep.ACTION_CHECK_DEPTH.equals(oldAction)) {
-            Assertion oldAssertion = oldAssertions.get(0);
-            newBackup.setQueueDepthAssertionProperties(
-                    (IntegerEqualAssertionProperties) oldAssertion.getOtherProperties());
-            persistNewBackup = true;
-        } else if (Teststep.ACTION_DEQUEUE.equals(oldAction)) {
-            newBackup.setDequeueAssertions(oldAssertions);
-            persistNewBackup = true;
-        } else if (Teststep.ACTION_ENQUEUE.equals(oldAction) || Teststep.ACTION_PUBLISH.equals(oldAction)) {
-            byte[] oldRequest = (byte[]) getBinaryRequestById(teststepId);
-            newBackup.setRequest(oldRequest);
-            if (TeststepRequestType.TEXT == oldTeststep.getRequestType()) {
-                newBackup.setRfh2Header(((MQTeststepProperties) oldTeststep.getOtherProperties()).getRfh2Header());
-            } else if (TeststepRequestType.FILE == oldTeststep.getRequestType()) {
-                newBackup.setRequestFilename(oldTeststep.getRequestFilename());
-            }
-            persistNewBackup = true;
+        if ((Teststep.ACTION_ENQUEUE.equals(newAction) || Teststep.ACTION_PUBLISH.equals(newAction)) &&
+                newApiRequest == null) {
+            newApiRequest = new MQEnqueueOrPublishFromTextRequest();
+            teststep.setApiRequest(newApiRequest);
         }
-
-        if (persistNewBackup) {
-            backupStr = new ObjectMapper().writeValueAsString(newBackup);
-            saveStepDataBackupById(teststepId, backupStr);
+        if ((Teststep.ACTION_DEQUEUE.equals(oldAction) && !Teststep.ACTION_DEQUEUE.equals(newAction)) ||
+                (Teststep.ACTION_CHECK_DEPTH.equals(oldAction) && !Teststep.ACTION_CHECK_DEPTH.equals(newAction))) {
+            teststep.getAssertions().clear();
         }
-
-        // setup new action's data
-        if (Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
+        if (!Teststep.ACTION_CHECK_DEPTH.equals(oldAction) && Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
+            teststep.getAssertions().clear();
             Assertion assertion = new Assertion();
             teststep.getAssertions().add(assertion);
             assertion.setName("MQ queue depth equals");
             assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
-            // restore old assertion properties if exists
-            IntegerEqualAssertionProperties oldAssertionProperties =
-                    oldBackup == null ? null : oldBackup.getQueueDepthAssertionProperties();
-            if (oldAssertionProperties != null) {
-                assertion.setOtherProperties(oldAssertionProperties);
+            assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
+        }
+        if (newDestinationType != MQDestinationType.QUEUE) {
+            newOtherProperties.setQueueName(null);
+        }
+        if (newDestinationType != MQDestinationType.TOPIC) {
+            newOtherProperties.setTopicString(null);
+        }
+
+        //  validate RFH2 header if exists
+        if (newApiRequest instanceof MQEnqueueOrPublishFromTextRequest) {
+            MQEnqueueOrPublishFromTextRequest request = (MQEnqueueOrPublishFromTextRequest) teststep.getApiRequest();
+            MQRFH2Header rfh2Header = request.getRfh2Header();
+            if (rfh2Header != null) {
+                List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
+                for (MQRFH2Folder folder : rfh2Folders) {
+                    GeneralUtils.validateMQRFH2FolderStringAndSetFolderName(folder);
+                }
+            }
+        }
+
+        //  handle api request backup/restore
+        if (oldApiRequest != null) {
+            backupMQApiRequest(oldApiRequest, teststep.getId());
+        }
+        if ((oldApiRequest == null && newApiRequest != null) ||
+                (oldApiRequest instanceof MQEnqueueOrPublishFromTextRequest && newApiRequest instanceof MQEnqueueOrPublishFromFileRequest) ||
+                (oldApiRequest instanceof MQEnqueueOrPublishFromFileRequest && newApiRequest instanceof MQEnqueueOrPublishFromTextRequest)) {
+            restoreMQApiRequest(teststep);
+        }
+    }
+
+    default MQTeststepActionDataBackup getMQTeststepActionDataBackup(long teststepId) throws IOException {
+        String backupStr = getStepDataBackupById(teststepId);
+        MQTeststepActionDataBackup backup = null;
+        if (backupStr != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            backup = mapper.readValue(backupStr, MQTeststepActionDataBackup.class);
+        }
+        return backup;
+    }
+
+    default void backupMQApiRequest(MQRequest apiRequest, long teststepId) throws IOException {
+        MQTeststepActionDataBackup backup = getMQTeststepActionDataBackup(teststepId);
+        if (backup == null) {
+            backup = new MQTeststepActionDataBackup();
+        }
+
+        if (apiRequest instanceof MQEnqueueOrPublishFromTextRequest) {
+            backup.setTextRequest((MQEnqueueOrPublishFromTextRequest) apiRequest);
+        } else {
+            backup.setFileRequest((MQEnqueueOrPublishFromFileRequest) apiRequest);
+        }
+
+        saveStepDataBackupById(teststepId, new ObjectMapper().writeValueAsString(backup));
+    }
+
+    default void restoreMQApiRequest(Teststep teststep) throws IOException {
+        long teststepId = teststep.getId();
+        MQTeststepActionDataBackup backup = getMQTeststepActionDataBackup(teststepId);
+
+        //  restore api request from backup
+        if (backup != null) {
+            if (teststep.getApiRequest() instanceof MQEnqueueOrPublishFromTextRequest) {
+                teststep.setApiRequest(backup.getTextRequest() == null ?
+                        new MQEnqueueOrPublishFromTextRequest() : backup.getTextRequest());
             } else {
-                assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
-            }
-        } else if (Teststep.ACTION_DEQUEUE.equals(newAction) && oldBackup != null) {
-            // restore old assertions if exist
-            if (oldBackup.getDequeueAssertions() != null) {
-                teststep.getAssertions().addAll(oldBackup.getDequeueAssertions());
-            }
-        } else if ((Teststep.ACTION_ENQUEUE.equals(newAction) || Teststep.ACTION_PUBLISH.equals(newAction)) && oldBackup != null) {
-            if (TeststepRequestType.TEXT == teststep.getRequestType()) {
-                // restore old request
-                teststep.setRequest(oldBackup.getRequest() == null ? null : new String(oldBackup.getRequest()));
-                ((MQTeststepProperties) teststep.getOtherProperties()).setRfh2Header(oldBackup.getRfh2Header());
-            } else if (TeststepRequestType.FILE == teststep.getRequestType()) {
-                // restore old request
-                updateRequest(teststep.getId(), oldBackup.getRequest());
-                teststep.setRequestFilename(oldBackup.getRequestFilename());
+                //  restore directly into api_request
+                MQEnqueueOrPublishFromFileRequest fileRequest = backup.getFileRequest() == null ?
+                        new MQEnqueueOrPublishFromFileRequest() : backup.getFileRequest();
+                saveApiRequest(teststepId, new ObjectMapper().writeValueAsString(fileRequest));
+                teststep.setApiRequest(new MQEnqueueOrPublishFromFileRequest());
             }
         }
     }
@@ -465,8 +455,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     @SqlQuery("select id, testcase_id, sequence, name, type, description, action, endpoint_id, endpoint_property, " +
-            "request_type, request_filename, api_request, other_properties, step_data_backup " +
-            "from teststep where id = :id")
+            "api_request, other_properties, step_data_backup from teststep where id = :id")
     Teststep _findById_NoRequest(@Bind("id") long id);
 
     @SqlQuery("select * from teststep where id = :id")
@@ -523,9 +512,6 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @SqlQuery("select id from teststep where testcase_id = :testcaseId")
     List<Long> findIdsByTestcaseId(@Bind("testcaseId") long testcaseId);
 
-    @SqlQuery("select request_type from teststep where id = :teststepId")
-    TeststepRequestType findRequestTypeById(@Bind("teststepId") long teststepId);
-
     @SqlUpdate("update teststep set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :teststepId")
     void updateSequenceById(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
 
@@ -559,35 +545,6 @@ public interface TeststepDAO extends CrossReferenceDAO {
         }
     }
 
-    @SqlUpdate("update teststep set request = :request, updated = CURRENT_TIMESTAMP where id = :teststepId")
-    void updateRequest(@Bind("teststepId") long teststepId, @Bind("request") byte[] request);
-
-    @SqlUpdate("update teststep set request = :request, request_type = :requestType, request_filename = :requestFilename, " +
-            "updated = CURRENT_TIMESTAMP where id = :teststepId")
-    void _setRequestFile(@Bind("teststepId") long teststepId,
-                         @Bind("request") byte[] request,   //  InputStream used to work here with jdbi v2, but it is not working with jdbi v3
-                         @Bind("requestType") String requestType,
-                         @Bind("requestFilename") String requestFilename);
-
-    @Transaction
-    default Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) throws IOException {
-        byte[] fileBytes;
-        try {
-            fileBytes = IOUtils.toByteArray(inputStream);
-        } finally {
-            inputStream.close();
-        }
-        _setRequestFile(teststepId, fileBytes, TeststepRequestType.FILE.toString(), fileName);
-
-        return findById_NoRequest(teststepId);
-    }
-
-    //  byte[] return type used to work in jdbi v2, but it is not working in jdbi v3
-    //  in jdbi v3, ColumnMapper<byte[]> is not working here
-    @SqlQuery("select request from teststep where id = :teststepId")
-    @RegisterColumnMapper(ObjectColumnMapper.class)
-    Object getBinaryRequestById(@Bind("teststepId") long teststepId);
-
     @SqlQuery("select api_request from teststep where id = :teststepId")
     @RegisterColumnMapper(APIRequestColumMapper.class)
     APIRequest getAPIRequestById(@Bind("teststepId") long teststepId);
@@ -613,9 +570,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
         switchToDirectEndpoint(teststep.getId(), endpoint.getId());
     }
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, request_type, " +
-            "request_filename, api_request, endpoint_id, endpoint_property, other_properties) select :newTestcaseId, " +
-            "sequence, name, type, description, action, request, request_type, request_filename, api_request, " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, " +
+            "api_request, endpoint_id, endpoint_property, other_properties) select :newTestcaseId, " +
+            "sequence, name, type, description, action, request, api_request, " +
             "endpoint_id, endpoint_property, other_properties from teststep where id = :oldTeststepId")
     @GetGeneratedKeys
     long duplicateById(@Bind("oldTeststepId") long oldTeststepId, @Bind("newTestcaseId") long newTestcaseId);
@@ -646,22 +603,23 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default Teststep saveApiRequestFile(long teststepId, String fileName, InputStream inputStream) throws IOException {
-        Teststep teststep = findById_Complete(teststepId);
-        if (Teststep.TYPE_FTP.equals(teststep.getType())) {
-            FtpPutRequestFileFromFile putRequest = (FtpPutRequestFileFromFile) teststep.getApiRequest();
-            putRequest.setFileName(fileName);
+        Teststep teststep = findById_NoRequest(teststepId);
+
+        if (teststep.getApiRequest() instanceof APIRequestFile) {
+            APIRequestFile apiRequest = (APIRequestFile) teststep.getApiRequest();
+            apiRequest.setFileName(fileName);
             byte[] fileBytes;
             try {
                 fileBytes = IOUtils.toByteArray(inputStream);
             } finally {
                 inputStream.close();
             }
-            putRequest.setFileContent(fileBytes);
+            apiRequest.setFileContent(fileBytes);
 
-            saveApiRequest(teststepId, new ObjectMapper().writeValueAsString(putRequest));
+            saveApiRequest(teststepId, new ObjectMapper().writeValueAsString(apiRequest));
         }
 
-        return findById_Complete(teststepId);
+        return findById_NoRequest(teststepId);
     }
 
     @Transaction

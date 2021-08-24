@@ -8,6 +8,9 @@ import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.endpoint.MQConnectionMode;
 import io.apitestbase.models.endpoint.MQEndpointProperties;
 import io.apitestbase.models.teststep.*;
+import io.apitestbase.models.teststep.apirequest.MQEnqueueOrPublishFromFileRequest;
+import io.apitestbase.models.teststep.apirequest.MQEnqueueOrPublishFromTextRequest;
+import io.apitestbase.models.teststep.apirequest.MQRequest;
 import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -53,10 +56,10 @@ public class MQTeststepRunner extends TeststepRunner {
 
             if (MQDestinationType.QUEUE == teststepProperties.getDestinationType()) {
                 response = doQueueAction(queueManager, teststepProperties.getQueueName(), action,
-                        teststep.getRequest(), teststepProperties.getRfh2Header());
+                        (MQRequest) teststep.getApiRequest());
             } else if (MQDestinationType.TOPIC == teststepProperties.getDestinationType()) {
-                doTopicAction(queueManager, teststepProperties.getTopicString(), action, teststep.getRequest(),
-                        teststepProperties.getRfh2Header());
+                doTopicAction(queueManager, teststepProperties.getTopicString(), action,
+                        (MQRequest) teststep.getApiRequest());
             }
         } finally {
             if (queueManager != null) {
@@ -69,8 +72,8 @@ public class MQTeststepRunner extends TeststepRunner {
         return basicTeststepRun;
     }
 
-    private APIResponse doQueueAction(MQQueueManager queueManager, String queueName, String action, Object request,
-                                 MQRFH2Header rfh2Header) throws Exception {
+    private APIResponse doQueueAction(MQQueueManager queueManager, String queueName, String action,
+                                      MQRequest apiRequest) throws Exception {
         APIResponse response = null;
         MQQueue queue = null;
         int openOptions = CMQC.MQOO_FAIL_IF_QUIESCING + CMQC.MQOO_INPUT_SHARED;
@@ -100,7 +103,7 @@ public class MQTeststepRunner extends TeststepRunner {
             } else if (Teststep.ACTION_DEQUEUE.equals(action)) {
                 response = dequeue(queue);
             } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
-                enqueue(queue, request, rfh2Header);
+                enqueue(queue, apiRequest);
             } else {
                 throw new Exception("Unrecognized action " + action + ".");
             }
@@ -113,8 +116,8 @@ public class MQTeststepRunner extends TeststepRunner {
         return response;
     }
 
-    private void doTopicAction(MQQueueManager queueManager, String topicString, String action, Object data,
-                               MQRFH2Header rfh2Header) throws Exception {
+    private void doTopicAction(MQQueueManager queueManager, String topicString, String action, MQRequest apiRequest)
+            throws Exception {
         if ("".equals(StringUtils.trimToEmpty(topicString))) {
             throw new Exception("Topic string not specified.");
         }
@@ -126,7 +129,7 @@ public class MQTeststepRunner extends TeststepRunner {
                     CMQC.MQOO_OUTPUT);
 
             if (Teststep.ACTION_PUBLISH.equals(action)) {
-                MQMessage message = buildMessage(data, rfh2Header);
+                MQMessage message = buildMessage(apiRequest);
                 publisher.put(message);
             } else {
                 throw new Exception("Unrecognized action " + action + ".");
@@ -138,28 +141,30 @@ public class MQTeststepRunner extends TeststepRunner {
         }
     }
 
-    private MQMessage buildMessage(Object data, MQRFH2Header rfh2Header) throws Exception {
-        if (data == null) {
-            throw new Exception("Data can not be null.");
-        }
-
+    private MQMessage buildMessage(MQRequest apiRequest) throws Exception {
         MQMessage message;
-        if (data instanceof String) {
-            message = buildMessageFromText((String) data, rfh2Header);
+        if (apiRequest instanceof MQEnqueueOrPublishFromTextRequest) {
+            MQEnqueueOrPublishFromTextRequest request = (MQEnqueueOrPublishFromTextRequest) apiRequest;
+            message = buildMessageFromText(request.getBody(), request.getRfh2Header());
         } else {
-            message = buildMessageFromFile((byte[]) data);
+            MQEnqueueOrPublishFromFileRequest request = (MQEnqueueOrPublishFromFileRequest) apiRequest;
+            message = buildMessageFromFile(request.getFileContent());
         }
         return message;
     }
 
-    private void enqueue(MQQueue queue, Object data, MQRFH2Header rfh2Header) throws Exception {
-        MQMessage message = buildMessage(data, rfh2Header);
+    private void enqueue(MQQueue queue, MQRequest apiRequest) throws Exception {
+        MQMessage message = buildMessage(apiRequest);
         MQPutMessageOptions pmo = new MQPutMessageOptions();
         queue.put(message, pmo);
     }
 
     private MQMessage buildMessageFromText(String body, MQRFH2Header rfh2Header)
             throws IOException, MQDataException {
+        if (body == null) {
+            throw new IllegalArgumentException("Message body can not be null.");
+        }
+
         MQMessage message = new MQMessage();
 
         //  create MQMD properties on the message object (MQMD is not written into message, but is used by MQ PUT)
@@ -188,6 +193,10 @@ public class MQTeststepRunner extends TeststepRunner {
     }
 
     private MQMessage buildMessageFromFile(byte[] bytes) throws MQDataException, IOException {
+        if (bytes == null) {
+            throw new IllegalArgumentException("File can not be null.");
+        }
+
         MQMessage message = new MQMessage();
         MQMD mqmdHeader;
         try {

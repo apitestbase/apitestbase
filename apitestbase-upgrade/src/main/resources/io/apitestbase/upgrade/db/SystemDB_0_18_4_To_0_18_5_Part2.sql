@@ -9,5 +9,7 @@ where type = 'MQ';
 
 update teststep set request = null, step_data_backup = null where type = 'MQ';
 
+update teststep set api_request = null where type = 'MQ' and action in ('CheckDepth', 'Clear', 'Dequeue');
+
 ALTER TABLE TESTSTEP DROP COLUMN "REQUEST_TYPE";
 ALTER TABLE TESTSTEP DROP COLUMN "REQUEST_FILENAME";

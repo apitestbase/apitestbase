@@ -2,9 +2,8 @@ package io.apitestbase.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apitestbase.models.endpoint.Endpoint;
-import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.models.teststep.Teststep;
-import io.apitestbase.models.teststep.TeststepRequestType;
+import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.utils.GeneralUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -41,17 +40,12 @@ public class TeststepMapper implements RowMapper<Teststep> {
         teststep.setDescription(rs.getString("description"));
         teststep.setAction(fields.contains("action") ? rs.getString("action") : null);
 
-        if (!Teststep.TYPE_HTTP.equals(type) && !Teststep.TYPE_SOAP.equals(type)) {
-            //  this line must go before the 'if (fields.contains("request")) {' block
-            teststep.setRequestType(fields.contains("request_type") ?
-                    TeststepRequestType.getByText(rs.getString("request_type")) : null);
-            if (fields.contains("request")) {
-                byte[] requestBytes = rs.getBytes("request");
-                if (requestBytes != null) {
-                    Object request = teststep.getRequestType() == TeststepRequestType.FILE ?
-                            requestBytes : new String(requestBytes);
-                    teststep.setRequest(request);
-                }
+        if (!Teststep.TYPE_HTTP.equals(type) && !Teststep.TYPE_SOAP.equals(type) && !Teststep.TYPE_MQ.equals(type) &&
+                fields.contains("request")) {
+            byte[] requestBytes = rs.getBytes("request");
+            if (requestBytes != null) {
+                Object request = new String(requestBytes);
+                teststep.setRequest(request);
             }
         }
 
@@ -62,8 +56,7 @@ public class TeststepMapper implements RowMapper<Teststep> {
                 throw new SQLException("Failed to deserialize api_request JSON.", e);
             }
         }
-        teststep.setRequestFilename(fields.contains("request_filename") ?
-                rs.getString("request_filename") : null);
+
         if (fields.contains("endpoint_id")) {
             Endpoint endpoint = new Endpoint();
             endpoint.setId(rs.getLong("endpoint_id"));

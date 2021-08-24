@@ -62,17 +62,13 @@ public class Teststep {
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String description;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-    private String action;            //  currently only used in MQ test step and IIB test step
+    private String action;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private Endpoint endpoint;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String endpointProperty;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private Object request;
-    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-    private TeststepRequestType requestType = TeststepRequestType.TEXT;
-    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-    private String requestFilename;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private APIRequest apiRequest;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
@@ -144,22 +140,6 @@ public class Teststep {
 
     public void setRequest(Object request) {
         this.request = request;
-    }
-
-    public TeststepRequestType getRequestType() {
-        return requestType;
-    }
-
-    public void setRequestType(TeststepRequestType requestType) {
-        this.requestType = requestType;
-    }
-
-    public String getRequestFilename() {
-        return requestFilename;
-    }
-
-    public void setRequestFilename(String requestFilename) {
-        this.requestFilename = requestFilename;
     }
 
     public APIRequest getApiRequest() {

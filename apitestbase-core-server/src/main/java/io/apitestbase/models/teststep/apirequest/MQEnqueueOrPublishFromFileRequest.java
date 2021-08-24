@@ -3,18 +3,11 @@ package io.apitestbase.models.teststep.apirequest;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.resources.ResourceJsonViews;
 
-public class FtpPutRequestFileFromFile extends FtpPutRequest implements APIRequestFile {
+public class MQEnqueueOrPublishFromFileRequest extends MQRequest implements APIRequestFile {
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String fileName;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private byte[] fileContent;
-
-    public FtpPutRequestFileFromFile() {}
-
-    public FtpPutRequestFileFromFile(FtpPutRequest ftpPutRequest) {
-        setFileFrom(ftpPutRequest.getFileFrom());
-        setRemoteFilePath(ftpPutRequest.getRemoteFilePath());
-    }
 
     public String getFileName() {
         return fileName;
@@ -30,5 +23,11 @@ public class FtpPutRequestFileFromFile extends FtpPutRequest implements APIReque
 
     public void setFileContent(byte[] fileContent) {
         this.fileContent = fileContent;
+    }
+
+    @Override
+    public void clear() {
+        this.fileName = null;
+        this.fileContent = null;
     }
 }

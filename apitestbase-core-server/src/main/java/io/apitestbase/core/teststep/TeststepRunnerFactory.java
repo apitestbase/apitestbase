@@ -7,10 +7,9 @@ import io.apitestbase.core.testcase.TestcaseRunContext;
 import io.apitestbase.db.UtilsDAO;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.endpoint.JMSEndpointProperties;
-import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.apitestbase.models.teststep.Teststep;
-import io.apitestbase.models.teststep.TeststepRequestType;
+import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.text.StrSubstitutor;
 
@@ -109,13 +108,10 @@ public class TeststepRunnerFactory {
         Teststep tempStep = objectMapper.readValue(tempStepJSON, Teststep.class);
         teststep.setOtherProperties(tempStep.getOtherProperties());
 
-        //  resolve property references in teststep.request (text type)
-        if (teststep.getRequestType() == TeststepRequestType.TEXT) {
-            propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, false);
-            teststep.setRequest(new StrSubstitutor(propertyReferenceResolver).replace(
-                    (String) teststep.getRequest()));
-            undefinedStringProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
-        }
+        //  resolve property references in teststep.request
+        propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, false);
+        teststep.setRequest(new StrSubstitutor(propertyReferenceResolver).replace((String) teststep.getRequest()));
+        undefinedStringProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
 
         //  resolve property references in teststep.apiRequest (null safe)
         String apiRequestJSON = objectMapper.writeValueAsString(teststep.getApiRequest());

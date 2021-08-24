@@ -9,8 +9,10 @@ import io.apitestbase.models.DataTable;
 import io.apitestbase.models.UserDefinedProperty;
 import io.apitestbase.models.assertion.Assertion;
 import io.apitestbase.models.endpoint.Endpoint;
-import io.apitestbase.models.teststep.*;
-import io.apitestbase.models.teststep.apirequest.FtpPutRequestFileFromFile;
+import io.apitestbase.models.teststep.MQRFH2Folder;
+import io.apitestbase.models.teststep.Teststep;
+import io.apitestbase.models.teststep.TeststepWrapper;
+import io.apitestbase.models.teststep.apirequest.APIRequestFile;
 import io.apitestbase.utils.GeneralUtils;
 import io.apitestbase.utils.PasswordUtils;
 import io.apitestbase.utils.XMLUtils;
@@ -90,14 +92,7 @@ public class TeststepResource {
     }
 
     private Teststep _findById(long teststepId) {
-        Teststep teststep;
-        TeststepRequestType requestType = teststepDAO.findRequestTypeById(teststepId);
-        if (requestType == TeststepRequestType.FILE) {
-            teststep = teststepDAO.findById_NoRequest(teststepId);
-        } else {
-            teststep = teststepDAO.findById_Complete(teststepId);
-        }
-
+        Teststep teststep = teststepDAO.findById_Complete(teststepId);
         PasswordUtils.maskEndpointPasswordForAPIResponse(teststep.getEndpoint());
 
         return teststep;
@@ -154,12 +149,8 @@ public class TeststepResource {
     @POST @Path("{teststepId}/run")
     @PermitAll
     public BasicTeststepRun run(Teststep teststep) throws Exception {
-        //  fetch request binary if its type is file
-        if (teststep.getRequestType() == TeststepRequestType.FILE) {
-            teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
-        }
         //  fetch API request binary if its type is file
-        if (Teststep.TYPE_FTP.equals(teststep.getType()) && teststep.getApiRequest() instanceof FtpPutRequestFileFromFile) {
+        if (teststep.getApiRequest() instanceof APIRequestFile) {
             teststep.setApiRequest(teststepDAO.getAPIRequestById(teststep.getId()));
         }
 
@@ -217,23 +208,6 @@ public class TeststepResource {
     }
 
     /**
-     * Save the uploaded file as Teststep.request.
-     * Use @POST instead of @PUT because ng-file-upload seems not working with PUT.
-     * @param teststepId
-     * @param inputStream
-     * @param contentDispositionHeader
-     * @return
-     */
-    @POST @Path("{teststepId}/requestFile")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @PermitAll
-    public Teststep saveRequestFile(@PathParam("teststepId") long teststepId,
-                                    @FormDataParam("file") InputStream inputStream,
-                                    @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) throws IOException {
-        return teststepDAO.setRequestFile(teststepId, contentDispositionHeader.getFileName(), inputStream);
-    }
-
-    /**
      * Save the uploaded file as Teststep's API request file.
      * Use @POST instead of @PUT because ng-file-upload seems not working with PUT.
      * @param teststepId
@@ -253,22 +227,6 @@ public class TeststepResource {
     }
 
     /**
-     * Download Teststep.request as a file.
-     * @param teststepId
-     * @return
-     */
-    @GET @Path("{teststepId}/requestFile")
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getRequestFile(@PathParam("teststepId") long teststepId) {
-        Teststep teststep = teststepDAO.findById_NoRequest(teststepId);
-        teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
-        String filename = teststep.getRequestFilename() == null ? "UnknownFilename" : teststep.getRequestFilename();
-        return Response.ok(teststep.getRequest())
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
-                .build();
-    }
-
-    /**
      * Download Teststep's API request file.
      * @param teststepId
      * @return
@@ -279,10 +237,10 @@ public class TeststepResource {
         Teststep teststep = teststepDAO.findById_NoRequest(teststepId);
         String fileName = null;
         byte[] fileBytes = null;
-        if (Teststep.TYPE_FTP.equals(teststep.getType())) {
-            FtpPutRequestFileFromFile putRequest = (FtpPutRequestFileFromFile) teststep.getApiRequest();
-            fileBytes = putRequest.getFileContent();
-            fileName = putRequest.getFileName();
+        if (teststep.getApiRequest() instanceof APIRequestFile) {
+            APIRequestFile apiRequest = (APIRequestFile) teststep.getApiRequest();
+            fileBytes = apiRequest.getFileContent();
+            fileName = apiRequest.getFileName();
         }
 
         return Response.ok(fileBytes)

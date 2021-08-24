@@ -35,6 +35,16 @@ angular.module('apitestbase').controller('MQTeststepActionController', ['$scope'
       $scope.update(isValid);
     };
 
+    $scope.messageFromChanged = function(isValid) {
+      clearPreviousRunStatus();
+
+      var teststep = $scope.teststep;
+      teststep.apiRequest = { minClassName: teststep.apiRequest.minClassName };
+
+      //  update test step immediately (no timeout)
+      $scope.update(isValid);
+    };
+
     $scope.endpointInfoIncomplete = function() {
       var endpoint = $scope.teststep.endpoint;
       var endpointOtherProperties = endpoint.otherProperties;
@@ -50,8 +60,8 @@ angular.module('apitestbase').controller('MQTeststepActionController', ['$scope'
       } else if (teststep.otherProperties.destinationType === 'Queue') {
         return !teststep.otherProperties.queueName || (
           teststep.action === 'Enqueue' && (
-            teststep.requestType === 'Text' && !teststep.request ||
-            teststep.requestType === 'File' && !teststep.requestFilename
+            teststep.apiRequest.minClassName === '.MQEnqueueOrPublishFromTextRequest' && !teststep.apiRequest.body ||
+            teststep.apiRequest.minClassName === '.MQEnqueueOrPublishFromFileRequest' && !teststep.apiRequest.fileName
           )
         );
       } else if (teststep.otherProperties.destinationType === 'Topic') {
@@ -78,8 +88,8 @@ angular.module('apitestbase').controller('MQTeststepActionController', ['$scope'
       });
     };
 
-    $scope.$watch('teststep.otherProperties', function() {
-      if ($scope.teststep.otherProperties.rfh2Header) {
+    $scope.$watch('teststep.apiRequest', function() {
+      if ($scope.teststep.apiRequest.rfh2Header) {
         $scope.includeRfh2Header = true;
       } else {
         $scope.includeRfh2Header = false;
@@ -87,18 +97,18 @@ angular.module('apitestbase').controller('MQTeststepActionController', ['$scope'
     });
 
     $scope.toggleRFH2Header = function(isValid) {
-      var header = $scope.teststep.otherProperties.rfh2Header;
+      var header = $scope.teststep.apiRequest.rfh2Header;
       if (header) {
-        $scope.teststep.otherProperties.rfh2Header = null;
+        $scope.teststep.apiRequest.rfh2Header = null;
         $scope.update(isValid);
       } else {
-        $scope.teststep.otherProperties.rfh2Header = { folders: [] };
+        $scope.teststep.apiRequest.rfh2Header = { folders: [] };
         $scope.addRFH2Folder(isValid);
       }
     };
 
     $scope.addRFH2Folder = function(isValid) {
-      var folders = $scope.teststep.otherProperties.rfh2Header.folders;
+      var folders = $scope.teststep.apiRequest.rfh2Header.folders;
       folders.push({ string: '<RFH2Folder></RFH2Folder>' });
       var successCallback = function() {
         $timeout(function() {
@@ -120,7 +130,7 @@ angular.module('apitestbase').controller('MQTeststepActionController', ['$scope'
 
     $scope.deleteRFH2Folder = function(isValid) {
       var selectedTab = $scope.textMessageTabs.activeIndex;
-      var folders = $scope.teststep.otherProperties.rfh2Header.folders;
+      var folders = $scope.teststep.apiRequest.rfh2Header.folders;
       folders.splice($scope.textMessageTabs.activeIndex - 1, 1);
       $scope.textMessageTabs.activeIndex = selectedTab - 1;    //  change index immediately for better UX (no blink)
       var successCallback = function() {
@@ -133,7 +143,7 @@ angular.module('apitestbase').controller('MQTeststepActionController', ['$scope'
 
     $scope.uploadRequestFile = function(file) {
       if (file) {
-        var url = 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/requestFile';
+        var url = 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/apiRequestFile';
         Upload.upload({
           url: url,
           data: {file: file}
@@ -147,7 +157,7 @@ angular.module('apitestbase').controller('MQTeststepActionController', ['$scope'
     };
 
     $scope.downloadRequestFile = function() {
-      var url = 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/requestFile';
+      var url = 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/apiRequestFile';
       $window.open(url, '_blank', '');
     };
   }
