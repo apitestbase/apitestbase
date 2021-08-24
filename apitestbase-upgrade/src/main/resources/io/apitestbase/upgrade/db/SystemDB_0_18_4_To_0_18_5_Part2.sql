@@ -5,7 +5,7 @@ update teststep set api_request =
 where type = 'MQ' and action in ('Enqueue', 'Publish') and request_type = 'Text';
 
 update teststep set other_properties = replace(other_properties, substring(other_properties from locate(',"rfh2Header":', other_properties)), '') || '}'
-where type = 'MQ' and action in ('Enqueue', 'Publish');
+where type = 'MQ';
 
 update teststep set request = null, step_data_backup = null where type = 'MQ';
 
