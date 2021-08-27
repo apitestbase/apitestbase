@@ -93,6 +93,7 @@ public class FTPTeststepRunner extends TeststepRunner {
             if (endpointProperties.isUseSSL()) {
                 ((FTPSClient) ftpClient).execPROT("P");
             }
+            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
             ftpClient.storeFile(remoteFilePath, new ByteArrayInputStream(fileBytes));
         } finally {
             ftpClient.disconnect();
