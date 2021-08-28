@@ -20,7 +20,7 @@ angular.module('apitestbase').controller('AMQPTeststepActionController', ['$scop
 
     $scope.actionInfoIncomplete = function() {
       var teststep = $scope.teststep;
-      return !teststep.otherProperties.nodeAddress || !teststep.request;
+      return !teststep.otherProperties.nodeAddress || !teststep.apiRequest.body;
     };
 
     $scope.doAction = function() {

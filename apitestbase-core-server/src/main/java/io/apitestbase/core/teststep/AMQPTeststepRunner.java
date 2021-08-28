@@ -3,6 +3,7 @@ package io.apitestbase.core.teststep;
 import com.ibm.mqlight.api.*;
 import io.apitestbase.models.teststep.AMQPTeststepProperties;
 import io.apitestbase.models.teststep.Teststep;
+import io.apitestbase.models.teststep.apirequest.AMQPRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +25,11 @@ public class AMQPTeststepRunner extends TeststepRunner {
 
         List<Exception> exceptionListDuringSending = new ArrayList<>();
 
+        AMQPRequest amqpRequest = (AMQPRequest) teststep.getApiRequest();
+
         NonBlockingClient theClient = NonBlockingClient.create(teststep.getEndpoint().getUrl(), new NonBlockingClientAdapter<Void>() {
             public void onStarted(NonBlockingClient client, Void context) {
-                client.send(otherProperties.getNodeAddress(), (String) teststep.getRequest(), null, new CompletionListener() {
+                client.send(otherProperties.getNodeAddress(), amqpRequest.getBody(), null, new CompletionListener() {
                     public void onSuccess(NonBlockingClient client, Object context) {
                         client.stop(null, null);
                     }

@@ -101,6 +101,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
             case Teststep.TYPE_FTP:
                 apiRequest = new FtpPutRequestFileFromText();
                 break;
+            case Teststep.TYPE_AMQP:
+                apiRequest = new AMQPRequest();
+                break;
             case Teststep.TYPE_MQ:
                 otherProperties = new MQTeststepProperties();
                 break;
@@ -197,14 +200,12 @@ public interface TeststepDAO extends CrossReferenceDAO {
         if (Teststep.TYPE_HTTP.equals(teststep.getType()) || Teststep.TYPE_SOAP.equals(teststep.getType())) {
             String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
             _updateWithRequest(teststep, apiRequest, newEndpointId);
+        } else if (teststep.getApiRequest() instanceof MQEnqueueOrPublishFromFileRequest) {
+            _updateWithoutRequest(teststep, newEndpointId);
         } else {
-            if (teststep.getApiRequest() instanceof MQEnqueueOrPublishFromFileRequest) {
-                _updateWithoutRequest(teststep, newEndpointId);
-            } else {
-                Object request = teststep.getRequest() == null ? null : ((String) teststep.getRequest()).getBytes();
-                String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-                _updateWithStringRequest(teststep, request, apiRequest, newEndpointId);
-            }
+            Object request = teststep.getRequest() == null ? null : ((String) teststep.getRequest()).getBytes();
+            String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
+            _updateWithStringRequest(teststep, request, apiRequest, newEndpointId);
         }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);

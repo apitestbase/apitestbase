@@ -19,3 +19,9 @@ update teststep set other_properties = null, api_request = '{"minClassName":".DB
 where type = 'DB';
 
 update teststep set request = null where type = 'DB';
+
+update teststep set api_request = '{"minClassName":".AMQPRequest",' ||
+    '"body":"' || STRINGENCODE(UTF8TOSTRING(COALESCE(request, ''))) || '"}'
+where type = 'AMQP';
+
+update teststep set request = null where type = 'AMQP';
