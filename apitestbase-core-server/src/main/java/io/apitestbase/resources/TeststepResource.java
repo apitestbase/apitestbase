@@ -13,6 +13,7 @@ import io.apitestbase.models.teststep.MQRFH2Folder;
 import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.TeststepWrapper;
 import io.apitestbase.models.teststep.apirequest.APIRequestFile;
+import io.apitestbase.models.teststep.apirequest.DBRequest;
 import io.apitestbase.utils.GeneralUtils;
 import io.apitestbase.utils.PasswordUtils;
 import io.apitestbase.utils.XMLUtils;
@@ -67,9 +68,9 @@ public class TeststepResource {
         Teststep teststep = wrapper.getTeststep();
         if (Teststep.TYPE_DB.equals(teststep.getType())) {
             boolean isSQLRequestSingleSelectStatement;
+            DBRequest dbRequest = (DBRequest) teststep.getApiRequest();
             try {
-                isSQLRequestSingleSelectStatement = GeneralUtils.isSQLRequestSingleSelectStatement(
-                        (String) teststep.getRequest());
+                isSQLRequestSingleSelectStatement = GeneralUtils.isSQLRequestSingleSelectStatement(dbRequest.getSqlScript());
             } catch (Exception e) {
                 //  the SQL script is invalid, so it can't be a single select statement
                 //  swallow the exception to avoid premature error message on UI (user is still editing the SQL script)

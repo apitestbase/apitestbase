@@ -13,3 +13,9 @@ update teststep set api_request = null where type = 'MQ' and action in ('CheckDe
 
 ALTER TABLE TESTSTEP DROP COLUMN "REQUEST_TYPE";
 ALTER TABLE TESTSTEP DROP COLUMN "REQUEST_FILENAME";
+
+update teststep set other_properties = null, api_request = '{"minClassName":".DBRequest",' ||
+    '"sqlScript":"' || STRINGENCODE(UTF8TOSTRING(COALESCE(request, ''))) || '"}'
+where type = 'DB';
+
+update teststep set request = null where type = 'DB';

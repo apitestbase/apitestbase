@@ -60,17 +60,16 @@ public interface TeststepDAO extends CrossReferenceDAO {
     /**
      * This method considers test step insertion from both Create (test step) button on UI and test case duplicating.
      * @param teststep
-     * @param request
      * @param endpointId
      * @return
      */
-    @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, api_request, endpoint_id, " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, type, api_request, endpoint_id, " +
             "other_properties) values (:t.testcaseId, " +
               "(select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId), " +
-            ":t.type, :request, :apiRequest, :endpointId, :t.otherProperties)")
+            ":t.type, :apiRequest, :endpointId, :t.otherProperties)")
     @GetGeneratedKeys
-    long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("request") Object request,
-                            @Bind("endpointId") Long endpointId, @Bind("apiRequest") String apiRequest);
+    long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("endpointId") Long endpointId,
+                            @Bind("apiRequest") String apiRequest);
 
     @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, " +
             "api_request, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
@@ -89,7 +88,6 @@ public interface TeststepDAO extends CrossReferenceDAO {
         //  set initial/default values
         Properties otherProperties = new Properties();
         APIRequest apiRequest = null;
-        String sampleRequest = null;
         switch (teststep.getType()) {
             case Teststep.TYPE_HTTP:
                 apiRequest = new HTTPRequest();
@@ -98,7 +96,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
                 apiRequest = new SOAPRequest();
                 break;
             case Teststep.TYPE_DB:
-                sampleRequest = "select * from ? where ?";
+                apiRequest = new DBRequest();
                 break;
             case Teststep.TYPE_FTP:
                 apiRequest = new FtpPutRequestFileFromText();
@@ -118,8 +116,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
         teststep.setOtherProperties(otherProperties);
         Endpoint endpoint = endpointDAO().createUnmanagedEndpoint(teststep.getType(), appMode);
-        Object request = sampleRequest == null ? null : sampleRequest.getBytes();
-        long id = _insertWithoutName(teststep, request, endpoint == null ? null : endpoint.getId(),
+        long id = _insertWithoutName(teststep, endpoint == null ? null : endpoint.getId(),
                 new ObjectMapper().writeValueAsString(apiRequest));
 
         updateNameForInsert(id, "Step " + id);
@@ -282,7 +279,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     default void processDBTeststep(Teststep teststep) {
-        if (!GeneralUtils.isSQLRequestSingleSelectStatement((String) teststep.getRequest())) {
+        DBRequest dbRequest = (DBRequest) teststep.getApiRequest();
+        if (!GeneralUtils.isSQLRequestSingleSelectStatement(dbRequest.getSqlScript())) {
             teststep.getAssertions().clear();
         }
     }

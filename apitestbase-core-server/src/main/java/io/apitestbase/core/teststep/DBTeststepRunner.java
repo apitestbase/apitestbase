@@ -7,6 +7,7 @@ import io.apitestbase.db.SQLStatementType;
 import io.apitestbase.models.OracleTIMESTAMPTZSerializer;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.teststep.Teststep;
+import io.apitestbase.models.teststep.apirequest.DBRequest;
 import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.core.Handle;
@@ -48,9 +49,10 @@ public class DBTeststepRunner extends TeststepRunner {
         Teststep teststep = getTeststep();
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         DBAPIResponse response = new DBAPIResponse();
-        String request = (String) teststep.getRequest();
+        DBRequest dbRequest = (DBRequest) teststep.getApiRequest();
+        String sqlScript = dbRequest.getSqlScript();
 
-        List<String> statements = GeneralUtils.getStatements(request);
+        List<String> statements = GeneralUtils.getStatements(sqlScript);
         sanityCheckTheStatements(statements);
 
         Endpoint endpoint = teststep.getEndpoint();
@@ -81,7 +83,7 @@ public class DBTeststepRunner extends TeststepRunner {
             response.setColumnNames(columnNames);
             response.setRowsJSON(jacksonObjectMapper.writeValueAsString(rows));
         } else {                                          //  the request is one or more non-select statements
-            Script script = handle.createScript(request);
+            Script script = handle.createScript(sqlScript);
             int[] returnValues = script.execute();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < returnValues.length; i++) {
