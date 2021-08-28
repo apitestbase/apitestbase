@@ -68,8 +68,6 @@ public class Teststep {
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String endpointProperty;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-    private Object request;
-    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private APIRequest apiRequest;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private List<Assertion> assertions = new ArrayList<>();
@@ -132,14 +130,6 @@ public class Teststep {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Object getRequest() {
-        return request;
-    }
-
-    public void setRequest(Object request) {
-        this.request = request;
     }
 
     public APIRequest getApiRequest() {

@@ -40,15 +40,6 @@ public class TeststepMapper implements RowMapper<Teststep> {
         teststep.setDescription(rs.getString("description"));
         teststep.setAction(fields.contains("action") ? rs.getString("action") : null);
 
-        if (!Teststep.TYPE_HTTP.equals(type) && !Teststep.TYPE_SOAP.equals(type) && !Teststep.TYPE_MQ.equals(type) &&
-                !Teststep.TYPE_DB.equals(type) && fields.contains("request")) {
-            byte[] requestBytes = rs.getBytes("request");
-            if (requestBytes != null) {
-                Object request = new String(requestBytes);
-                teststep.setRequest(request);
-            }
-        }
-
         if (fields.contains("api_request") && rs.getString("api_request") != null) {
             try {
                 teststep.setApiRequest(new ObjectMapper().readValue(rs.getString("api_request"), APIRequest.class));

@@ -108,11 +108,6 @@ public class TeststepRunnerFactory {
         Teststep tempStep = objectMapper.readValue(tempStepJSON, Teststep.class);
         teststep.setOtherProperties(tempStep.getOtherProperties());
 
-        //  resolve property references in teststep.request
-        propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, false);
-        teststep.setRequest(new StrSubstitutor(propertyReferenceResolver).replace((String) teststep.getRequest()));
-        undefinedStringProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
-
         //  resolve property references in teststep.apiRequest (null safe)
         String apiRequestJSON = objectMapper.writeValueAsString(teststep.getApiRequest());
         propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, true);

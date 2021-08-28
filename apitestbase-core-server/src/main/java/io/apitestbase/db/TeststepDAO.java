@@ -42,8 +42,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, " +
-            "endpoint_property VARCHAR(200), request BLOB, api_request CLOB, " +
-            "other_properties CLOB, step_data_backup CLOB, " +
+            "endpoint_property VARCHAR(200), api_request CLOB, other_properties CLOB, step_data_backup CLOB, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
@@ -71,14 +70,14 @@ public interface TeststepDAO extends CrossReferenceDAO {
     long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("endpointId") Long endpointId,
                             @Bind("apiRequest") String apiRequest);
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, " +
             "api_request, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
             "select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId, :t.name, " +
-            ":t.type, :t.description, :t.action, :request, :apiRequest, " +
+            ":t.type, :t.description, :t.action, :apiRequest, " +
             ":endpointId, :t.endpointProperty, :t.otherProperties)")
     @GetGeneratedKeys
-    long _insertWithName(@BindBean("t") Teststep teststep, @Bind("request") byte[] request,
-                         @Bind("apiRequest") String apiRequest, @Bind("endpointId") Long endpointId);
+    long _insertWithName(@BindBean("t") Teststep teststep, @Bind("apiRequest") String apiRequest,
+                         @Bind("endpointId") Long endpointId);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
@@ -133,13 +132,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
         if (teststep.getEndpoint() != null) {
             endpointId = endpointDAO().insertUnmanagedEndpoint(teststep.getEndpoint());
         }
-        String requestString = (String) teststep.getRequest();
-        byte[] request = null;
-        if (requestString != null) {
-            request = requestString.getBytes();
-        }
         String apiRequestJSONString = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-        long teststepId = _insertWithName(teststep, request, apiRequestJSONString, endpointId);
+        long teststepId = _insertWithName(teststep, apiRequestJSONString, endpointId);
 
         for (Assertion assertion : teststep.getAssertions()) {
             assertion.setTeststepId(teststepId);
@@ -152,16 +146,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
-            "request = :request, api_request = :apiRequest, endpoint_id = :endpointId, " +
-            "endpoint_property = :t.endpointProperty, other_properties = :t.otherProperties, " +
-            "updated = CURRENT_TIMESTAMP where id = :t.id")
-    void _updateWithStringRequest(@BindBean("t") Teststep teststep, @Bind("request") Object request,
-                                  @Bind("apiRequest") String apiRequest, @Bind("endpointId") Long endpointId);
-
-    @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
             "api_request = :apiRequest, endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, " +
+            "other_properties = :t.otherProperties, " +
             "updated = CURRENT_TIMESTAMP where id = :t.id")
-    void _updateWithRequest(@BindBean("t") Teststep teststep, @Bind("apiRequest") String apiRequest,
+    void _updateWithStringRequest(@BindBean("t") Teststep teststep, @Bind("apiRequest") String apiRequest,
                                   @Bind("endpointId") Long endpointId);
 
     @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
@@ -197,15 +185,11 @@ public interface TeststepDAO extends CrossReferenceDAO {
         Endpoint newEndpoint = teststep.getEndpoint();
         Long newEndpointId = newEndpoint == null ? null : newEndpoint.getId();
 
-        if (Teststep.TYPE_HTTP.equals(teststep.getType()) || Teststep.TYPE_SOAP.equals(teststep.getType())) {
-            String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-            _updateWithRequest(teststep, apiRequest, newEndpointId);
-        } else if (teststep.getApiRequest() instanceof MQEnqueueOrPublishFromFileRequest) {
+        if (teststep.getApiRequest() instanceof MQEnqueueOrPublishFromFileRequest) {
             _updateWithoutRequest(teststep, newEndpointId);
         } else {
-            Object request = teststep.getRequest() == null ? null : ((String) teststep.getRequest()).getBytes();
             String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-            _updateWithStringRequest(teststep, request, apiRequest, newEndpointId);
+            _updateWithStringRequest(teststep, apiRequest, newEndpointId);
         }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);
@@ -569,9 +553,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
         switchToDirectEndpoint(teststep.getId(), endpoint.getId());
     }
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, " +
             "api_request, endpoint_id, endpoint_property, other_properties) select :newTestcaseId, " +
-            "sequence, name, type, description, action, request, api_request, " +
+            "sequence, name, type, description, action, api_request, " +
             "endpoint_id, endpoint_property, other_properties from teststep where id = :oldTeststepId")
     @GetGeneratedKeys
     long duplicateById(@Bind("oldTeststepId") long oldTeststepId, @Bind("newTestcaseId") long newTestcaseId);
