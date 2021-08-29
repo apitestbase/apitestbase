@@ -25,3 +25,7 @@ update teststep set api_request = '{"minClassName":".AMQPRequest",' ||
 where type = 'AMQP';
 
 update teststep set request = null where type = 'AMQP';
+
+ALTER TABLE TESTSTEP DROP COLUMN "REQUEST";
+
+delete from testcase_run;
