@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <artifactId>apitestbase-parent</artifactId>
         <groupId>io.apitestbase</groupId>
-        <version>0.18.5-SNAPSHOT</version>
+        <version>0.18.5</version>
     </parent>
 
     <artifactId>apitestbase-assembly</artifactId>
@@ -138,7 +136,7 @@
                                 </goals>
                                 <configuration>
                                     <transformers>
-                                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                             <manifestEntries>
                                                 <Main-Class>io.apitestbase.APITestBaseApplication</Main-Class>
@@ -214,10 +212,10 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${distDir}/${lib.iib}/v100"/>
-                                        <mkdir dir="${distDir}/${lib.jdbc.oracle}"/>
-                                        <mkdir dir="${distDir}/${lib.jdbc.sqlserver}"/>
-                                        <mkdir dir="${distDir}/${lib.mq}"/>
+                                        <mkdir dir="${distDir}/${lib.iib}/v100" />
+                                        <mkdir dir="${distDir}/${lib.jdbc.oracle}" />
+                                        <mkdir dir="${distDir}/${lib.jdbc.sqlserver}" />
+                                        <mkdir dir="${distDir}/${lib.mq}" />
                                     </target>
                                 </configuration>
                             </execution>
@@ -230,7 +228,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <dw.mode/>
+                <dw.mode />
             </properties>
             <build>
                 <plugins>
