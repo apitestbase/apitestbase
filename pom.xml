@@ -5,7 +5,7 @@
     <groupId>io.apitestbase</groupId>
     <artifactId>apitestbase-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.18.5</version>
+    <version>0.18.6-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A simple tool for comprehensive API testing</description>
@@ -29,7 +29,7 @@
         <connection>scm:git:git://github.com/apitestbase/apitestbase.git</connection>
         <developerConnection>scm:git:git@github.com:apitestbase/apitestbase.git</developerConnection>
         <url>https://github.com/apitestbase/apitestbase</url>
-      <tag>v0.18.5</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
