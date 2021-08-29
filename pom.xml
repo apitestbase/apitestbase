@@ -73,6 +73,7 @@
                 <module>apitestbase-assembly</module>
                 <module>apitestbase-iib</module>
                 <module>apitestbase-mq</module>
+                <module>apitestbase-upgrade</module>
             </modules>
         </profile>
         <profile>
