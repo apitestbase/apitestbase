@@ -10,9 +10,17 @@
 
     <artifactId>apitestbase-jms-solace</artifactId>
 
-    <properties>
-        <solace.version>10.10.0</solace.version>
-    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.apitestbase</groupId>
+                <artifactId>apitestbase-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -23,12 +31,10 @@
         <dependency>
             <groupId>com.solacesystems</groupId>
             <artifactId>sol-jcsmp</artifactId>
-            <version>${solace.version}</version>
         </dependency>
         <dependency>
             <groupId>com.solacesystems</groupId>
             <artifactId>sol-jms</artifactId>
-            <version>${solace.version}</version>
         </dependency>
     </dependencies>
 </project>

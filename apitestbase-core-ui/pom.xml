@@ -10,21 +10,17 @@
 
     <artifactId>apitestbase-core-ui</artifactId>
 
-    <properties>
-        <angular.version>1.7.7</angular.version>
-        <angular-ui-grid.version>4.7.1</angular-ui-grid.version>
-        <angular-ui-router.version>1.0.20</angular-ui-router.version>
-        <bootstrap.version>3.4.1</bootstrap.version>
-        <jquery.version>3.3.1</jquery.version>
-        <angular-bootstrap.version>2.5.0</angular-bootstrap.version>
-        <startbootstrap-sb-admin-2.version>3.3.7+1</startbootstrap-sb-admin-2.version>
-        <ui-grid-draggable-rows.version>0.3.3</ui-grid-draggable-rows.version>
-        <ng-file-upload.version>12.2.13</ng-file-upload.version>
-        <metisMenu.version>3.0.3</metisMenu.version>
-        <font-awesome.version>4.7.0</font-awesome.version>
-        <jstree.version>3.3.7</jstree.version>
-        <ng-js-tree.version>0.0.10</ng-js-tree.version>
-    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.apitestbase</groupId>
+                <artifactId>apitestbase-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <!-- Exclude transitive dependencies (by using <exclusions> element) to avoid this issue
         https://stackoverflow.com/questions/16421454/why-is-maven-downloading-the-maven-metadata-xml-every-time -->
@@ -32,12 +28,10 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular</artifactId>
-            <version>${angular.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-resource</artifactId>
-            <version>${angular.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -48,7 +42,6 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-sanitize</artifactId>
-            <version>${angular.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -59,7 +52,6 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-ui-grid</artifactId>
-            <version>${angular-ui-grid.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -70,7 +62,6 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-ui-router</artifactId>
-            <version>${angular-ui-router.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -81,7 +72,6 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>${bootstrap.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -92,12 +82,10 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>jquery</artifactId>
-            <version>${jquery.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-bootstrap</artifactId>
-            <version>${angular-bootstrap.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -108,7 +96,6 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>github-com-BlackrockDigital-startbootstrap-sb-admin-2</artifactId>
-            <version>${startbootstrap-sb-admin-2.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -119,7 +106,6 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>ui-grid-draggable-rows</artifactId>
-            <version>${ui-grid-draggable-rows.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -130,7 +116,6 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>ng-file-upload</artifactId>
-            <version>${ng-file-upload.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -141,7 +126,6 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>metisMenu</artifactId>
-            <version>${metisMenu.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -152,12 +136,10 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>font-awesome</artifactId>
-            <version>${font-awesome.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>jstree</artifactId>
-            <version>${jstree.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -168,7 +150,6 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>ng-js-tree</artifactId>
-            <version>${ng-js-tree.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

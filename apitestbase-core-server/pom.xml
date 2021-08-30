@@ -10,13 +10,6 @@
 
     <artifactId>apitestbase-core-server</artifactId>
 
-    <properties>
-        <junit.jupiter.version>5.4.0</junit.jupiter.version>  <!-- JUnit 5 -->
-        <dropwizard.version>1.3.17</dropwizard.version>
-        <xmlunit.version>2.6.2</xmlunit.version>
-        <handlebars.version>4.2.0</handlebars.version>
-    </properties>
-
     <profiles>
         <profile>
             <id>sonatype-ossrh</id>
@@ -29,6 +22,18 @@
         </profile>
     </profiles>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.apitestbase</groupId>
+                <artifactId>apitestbase-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>io.apitestbase</groupId>
@@ -39,50 +44,41 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
-            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-assets</artifactId>
-            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-db</artifactId>
-            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-jdbi3</artifactId>
-            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-forms</artifactId>
-            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-views-freemarker</artifactId>
-            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-auth</artifactId>
-            <version>${dropwizard.version}</version>
         </dependency>
 
         <dependency>
@@ -92,32 +88,26 @@
         <dependency>
             <groupId>com.github.roskart.dropwizard-jaxws</groupId>
             <artifactId>dropwizard-jaxws</artifactId>
-            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>com.predic8</groupId>
             <artifactId>soa-model-core</artifactId>
-            <version>1.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-core</artifactId>
-            <version>${xmlunit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-placeholders</artifactId>
-            <version>${xmlunit.version}</version>
         </dependency>
         <dependency>
             <groupId>net.javacrumbs.json-unit</groupId>
             <artifactId>json-unit</artifactId>
-            <version>2.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>json-schema-validator</artifactId>
-            <version>1.0.53</version>
             <exclusions>
                 <!-- Use Jackson from Dropwizard -->
                 <exclusion>
@@ -129,42 +119,34 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
-            <version>2.4.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.8.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>1.6</version>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
-            <version>1.6</version>
         </dependency>
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
-            <version>2.5.1</version>
         </dependency>
         <dependency>
             <groupId>uk.com.robust-it</groupId>
             <artifactId>cloning</artifactId>
-            <version>1.9.11</version>
         </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
-            <version>2.22.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -175,35 +157,29 @@
         <dependency>
             <groupId>com.ibm.mqlight</groupId>
             <artifactId>mqlight-api</artifactId>
-            <version>1.0.2016062300</version>
         </dependency>
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
-            <version>3.6</version>
         </dependency>
 
         <!-- WireMock's dependencies -->
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-legacy</artifactId>
-            <version>${xmlunit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.flipkart.zjsonpatch</groupId>
             <artifactId>zjsonpatch</artifactId>
-            <version>0.4.6</version>
         </dependency>
         <!-- for WireMock response templating -->
         <dependency>
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars</artifactId>
-            <version>${handlebars.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars-helpers</artifactId>
-            <version>${handlebars.version}</version>
         </dependency>
 
         <!-- For Java 9+ (backward compatible with Java 1.8).
@@ -212,32 +188,26 @@
         <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
-            <version>2.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.javaee-api</groupId>
             <artifactId>javax.jws</artifactId>
-            <version>3.1.2.2</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
-            <version>2.3.2</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-core</artifactId>
-            <version>2.3.0.1</version>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-            <version>1.1.1</version>
         </dependency>
     </dependencies>
 

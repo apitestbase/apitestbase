@@ -43,16 +43,6 @@
         <maven.install.skip>true</maven.install.skip>  <!-- Avoid installing API Test Base jars to Maven local repository -->
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>1.4.196</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <profiles>
         <profile>
             <id>default</id>
@@ -60,6 +50,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>apitestbase-bom</module>
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-core-ui</module>
@@ -74,6 +65,7 @@
         <profile>
             <id>dev</id>
             <modules>
+                <module>apitestbase-bom</module>
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-core-ui</module>
@@ -105,6 +97,7 @@
         <profile>
             <id>prod</id>
             <modules>
+                <module>apitestbase-bom</module>
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-core-ui</module>
@@ -117,6 +110,7 @@
         <profile>
             <id>sonatype-ossrh</id>
             <modules>
+                <module>apitestbase-bom</module>
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-iib</module>

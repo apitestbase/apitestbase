@@ -10,9 +10,17 @@
 
     <artifactId>apitestbase-mq</artifactId>
 
-    <properties>
-        <mq.version>[8.0.0.0, 8.0.0.50]</mq.version>
-    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.apitestbase</groupId>
+                <artifactId>apitestbase-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -26,22 +34,18 @@
         <dependency>
             <groupId>com.ibm</groupId>
             <artifactId>com.ibm.mq</artifactId>
-            <version>${mq.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ibm</groupId>
             <artifactId>com.ibm.mq.jmqi</artifactId>
-            <version>${mq.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ibm</groupId>
             <artifactId>com.ibm.mq.headers</artifactId>
-            <version>${mq.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ibm</groupId>
             <artifactId>com.ibm.mq.pcf</artifactId>
-            <version>${mq.version}</version>
         </dependency>
     </dependencies>
 </project>
