@@ -17,7 +17,7 @@ import io.apitestbase.models.*;
 import io.apitestbase.models.mixin.*;
 import io.apitestbase.models.teststep.HTTPHeader;
 import io.apitestbase.models.teststep.MQRFH2Folder;
-import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -72,7 +72,7 @@ public final class GeneralUtils {
     }
 
     public static boolean isSQLRequestSingleSelectStatement(String sqlRequest) {
-        List<String> statements = getStatements(sqlRequest);
+        List<String> statements = getSqlStatements(sqlRequest);
         return statements.size() == 1 && SQLStatementType.isSelectStatement(statements.get(0));
     }
 
@@ -81,12 +81,12 @@ public final class GeneralUtils {
      * @param sqlRequest
      * @return
      */
-    public static List<String> getStatements(String sqlRequest) {
+    public static List<String> getSqlStatements(String sqlRequest) {
         final List<String> statements = new ArrayList<>();
         String lastStatement = new SqlScriptParser((t, sb) -> {
             statements.add(sb.toString().trim());
             sb.setLength(0);
-        }).parse(new ANTLRStringStream(sqlRequest));
+        }).parse(CharStreams.fromString(sqlRequest));
         statements.add(lastStatement.trim());
         statements.removeAll(Collections.singleton(""));   //  remove all empty statements
 

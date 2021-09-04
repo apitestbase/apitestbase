@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -55,5 +56,15 @@ public class GeneralUtilsTest {
         String input = "<root>";
         String expectedOutput = input;
         assertEquals(expectedOutput, GeneralUtils.prettyPrintJSONOrXML(input));
+    }
+
+    @Test
+    void getSqlStatements() {
+        String sqlStatement1 = "update aaa set col1 = 'value1'";
+        String sqlStatement2 = "update bbb set col2 = 'value2'";
+        String sqlScript = sqlStatement1 + ";\n-- some comment\n" + sqlStatement2 + ";";
+        List<String> sqlStatements = GeneralUtils.getSqlStatements(sqlScript);
+        assertEquals(sqlStatement1, sqlStatements.get(0));
+        assertEquals(sqlStatement2, sqlStatements.get(1));
     }
 }

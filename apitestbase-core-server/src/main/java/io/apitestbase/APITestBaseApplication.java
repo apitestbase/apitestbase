@@ -33,14 +33,12 @@ import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.jetty.ConnectorFactory;
 import io.dropwizard.jetty.HttpConnectorFactory;
 import io.dropwizard.lifecycle.ServerLifecycleListener;
-import io.dropwizard.logging.DefaultLoggingFactory;
 import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.eclipse.jetty.server.Server;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
 
@@ -50,7 +48,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
@@ -298,12 +295,6 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         environment.jersey().register(new PropertyExtractorResource(udpDAO, dataTableDAO, propertyExtractorDAO));
         if (isInTeamMode(configuration)) {
             environment.jersey().register(new UserResource(userDAO));
-        }
-
-        //  if turned on in config.yml, register jersey LoggingFilter (used for logging API Test Base resource oriented HTTP API requests and responses)
-        DefaultLoggingFactory defaultLoggingFactory = (DefaultLoggingFactory) configuration.getLoggingFactory();
-        if (defaultLoggingFactory.getLoggers().containsKey(LoggingFilter.class.getName())) {
-            environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));
         }
 
         //  register exception mappers

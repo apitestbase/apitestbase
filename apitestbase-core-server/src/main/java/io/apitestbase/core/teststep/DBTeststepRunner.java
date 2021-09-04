@@ -52,7 +52,7 @@ public class DBTeststepRunner extends TeststepRunner {
         DBRequest dbRequest = (DBRequest) teststep.getApiRequest();
         String sqlScript = dbRequest.getSqlScript();
 
-        List<String> statements = GeneralUtils.getStatements(sqlScript);
+        List<String> statements = GeneralUtils.getSqlStatements(sqlScript);
         sanityCheckTheStatements(statements);
 
         Endpoint endpoint = teststep.getEndpoint();

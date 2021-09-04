@@ -1,0 +1,3 @@
+Please manually update the config.yml file under your <APITestBase_Home>:
+    Delete the paragraph of comment starting with '# Uncomment below logger for REST APIs request/response logging'
+To confirm update completion, type y and then Enter.

@@ -26,6 +26,11 @@
                 <version>${junit-jupiter.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.dropwizard</groupId>
                 <artifactId>dropwizard-core</artifactId>
                 <version>${dropwizard.version}</version>
@@ -205,6 +210,11 @@
                 <groupId>org.jdbi</groupId>
                 <artifactId>jdbi3-core</artifactId>
                 <version>${jdbi3-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>${antlr.version}</version>
             </dependency>
 
             <dependency>

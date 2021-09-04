@@ -40,15 +40,6 @@ logging:
           maxFileSize: 10MB
           archivedLogFilenamePattern: ./logs/archive/wiremock/wiremock-%d-%i.log.gz
           archivedFileCount: 200
-    # Uncomment below logger for REST APIs request/response logging
-    # "org.glassfish.jersey.filter.LoggingFilter":
-    #   additive: false
-    #   appenders:
-    #     - type: file
-    #       currentLogFilename: ./logs/api.log
-    #       maxFileSize: 20MB
-    #       archivedLogFilenamePattern: ./logs/archive/api/api-%d-%i.log.gz
-    #       archivedFileCount: 200
   appenders:
     - type: console
     - type: file

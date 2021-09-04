@@ -61,7 +61,8 @@
         <!-- not putting dependency version properties in BOM, because the properties are also used at other places (like files filtering in apitestbase-core-ui module -->
         <junit-jupiter.version>5.7.2</junit-jupiter.version>  <!-- JUnit 5 -->
         <h2database.version>1.4.199</h2database.version>
-        <dropwizard.version>1.3.17</dropwizard.version>
+        <jackson.version>2.10.5</jackson.version>    <!-- check dropwizard-dependencies/pom.xml -->
+        <dropwizard.version>2.0.25</dropwizard.version>
         <dropwizard-jaxws.version>1.0.5</dropwizard-jaxws.version>
         <soa-model-core.version>1.6.0</soa-model-core.version>
         <xmlunit.version>2.6.2</xmlunit.version>
@@ -87,7 +88,8 @@
         <javax-activation.version>1.1.1</javax-activation.version>
 
         <maven-artifact.version>3.6.3</maven-artifact.version>
-        <jdbi3-core.version>3.5.1</jdbi3-core.version>    <!-- jdbi3-core 3.5.1 is used by dropwizard 1.3.17 -->
+        <jdbi3-core.version>3.21.0</jdbi3-core.version>    <!-- check dropwizard-dependencies/pom.xml -->
+        <antlr.version>4.9.2</antlr.version> <!-- check jdbi/pom.xml -->
 
         <angular.version>1.7.7</angular.version>
         <angular-ui-grid.version>4.7.1</angular-ui-grid.version>
