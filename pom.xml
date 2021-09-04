@@ -78,23 +78,23 @@
         <jetty.version>9.4.43.v20210629</jetty.version>  <!-- check dropwizard-dependencies/pom.xml -->
         <wiremock.version>2.30.1</wiremock.version>
         <mqlight-api.version>1.0.2016062300</mqlight-api.version>
-        <commons-net.version>3.6</commons-net.version>
-        <zjsonpatch.version>0.4.6</zjsonpatch.version>
+        <commons-net.version>3.8.0</commons-net.version>
+        <zjsonpatch.version>0.4.11</zjsonpatch.version>
         <handlebars.version>4.2.0</handlebars.version>
         <jaxws-api.version>2.3.1</jaxws-api.version>
         <javax.jws.version>3.1.2.2</javax.jws.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
-        <jaxb-impl.version>2.3.2</jaxb-impl.version>
-        <jaxb-core.version>2.3.0.1</jaxb-core.version>
+        <jaxb-impl.version>3.0.2</jaxb-impl.version>
+        <jaxb-core.version>3.0.2</jaxb-core.version>
         <javax-activation.version>1.1.1</javax-activation.version>
 
-        <maven-artifact.version>3.6.3</maven-artifact.version>
+        <maven-artifact.version>3.8.2</maven-artifact.version>
         <jdbi3-core.version>3.21.0</jdbi3-core.version>    <!-- check dropwizard-dependencies/pom.xml -->
         <antlr.version>4.9.2</antlr.version> <!-- check jdbi/pom.xml -->
 
-        <angular.version>1.7.7</angular.version>
-        <angular-ui-grid.version>4.7.1</angular-ui-grid.version>
-        <angular-ui-router.version>1.0.20</angular-ui-router.version>
+        <angular.version>1.8.2</angular.version>
+        <angular-ui-grid.version>4.11.0</angular-ui-grid.version>
+        <angular-ui-router.version>1.0.29</angular-ui-router.version>
         <bootstrap.version>3.4.1</bootstrap.version>
         <jquery.version>3.3.1</jquery.version>
         <angular-bootstrap.version>2.5.0</angular-bootstrap.version>
