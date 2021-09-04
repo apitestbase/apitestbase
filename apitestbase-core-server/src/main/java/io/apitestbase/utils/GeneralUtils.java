@@ -334,7 +334,8 @@ public final class GeneralUtils {
                                 httpStubMapping.getRequestBodyMainPatternValue(),
                                 equalToXmlPattern.isEnablePlaceholders(),
                                 equalToXmlPattern.getPlaceholderOpeningDelimiterRegex(),
-                                equalToXmlPattern.getPlaceholderClosingDelimiterRegex()));
+                                equalToXmlPattern.getPlaceholderClosingDelimiterRegex(),
+                                null));
                         break;
                     } else if (requestBodyPattern instanceof EqualToJsonPattern) {
                         EqualToJsonPattern equalToJsonPattern = (EqualToJsonPattern) requestBodyPattern;
