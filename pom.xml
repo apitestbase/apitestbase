@@ -63,9 +63,9 @@
         <h2database.version>1.4.199</h2database.version>
         <jackson.version>2.10.5</jackson.version>    <!-- check dropwizard-dependencies/pom.xml -->
         <dropwizard.version>2.0.25</dropwizard.version>
-        <dropwizard-jaxws.version>1.0.5</dropwizard-jaxws.version>
-        <soa-model-core.version>1.6.0</soa-model-core.version>
-        <xmlunit.version>2.6.2</xmlunit.version>
+        <dropwizard-jaxws.version>1.2.2</dropwizard-jaxws.version>
+        <soa-model-core.version>1.6.3</soa-model-core.version>
+        <xmlunit.version>2.8.2</xmlunit.version>
         <json-unit.version>2.3.0</json-unit.version>
         <json-schema-validator.version>1.0.53</json-schema-validator.version>
         <httpclient.version>4.5.13</httpclient.version>
