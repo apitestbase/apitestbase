@@ -21,22 +21,23 @@ import org.antlr.v4.runtime.CharStreams;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.*;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.ClientProtocolException;
+import org.apache.hc.client5.http.classic.methods.*;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.jdbi.v3.core.internal.SqlScriptParser;
 import org.w3c.dom.Document;
 
@@ -46,11 +47,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
 import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_ID;
@@ -138,12 +139,12 @@ public final class GeneralUtils {
                 break;
             case POST:
                 HttpPost httpPost = new HttpPost(url);
-                httpPost.setEntity(httpBody == null ? null : new StringEntity(httpBody, "UTF-8"));    //  StringEntity doesn't accept null string (exception is thrown)
+                httpPost.setEntity(httpBody == null ? null : new StringEntity(httpBody, StandardCharsets.UTF_8));    //  StringEntity doesn't accept null string (exception is thrown)
                 httpRequest = httpPost;
                 break;
             case PUT:
                 HttpPut httpPut = new HttpPut(url);
-                httpPut.setEntity(httpBody == null ? null : new StringEntity(httpBody, "UTF-8"));     //  StringEntity doesn't accept null string (exception is thrown)
+                httpPut.setEntity(httpBody == null ? null : new StringEntity(httpBody, StandardCharsets.UTF_8));     //  StringEntity doesn't accept null string (exception is thrown)
                 httpRequest = httpPut;
                 break;
             case DELETE:
@@ -165,27 +166,13 @@ public final class GeneralUtils {
             httpRequest.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
         }
 
-        final HTTPAPIResponse apiResponse = new HTTPAPIResponse();
-        final AtomicReference<Date> responseReceivedTime = new AtomicReference<>();
-        ResponseHandler<Void> responseHandler = httpResponse -> {
-            responseReceivedTime.set(new Date());
-            apiResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
-            apiResponse.getHttpHeaders().add(
-                    new HTTPHeader("*Status-Line*", httpResponse.getStatusLine().toString()));
-            Header[] headers = httpResponse.getAllHeaders();
-            for (Header header: headers) {
-                apiResponse.getHttpHeaders().add(new HTTPHeader(header.getName(), header.getValue()));
-            }
-            HttpEntity entity = httpResponse.getEntity();
-            apiResponse.setHttpBody(entity != null ? EntityUtils.toString(entity) : null);
-            return null;
-        };
-
         //  build HTTP Client instance, trusting all SSL certificates, using system HTTP proxy if needed and exists
-        SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial((TrustStrategy) (chain, authType) -> true).build();
+        SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial((chain, authType) -> true).build();
         HostnameVerifier allowAllHosts = new NoopHostnameVerifier();
         SSLConnectionSocketFactory connectionFactory = new SSLConnectionSocketFactory(sslContext, allowAllHosts);
-        HttpClientBuilder httpClientBuilder = HttpClients.custom().setSSLSocketFactory(connectionFactory);
+        HttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder.create()
+                .setSSLSocketFactory(connectionFactory).build();
+        HttpClientBuilder httpClientBuilder = HttpClients.custom().setConnectionManager(cm);
         InetAddress urlHost = InetAddress.getByName(new URL(url).getHost());
         if (!(urlHost.isLoopbackAddress() || urlHost.isSiteLocalAddress())) {    //  only use system proxy for external address
             Proxy systemHTTPProxy = getSystemHTTPProxy();
@@ -194,17 +181,34 @@ public final class GeneralUtils {
                 httpClientBuilder.setProxy(new HttpHost(addr.getHostName(), addr.getPort()));
             }
         }
-        HttpClient httpClient = httpClientBuilder.build();
+        CloseableHttpClient httpClient = httpClientBuilder.build();
 
         //  invoke the API
         Date invocationStartTime = new Date();
+        final HTTPAPIResponse apiResponse = new HTTPAPIResponse();
+        Date responseReceivedTime;
         try {
-            httpClient.execute(httpRequest, responseHandler);
+            try (CloseableHttpResponse httpResponse = httpClient.execute(httpRequest)) {
+                responseReceivedTime = new Date();
+                apiResponse.setStatusCode(httpResponse.getCode());
+                StringBuffer statusLine = new StringBuffer();
+                statusLine.append(httpResponse.getVersion()).append(' ').append(httpResponse.getCode()).append(' ')
+                        .append(httpResponse.getReasonPhrase());
+                apiResponse.getHttpHeaders().add(new HTTPHeader("*Status-Line*", statusLine.toString()));
+                Header[] headers = httpResponse.getHeaders();
+                for (Header header: headers) {
+                    apiResponse.getHttpHeaders().add(new HTTPHeader(header.getName(), header.getValue()));
+                }
+                HttpEntity entity = httpResponse.getEntity();
+                apiResponse.setHttpBody(entity != null ? EntityUtils.toString(entity) : null);
+            }
         } catch (ClientProtocolException e) {
             throw new RuntimeException(e.getCause().getMessage(), e);
+        } finally {
+            httpClient.close();
         }
 
-        long responseTime = responseReceivedTime.get().getTime() - invocationStartTime.getTime();
+        long responseTime = responseReceivedTime.getTime() - invocationStartTime.getTime();
         apiResponse.setResponseTime(responseTime);
 
         return apiResponse;
@@ -282,7 +286,6 @@ public final class GeneralUtils {
      * Create (clone) a new instance out of the stub spec, with UUID generated for the instance.
      * The instance also has the apiTestBaseId as metadata.
      * The spec is not changed.
-     * @param spec
      * @return
      */
     public static StubMapping createStubInstance(long apiTestBaseId, short apiTestBaseNumber, StubMapping spec) {
