@@ -96,19 +96,19 @@
         <angular-ui-grid.version>4.11.0</angular-ui-grid.version>
         <angular-ui-router.version>1.0.29</angular-ui-router.version>
         <bootstrap.version>3.4.1</bootstrap.version>
-        <jquery.version>3.3.1</jquery.version>
+        <jquery.version>3.6.0</jquery.version>
         <angular-bootstrap.version>2.5.0</angular-bootstrap.version>
         <startbootstrap-sb-admin-2.version>3.3.7+1</startbootstrap-sb-admin-2.version>
         <ui-grid-draggable-rows.version>0.3.3</ui-grid-draggable-rows.version>
         <ng-file-upload.version>12.2.13</ng-file-upload.version>
-        <metisMenu.version>3.0.3</metisMenu.version>
+        <metisMenu.version>3.0.7</metisMenu.version>
         <font-awesome.version>4.7.0</font-awesome.version>
-        <jstree.version>3.3.7</jstree.version>
+        <jstree.version>3.3.12</jstree.version>
         <ng-js-tree.version>0.0.10</ng-js-tree.version>
 
         <iib.version>[10.0.0.0, 10.0.0.50]</iib.version>
 
-        <solace.version>10.10.0</solace.version>
+        <solace.version>10.12.0</solace.version>
 
         <mq.version>[8.0.0.0, 8.0.0.50]</mq.version>
 
@@ -116,8 +116,8 @@
 
         <picocli.version>4.6.1</picocli.version>
         <reflections.version>0.9.11</reflections.version> <!-- can't use 0.9.12, as there is https://github.com/ronmamo/reflections/issues/273 -->
-        <jackson-dataformat-yaml.version>2.12.2</jackson-dataformat-yaml.version>
-        <slf4j-nop.version>1.7.30</slf4j-nop.version>
+        <jackson-dataformat-yaml.version>2.12.5</jackson-dataformat-yaml.version>
+        <slf4j-nop.version>1.7.32</slf4j-nop.version>
     </properties>
 
     <profiles>
