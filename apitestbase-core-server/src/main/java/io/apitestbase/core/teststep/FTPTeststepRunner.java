@@ -2,7 +2,8 @@ package io.apitestbase.core.teststep;
 
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.endpoint.FTPEndpointProperties;
-import io.apitestbase.models.teststep.*;
+import io.apitestbase.models.teststep.FTPTeststepProperties;
+import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.models.teststep.apirequest.FtpPutRequest;
 import io.apitestbase.models.teststep.apirequest.FtpPutRequestFileFromFile;
@@ -24,19 +25,21 @@ public class FTPTeststepRunner extends TeststepRunner {
     public BasicTeststepRun run() throws Exception {
         Teststep teststep = getTeststep();
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+        FTPTeststepProperties otherProperties = (FTPTeststepProperties) teststep.getOtherProperties();
         Endpoint endpoint = teststep.getEndpoint();
 
         APIRequest apiRequest = teststep.getApiRequest();
         if (apiRequest instanceof FtpPutRequest) {
-            put(endpoint, (FtpPutRequest) apiRequest);
+            put(endpoint, (FtpPutRequest) apiRequest, otherProperties);
         }
 
         return basicTeststepRun;
     }
 
-    private void put(Endpoint endpoint, FtpPutRequest ftpPutRequest) throws IOException {
+    private void put(Endpoint endpoint, FtpPutRequest ftpPutRequest, FTPTeststepProperties otherProperties)
+            throws IOException {
         String username = StringUtils.trimToEmpty(endpoint.getUsername());
-        String remoteFilePath = StringUtils.trimToEmpty(ftpPutRequest.getRemoteFilePath());
+        String remoteFilePath = StringUtils.trimToEmpty(otherProperties.getRemoteFilePath());
         byte[] fileBytes;
 
         //  validate arguments

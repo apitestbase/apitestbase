@@ -14,5 +14,9 @@ public class SystemDBOperationList extends OperationList {
         getOperationList().add(
                 new SimpleSystemDBOperation(new DefaultArtifactVersion("0.18.4"), new DefaultArtifactVersion("0.18.5"),
                 "io/apitestbase/upgrade/db/SystemDB_0_18_4_To_0_18_5_Part2.sql"));
+
+        getOperationList().add(new SimpleSystemDBOperation(
+                new DefaultArtifactVersion("0.18.5"), new DefaultArtifactVersion("0.18.6"),
+                "io/apitestbase/upgrade/db/SystemDB_0_18_5_To_0_18_6.sql"));
     }
 }

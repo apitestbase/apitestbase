@@ -2,21 +2,21 @@
   <label for="fileFrom" class="col-lg-2 control-label">File From</label>
   <div class="col-lg-1">
     <select name="fileFrom" id="fileFrom" class="form-control"
-            ng-model="teststep.apiRequest.fileFrom" ng-change="update(teststepForm.$valid)"
+            ng-model="teststep.apiRequest.minClassName" ng-change="fileFromChanged(teststepForm.$valid)"
             ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
-      <option value="Text">Text</option>
-      <option value="File">File</option>
+      <option value=".FtpPutRequestFileFromText">Text</option>
+      <option value=".FtpPutRequestFileFromFile">File</option>
     </select>
   </div>
   <label for="remoteFilePath" class="col-lg-2 control-label">Remote File Path</label>
   <div class="col-lg-5">
     <input name="remoteFilePath" id="remoteFilePath" type="text" class="form-control" ng-trim="true"
-           ng-model="teststep.apiRequest.remoteFilePath" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
+           ng-model="teststep.otherProperties.remoteFilePath" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
            ng-readonly="appStatus.isForbidden()">
   </div>
 </div>
 
-<div class="form-group" ng-if="teststep.apiRequest.fileFrom === 'Text'">
+<div class="form-group" ng-if="teststep.apiRequest.minClassName === '.FtpPutRequestFileFromText'">
   <div class="col-lg-10">
     <textarea id="fileContent" name="fileContent" class="form-control" spellcheck="false" rows="30"
               ng-model="teststep.apiRequest.fileContent" ng-change="autoSave(teststepForm.$valid)"
@@ -24,7 +24,7 @@
   </div>
 </div>
 
-<div ng-if="teststep.apiRequest.fileFrom === 'File'">
+<div ng-if="teststep.apiRequest.minClassName === '.FtpPutRequestFileFromFile'">
   <div class="form-group"></div> <!-- spacer -->
   <div class="form-group"></div> <!-- spacer -->
   <div class="form-group"></div> <!-- spacer -->

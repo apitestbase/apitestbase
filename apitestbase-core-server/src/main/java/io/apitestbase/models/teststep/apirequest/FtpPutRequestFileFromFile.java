@@ -9,13 +9,6 @@ public class FtpPutRequestFileFromFile extends FtpPutRequest implements APIReque
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private byte[] fileContent;
 
-    public FtpPutRequestFileFromFile() {}
-
-    public FtpPutRequestFileFromFile(FtpPutRequest ftpPutRequest) {
-        setFileFrom(ftpPutRequest.getFileFrom());
-        setRemoteFilePath(ftpPutRequest.getRemoteFilePath());
-    }
-
     public String getFileName() {
         return fileName;
     }

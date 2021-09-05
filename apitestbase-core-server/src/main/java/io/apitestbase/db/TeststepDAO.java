@@ -146,16 +146,15 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
-            "api_request = :apiRequest, endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, " +
+            "api_request = :t.apiRequest, endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, " +
             "other_properties = :t.otherProperties, " +
             "updated = CURRENT_TIMESTAMP where id = :t.id")
-    void _updateWithStringRequest(@BindBean("t") Teststep teststep, @Bind("apiRequest") String apiRequest,
-                                  @Bind("endpointId") Long endpointId);
+    void _updateWithApiRequest(@BindBean("t") Teststep teststep, @Bind("endpointId") Long endpointId);
 
     @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
             "endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, " +
             "other_properties = :t.otherProperties, updated = CURRENT_TIMESTAMP where id = :t.id")
-    void _updateWithoutRequest(@BindBean("t") Teststep teststep, @Bind("endpointId") Long endpointId);
+    void _updateWithoutApiRequest(@BindBean("t") Teststep teststep, @Bind("endpointId") Long endpointId);
 
     @Transaction
     default void update(Teststep teststep) throws Exception {
@@ -185,11 +184,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
         Endpoint newEndpoint = teststep.getEndpoint();
         Long newEndpointId = newEndpoint == null ? null : newEndpoint.getId();
 
-        if (teststep.getApiRequest() instanceof MQEnqueueOrPublishFromFileRequest) {
-            _updateWithoutRequest(teststep, newEndpointId);
+        if (teststep.getApiRequest() instanceof APIRequestFile) {
+            _updateWithoutApiRequest(teststep, newEndpointId);
         } else {
-            String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-            _updateWithStringRequest(teststep, apiRequest, newEndpointId);
+            _updateWithApiRequest(teststep, newEndpointId);
         }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);
@@ -249,17 +247,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     default void processFTPTeststep(Teststep oldTeststep, Teststep teststep) {
-        FtpPutFileFrom oldFileFrom = ((FtpPutRequest) oldTeststep.getApiRequest()).getFileFrom();
-        FtpPutRequest ftpPutRequest = (FtpPutRequest) teststep.getApiRequest();
-        FtpPutFileFrom fileFrom = ftpPutRequest.getFileFrom();
-        if (fileFrom != oldFileFrom) {         //  switching between file from text/file
-            teststep.setApiRequest(fileFrom == FtpPutFileFrom.TEXT ?
-                    new FtpPutRequestFileFromText(ftpPutRequest) :
-                    new FtpPutRequestFileFromFile(ftpPutRequest));
-        } else if (fileFrom == FtpPutFileFrom.FILE) {
-            FtpPutRequestFileFromFile oldFtpPutRequestFileFromFile = (FtpPutRequestFileFromFile) oldTeststep.getApiRequest();
-            FtpPutRequestFileFromFile ftpPutRequestFileFromFile = (FtpPutRequestFileFromFile) ftpPutRequest;
-            ftpPutRequestFileFromFile.setFileContent(oldFtpPutRequestFileFromFile.getFileContent());
+        if (!teststep.getApiRequest().getClass().getSimpleName().equals(oldTeststep.getApiRequest().getClass().getSimpleName())) {         //  switching fileFrom between text/file
+            saveApiRequest(teststep.getId(), teststep.getApiRequest());
         }
     }
 
@@ -368,7 +357,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
                 //  restore directly into api_request
                 MQEnqueueOrPublishFromFileRequest fileRequest = backup.getFileRequest() == null ?
                         new MQEnqueueOrPublishFromFileRequest() : backup.getFileRequest();
-                saveApiRequest(teststepId, new ObjectMapper().writeValueAsString(fileRequest));
+                saveApiRequest(teststepId, fileRequest);
                 teststep.setApiRequest(new MQEnqueueOrPublishFromFileRequest());
             }
         }
@@ -582,7 +571,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     @SqlUpdate("update teststep set api_request = :apiRequest, updated = CURRENT_TIMESTAMP where id = :teststepId")
-    void saveApiRequest(@Bind("teststepId") long teststepId, @Bind("apiRequest") String apiRequest);
+    void saveApiRequest(@Bind("teststepId") long teststepId, @Bind("apiRequest") APIRequest apiRequest);
 
     @Transaction
     default Teststep saveApiRequestFile(long teststepId, String fileName, InputStream inputStream) throws IOException {
@@ -599,7 +588,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             }
             apiRequest.setFileContent(fileBytes);
 
-            saveApiRequest(teststepId, new ObjectMapper().writeValueAsString(apiRequest));
+            saveApiRequest(teststepId, teststep.getApiRequest());
         }
 
         return findById_NoRequest(teststepId);

@@ -9,13 +9,19 @@ angular.module('apitestbase').controller('FTPTeststepActionController', ['$scope
     var timer;
     $scope.steprun = {};
 
-    $scope.textMessageTabs = {
-      activeIndex: 0
-    }
-
     var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
       $scope.steprun = {};
+    };
+
+    $scope.fileFromChanged = function(isValid) {
+      clearPreviousRunStatus();
+
+      var teststep = $scope.teststep;
+      teststep.apiRequest = { minClassName: teststep.apiRequest.minClassName };
+
+      //  update test step immediately (no timeout)
+      $scope.update(isValid);
     };
 
     $scope.endpointInfoIncomplete = function() {
@@ -25,8 +31,10 @@ angular.module('apitestbase').controller('FTPTeststepActionController', ['$scope
 
     $scope.actionInfoIncomplete = function() {
       var apiRequest = $scope.teststep.apiRequest;
-      return !apiRequest.remoteFilePath || (apiRequest.fileFrom === 'Text' && !apiRequest.fileContent) ||
-        (apiRequest.fileFrom === 'File' && !apiRequest.fileName);
+      var otherProperties = $scope.teststep.otherProperties;
+      return !otherProperties.remoteFilePath ||
+        (apiRequest.minClassName === '.FtpPutRequestFileFromText' && !apiRequest.fileContent) ||
+        (apiRequest.minClassName === '.FtpPutRequestFileFromFile' && !apiRequest.fileName);
     };
 
     $scope.doAction = function() {

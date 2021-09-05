@@ -190,6 +190,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
 
     private void createSystemResources(APITestBaseConfiguration configuration, Environment environment, Jdbi systemDBJdbi,
                                        WireMockServer wireMockServer) {
+        systemDBJdbi.registerArgument(new ApiRequestArgumentFactory());
         systemDBJdbi.registerArgument(new PropertiesArgumentFactory());
         systemDBJdbi.registerArgument(new EndpointPropertiesArgumentFactory());
 
