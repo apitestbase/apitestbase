@@ -1,3 +1,8 @@
 Please manually update the config.yml file under your <APITestBase_Home>:
     Delete the paragraph of comment starting with '# Uncomment below logger for REST APIs request/response logging'
+    Update wireMock properties to be as below
+        wireMock:
+          httpPort: 8092
+          httpsPort: 8093
+          maxRequestJournalEntries: 100
 To confirm update completion, type y and then Enter.

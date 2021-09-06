@@ -136,7 +136,8 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         //  start WireMock server (in the same JVM)
         WireMockServer wireMockServer = new WireMockServer(options()
                 .extensions(new ResponseTemplateTransformer(true))
-                .port(Integer.parseInt(configuration.getWireMock().get("port")))
+                .port(Integer.parseInt(configuration.getWireMock().get("httpPort")))
+                .httpsPort(Integer.parseInt(configuration.getWireMock().get("httpsPort")))
                 .maxRequestJournalEntries(Integer.parseInt(configuration.getWireMock().get("maxRequestJournalEntries")))
                 .notifier(new WireMockFileNotifier())
         );

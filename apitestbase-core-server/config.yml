@@ -27,7 +27,8 @@ server:
         archivedFileCount: 200
 
 wireMock:
-  port: 8092
+  httpPort: 8092
+  httpsPort: 8093
   maxRequestJournalEntries: 100
 
 logging:
