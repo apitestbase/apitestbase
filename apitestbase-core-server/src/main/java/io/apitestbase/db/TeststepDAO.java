@@ -427,22 +427,36 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     @SqlQuery("select * from teststep where id = :id")
-    Teststep _findById_Complete(@Bind("id") long id);
+    Teststep _findById(@Bind("id") long id);
 
     @SqlQuery("select testcase_id from teststep where id = :id")
     long findTestcaseIdById(@Bind("id") long id);
 
     @Transaction
-    default void populateTeststepWithOtherDetails(Teststep teststep) {
+    default void populateTeststepWithOtherDetails_NoAssertions(Teststep teststep) {
         Endpoint endpoint = endpointDAO().findById_NotMaskingPassword(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
-        teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
         teststep.setPropertyExtractors(propertyExtractorDAO().findByTeststepId(teststep.getId()));
     }
 
     @Transaction
+    default void populateTeststepWithOtherDetails(Teststep teststep) {
+        populateTeststepWithOtherDetails_NoAssertions(teststep);
+        teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
+    }
+
+    @Transaction
+    default Teststep findById_NoAssertions(long id) {
+        Teststep teststep = _findById(id);
+        if (teststep != null) {
+            populateTeststepWithOtherDetails_NoAssertions(teststep);
+        }
+        return teststep;
+    }
+
+    @Transaction
     default Teststep findById_Complete(long id) {
-        Teststep teststep = _findById_Complete(id);
+        Teststep teststep = _findById(id);
         if (teststep != null) {
             populateTeststepWithOtherDetails(teststep);
         }
