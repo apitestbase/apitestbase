@@ -233,7 +233,8 @@ angular.module('apitestbase').controller('HTTPStubController', ['$scope', 'HTTPS
         editableCellTemplate: 'headerGridEditableCellTemplate.html' },
       { name: 'operator', width: '15%', headerTooltip: 'Double click cell to select',
         editableCellTemplate: 'ui-grid/dropdownEditor', editDropdownOptionsArray: [
-        { id: 'equalTo', value: 'equalTo' }, { id: 'anything', value: 'anything' }, { id: 'matches', value: 'matches' }
+        { id: 'equalTo', value: 'equalTo' }, { id: 'anything', value: 'anything' },
+        { id: 'contains', value: 'contains' }, { id: 'matches', value: 'matches' }
       ]},
       { name: 'value', headerTooltip: 'Double click cell to edit', cellTooltip: true,
         cellEditableCondition: function(scope) {
