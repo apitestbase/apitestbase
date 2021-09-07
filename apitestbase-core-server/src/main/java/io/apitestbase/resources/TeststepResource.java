@@ -61,7 +61,7 @@ public class TeststepResource {
     public Teststep create(Teststep teststep) throws JsonProcessingException {
         long teststepId = teststepDAO.insert(teststep, appInfo.getAppMode());
 
-        return teststepDAO.findById_NoRequest(teststepId);
+        return teststepDAO.findById_Complete(teststepId);
     }
 
     private void populateParametersInWrapper(TeststepWrapper wrapper) {
@@ -235,7 +235,7 @@ public class TeststepResource {
     @GET @Path("{teststepId}/apiRequestFile")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getAPIRequestFile(@PathParam("teststepId") long teststepId) {
-        Teststep teststep = teststepDAO.findById_NoRequest(teststepId);
+        Teststep teststep = teststepDAO.findById_Complete(teststepId);
         String fileName = null;
         byte[] fileBytes = null;
         if (teststep.getApiRequest() instanceof APIRequestFile) {
@@ -254,7 +254,7 @@ public class TeststepResource {
     public Teststep useEndpointProperty(Teststep teststep) {
         teststepDAO.useEndpointProperty(teststep);
 
-        return teststepDAO.findById_NoRequest(teststep.getId());
+        return teststepDAO.findById_Complete(teststep.getId());
     }
 
     @POST @Path("{teststepId}/useDirectEndpoint")
@@ -262,6 +262,6 @@ public class TeststepResource {
     public Teststep useDirectEndpoint(Teststep teststep) throws JsonProcessingException {
         teststepDAO.useDirectEndpoint(teststep, appInfo.getAppMode());
 
-        return teststepDAO.findById_NoRequest(teststep.getId());
+        return teststepDAO.findById_Complete(teststep.getId());
     }
 }

@@ -158,7 +158,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default void update(Teststep teststep) throws Exception {
-        Teststep oldTeststep = findById_NoRequest(teststep.getId());
+        Teststep oldTeststep = findById_Complete(teststep.getId());
 
         switch (teststep.getType()) {
             case Teststep.TYPE_HTTP:
@@ -415,7 +415,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default void deleteById(long id) {
-        Teststep teststep = findById_NoRequest(id);
+        Teststep teststep = findById_Complete(id);
         _deleteById(id);
         // decrement sequence number of all next test steps
         batchMove(teststep.getTestcaseId(), (short) (teststep.getSequence() + 1), Short.MAX_VALUE, STEP_MOVE_DIRECTION_UP);
@@ -425,10 +425,6 @@ public interface TeststepDAO extends CrossReferenceDAO {
             endpointDAO().deleteById(endpoint.getId());
         }
     }
-
-    @SqlQuery("select id, testcase_id, sequence, name, type, description, action, endpoint_id, endpoint_property, " +
-            "api_request, other_properties, step_data_backup from teststep where id = :id")
-    Teststep _findById_NoRequest(@Bind("id") long id);
 
     @SqlQuery("select * from teststep where id = :id")
     Teststep _findById_Complete(@Bind("id") long id);
@@ -443,16 +439,6 @@ public interface TeststepDAO extends CrossReferenceDAO {
         teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
         teststep.setPropertyExtractors(propertyExtractorDAO().findByTeststepId(teststep.getId()));
     }
-
-    @Transaction
-    default Teststep findById_NoRequest(long id) {
-        Teststep teststep = _findById_NoRequest(id);
-        if (teststep != null) {
-            populateTeststepWithOtherDetails(teststep);
-        }
-        return teststep;
-    }
-
 
     @Transaction
     default Teststep findById_Complete(long id) {
@@ -575,7 +561,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default Teststep saveApiRequestFile(long teststepId, String fileName, InputStream inputStream) throws IOException {
-        Teststep teststep = findById_NoRequest(teststepId);
+        Teststep teststep = findById_Complete(teststepId);
 
         if (teststep.getApiRequest() instanceof APIRequestFile) {
             APIRequestFile apiRequest = (APIRequestFile) teststep.getApiRequest();
@@ -591,7 +577,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             saveApiRequest(teststepId, teststep.getApiRequest());
         }
 
-        return findById_NoRequest(teststepId);
+        return findById_Complete(teststepId);
     }
 
     @Transaction
