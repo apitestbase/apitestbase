@@ -8,9 +8,9 @@
     </div>
   </div>
   <div class="col-lg-8">
-    <textarea name="assertionJSONPath" ng-model="assertionsModelObj.assertion.otherProperties.jsonPath"
-              id="assertionJSONPath" rows="3" class="form-control" ng-readonly="appStatus.isForbidden()"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
+    <textarea name="assertionJSONPath" ng-model="assertion.otherProperties.jsonPath"
+              id="assertionJSONPath" rows="3" class="form-control" spellcheck="false"
+              ng-change="assertionAutoSave()" ng-readonly="appStatus.isForbidden()">
     </textarea>
   </div>
 </div>
@@ -24,9 +24,9 @@
       </div>
     </div>
     <div class="col-lg-5 no-right-padding">
-      <textarea name="expectedValueJSON" ng-model="assertionsModelObj.assertion.otherProperties.expectedValueJSON"
-                id="expectedValueJSON" rows="6" class="form-control" ng-readonly="appStatus.isForbidden()"
-                ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
+      <textarea name="expectedValueJSON" ng-model="assertion.otherProperties.expectedValueJSON"
+                id="expectedValueJSON" rows="6" class="form-control" spellcheck="false"
+                ng-change="assertionAutoSave()" ng-readonly="appStatus.isForbidden()">
       </textarea>
     </div>
   </div>
@@ -39,9 +39,9 @@
   </div>
   <div class="col-lg-5 no-left-padding">
     <textarea name="actualValueJSON" id="actualValueJSON" rows="6" class="form-control"
-              ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResults[assertionsModelObj.assertion.id].error }" readonly>{{
-        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error ?
-        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error :
-        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].actualValueJSON }}</textarea>
+              ng-class="{ 'text-red' : assertionVerificationResults[assertion.id].error }" readonly>{{
+        $parent.assertionVerificationResults[$parent.assertion.id].error ?
+        $parent.assertionVerificationResults[$parent.assertion.id].error :
+        $parent.assertionVerificationResults[$parent.assertion.id].actualValueJSON }}</textarea>
   </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="row" ng-controller="AssertionsController">
+<div class="row" ng-controller="AssertionsController" ng-init="findByTeststepId()">
   <!-- without the z-index, assertions grid vertical scrollbar and partial grid menu could be overlapped by
        the assertion details div when an assertion has been selected -->
   <div class="col-lg-3" style="z-index: 1000">
@@ -16,103 +16,103 @@
             <hr class="divider-left-short">On MQRFH2 Header<hr class="divider-right-short">
           </li>
           <li role="menuitem" ng-if="['MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('HasAnMQRFH2FolderEqualToXml')" href="">HasAnMQRFH2FolderEqualToXml Assertion</a>
+            <a ng-click="createAssertion('HasAnMQRFH2FolderEqualToXml')" href="">HasAnMQRFH2FolderEqualToXml Assertion</a>
           </li>
           <li role="menuitem" ng-if="['HTTP', 'SOAP'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('StatusCodeEqual')" href="">StatusCodeEqual Assertion</a>
+            <a ng-click="createAssertion('StatusCodeEqual')" href="">StatusCodeEqual Assertion</a>
           </li>
           <li class="text-center" ng-if="['HTTP', 'SOAP', 'MQ'].includes(teststep.type)">
             <hr class="divider-left">On Body<hr class="divider-right">
           </li>
           <li role="menuitem" ng-if="['HTTP', 'DB', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('JSONEqual')" href="">JSONEqual Assertion</a>
+            <a ng-click="createAssertion('JSONEqual')" href="">JSONEqual Assertion</a>
           </li>
           <li role="menuitem" ng-if="['HTTP', 'DB', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('JSONPath')" href="">JSONPath Assertion</a>
+            <a ng-click="createAssertion('JSONPath')" href="">JSONPath Assertion</a>
           </li>
           <li role="menuitem" ng-if="['HTTP', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('JSONValidAgainstJSONSchema')" href="">JSONValidAgainstJSONSchema Assertion</a>
+            <a ng-click="createAssertion('JSONValidAgainstJSONSchema')" href="">JSONValidAgainstJSONSchema Assertion</a>
           </li>
           <li role="menuitem" ng-if="['HTTP', 'SOAP', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('XMLEqual')" href="">XMLEqual Assertion</a>
+            <a ng-click="createAssertion('XMLEqual')" href="">XMLEqual Assertion</a>
           </li>
           <li role="menuitem" ng-if="['HTTP', 'SOAP', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a>
+            <a ng-click="createAssertion('XPath')" href="">XPath Assertion</a>
           </li>
           <li role="menuitem" ng-if="['HTTP', 'SOAP', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('XMLValidAgainstXSD')" href="">XMLValidAgainstXSD Assertion</a>
+            <a ng-click="createAssertion('XMLValidAgainstXSD')" href="">XMLValidAgainstXSD Assertion</a>
           </li>
           <li role="menuitem" ng-if="['DB'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('JSONPathXMLEqual')" href="">JSONPathXMLEqual Assertion</a>
+            <a ng-click="createAssertion('JSONPathXMLEqual')" href="">JSONPathXMLEqual Assertion</a>
           </li>
           <li role="menuitem" ng-if="['SOAP', 'HTTP', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a>
+            <a ng-click="createAssertion('Contains')" href="">Contains Assertion</a>
           </li>
           <li role="menuitem" ng-if="['HTTP', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('TextEqual')" href="">TextEqual Assertion</a>
+            <a ng-click="createAssertion('TextEqual')" href="">TextEqual Assertion</a>
           </li>
           <li role="menuitem" ng-if="['HTTP', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('Substring')" href="">Substring Assertion</a>
+            <a ng-click="createAssertion('Substring')" href="">Substring Assertion</a>
           </li>
           <li role="menuitem" ng-if="['HTTP', 'JMS', 'MQ'].includes(teststep.type)">
-            <a ng-click="assertionsModelObj.createAssertion('RegexMatch')" href="">RegexMatch Assertion</a>
+            <a ng-click="createAssertion('RegexMatch')" href="">RegexMatch Assertion</a>
           </li>
         </ul>
       </div>
       <div class="col-lg-8">
         <button type="button" class="btn btn-info" title="Verify assertion against current response"
-                ng-disabled="appStatus.isForbidden() || !steprun.response || !assertionsModelObj.assertion"
-                ng-click="assertionsModelObj.verifyCurrentAssertion()">Verify</button>
+                ng-disabled="appStatus.isForbidden() || !steprun.response || !assertion"
+                ng-click="verifyCurrentAssertion()">Verify</button>
       </div>
     </div>
     <div class="form-group no-bottom-margin">
       <!-- ng-class does not work here as the grid height needs to be determined before rendering the grid -->
-      <div ng-if="teststep.type !== 'DB'" ui-grid="assertionsModelObj.gridOptions"
+      <div ng-if="teststep.type !== 'DB'" ui-grid="assertionsGridOptions"
            ui-grid-resize-columns ui-grid-move-columns ui-grid-selection
            ui-grid-edit class="ui-grid col-lg-12 assertions-grid"></div>
-      <div ng-if="teststep.type === 'DB'" ui-grid="assertionsModelObj.gridOptions"
+      <div ng-if="teststep.type === 'DB'" ui-grid="assertionsGridOptions"
            ui-grid-resize-columns ui-grid-move-columns ui-grid-selection
            ui-grid-edit class="ui-grid col-lg-12 db-teststep-assertions-grid"></div>
     </div>
   </div>
   <!-- assertion details area -->
-  <div class="col-lg-9" ng-if="assertionsModelObj.assertion">
-    <div ng-if="assertionsModelObj.assertion.type === 'StatusCodeEqual'"
+  <div class="col-lg-9" ng-if="assertion">
+    <div ng-if="assertion.type === 'StatusCodeEqual'"
          ng-include="'/ui/views/assertions/statuscodeequal-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'Contains'"
+    <div ng-if="assertion.type === 'Contains'"
          ng-include="'/ui/views/assertions/contains-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'TextEqual'"
+    <div ng-if="assertion.type === 'TextEqual'"
          ng-include="'/ui/views/assertions/textequal-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'Substring'"
+    <div ng-if="assertion.type === 'Substring'"
          ng-include="'/ui/views/assertions/substring-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'RegexMatch'"
+    <div ng-if="assertion.type === 'RegexMatch'"
          ng-include="'/ui/views/assertions/regexmatch-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'JSONEqual'"
+    <div ng-if="assertion.type === 'JSONEqual'"
          ng-include="'/ui/views/assertions/jsonequal-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'JSONPath'"
+    <div ng-if="assertion.type === 'JSONPath'"
          ng-include="'/ui/views/assertions/jsonpath-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'JSONValidAgainstJSONSchema'"
+    <div ng-if="assertion.type === 'JSONValidAgainstJSONSchema'"
          ng-include="'/ui/views/assertions/jsonvalidagainstjsonschema-assertion-edit.html'"
          ng-controller="JSONValidAgainstJSONSchemaController"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'JSONPathXMLEqual'"
+    <div ng-if="assertion.type === 'JSONPathXMLEqual'"
          ng-include="'/ui/views/assertions/jsonpath-xmlequal-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'XMLEqual'"
+    <div ng-if="assertion.type === 'XMLEqual'"
          ng-include="'/ui/views/assertions/xmlequal-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'XPath'"
+    <div ng-if="assertion.type === 'XPath'"
          ng-include="'/ui/views/assertions/xpath-assertion-edit.html'"
          ng-controller="XPathAssertionController"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'XMLValidAgainstXSD'"
+    <div ng-if="assertion.type === 'XMLValidAgainstXSD'"
          ng-include="'/ui/views/assertions/xmlvalidagainstxsd-assertion-edit.html'"
          ng-controller="XMLValidAgainstXSDController"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'HasAnMQRFH2FolderEqualToXml'"
+    <div ng-if="assertion.type === 'HasAnMQRFH2FolderEqualToXml'"
          ng-include="'/ui/views/assertions/hasanmqrfh2folderequaltoxml-assertion-edit.html'"></div>
   </div>
 </div>
 
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div ng-class="{ 'background-red' : grid.appScope.assertionsModelObj.assertionVerificationResults[row.entity.id].result === 'Failed',
-                     'background-green' : grid.appScope.assertionsModelObj.assertionVerificationResults[row.entity.id].result === 'Passed' }">{{COL_FIELD}}</div>
+    <div ng-class="{ 'background-red' : grid.appScope.assertionVerificationResults[row.entity.id].result === 'Failed',
+                     'background-green' : grid.appScope.assertionVerificationResults[row.entity.id].result === 'Passed' }">{{COL_FIELD}}</div>
   </div>
 </script>
 <script type="text/ng-template" id="assertionGridNameEditableCellTemplate.html">

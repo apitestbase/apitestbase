@@ -32,7 +32,10 @@ angular.module('apitestbase').controller('MQTeststepActionController', ['$scope'
       clearPreviousRunStatus();
 
       //  update test step immediately (no timeout)
-      $scope.update(isValid);
+      $scope.changingAction = true;
+      $scope.update(isValid, function() {
+        delete $scope.changingAction;
+      });
     };
 
     $scope.messageFromChanged = function(isValid) {
@@ -89,7 +92,7 @@ angular.module('apitestbase').controller('MQTeststepActionController', ['$scope'
     };
 
     $scope.$watch('teststep.apiRequest', function() {
-      if ($scope.teststep.apiRequest.rfh2Header) {
+      if ($scope.teststep.apiRequest && $scope.teststep.apiRequest.rfh2Header) {
         $scope.includeRfh2Header = true;
       } else {
         $scope.includeRfh2Header = false;

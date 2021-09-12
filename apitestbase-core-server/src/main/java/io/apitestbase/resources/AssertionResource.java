@@ -47,6 +47,32 @@ public class AssertionResource {
         this.assertionDAO = assertionDAO;
     }
 
+    @GET @Path("teststeps/{teststepId}/assertions")
+    public List<Assertion> findByTeststepId(@PathParam("teststepId") long teststepId) {
+        return assertionDAO.findByTeststepId(teststepId);
+    }
+
+    @POST
+    @Path("teststeps/{teststepId}/assertions")
+    @PermitAll
+    public Assertion create(@PathParam("teststepId") long teststepId, Assertion assertion) {
+        assertion.setTeststepId(teststepId);
+        long id = assertionDAO.insert(assertion);
+        return assertionDAO.findById(id);
+    }
+
+    @PUT @Path("assertions/{assertionId}")
+    @PermitAll
+    public void update(Assertion assertion) {
+        assertionDAO.update(assertion);
+    }
+
+    @DELETE @Path("assertions/{assertionId}")
+    @PermitAll
+    public void delete(@PathParam("assertionId") long assertionId) {
+        assertionDAO.deleteById(assertionId);
+    }
+
     /**
      * This is a stateless operation, i.e. not persisting anything in database.
      * @param assertionVerificationRequest

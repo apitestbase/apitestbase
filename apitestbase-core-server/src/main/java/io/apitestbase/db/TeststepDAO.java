@@ -25,7 +25,6 @@ import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.apitestbase.APITestBaseConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
@@ -158,14 +157,14 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default void update(Teststep teststep) throws Exception {
-        Teststep oldTeststep = findById_Complete(teststep.getId());
+        Teststep oldTeststep = findById_NoAssertions(teststep.getId());
 
         switch (teststep.getType()) {
             case Teststep.TYPE_HTTP:
                 processHTTPTeststepBackupRestore(oldTeststep, teststep);
                 break;
             case Teststep.TYPE_DB:
-                processDBTeststep(teststep);
+                processDBTeststep(oldTeststep, teststep);
                 break;
             case Teststep.TYPE_JMS:
                 processJMSTeststep(oldTeststep,teststep);
@@ -191,8 +190,6 @@ public interface TeststepDAO extends CrossReferenceDAO {
         }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);
-
-        updateAssertions(teststep);
     }
 
     default void processJMSTeststep(Teststep oldTeststep, Teststep teststep) {
@@ -208,15 +205,16 @@ public interface TeststepDAO extends CrossReferenceDAO {
             String newAction = teststep.getAction();
             if (!newAction.equals(oldAction)) {    //  action is switched, so clear things
                 teststep.setApiRequest(null);
-                teststep.getAssertions().clear();
+                assertionDAO().deleteByTeststepId(teststep.getId());
 
                 switch (newAction) {
                     case Teststep.ACTION_CHECK_DEPTH:
                         Assertion assertion = new Assertion();
-                        teststep.getAssertions().add(assertion);
+                        assertion.setTeststepId(teststep.getId());
                         assertion.setName("Queue depth equals");
                         assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
                         assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
+                        assertionDAO().insert(assertion);
                         break;
                     case Teststep.ACTION_SEND:
                         //  fall through
@@ -247,15 +245,17 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     default void processFTPTeststep(Teststep oldTeststep, Teststep teststep) {
-        if (!teststep.getApiRequest().getClass().getSimpleName().equals(oldTeststep.getApiRequest().getClass().getSimpleName())) {         //  switching fileFrom between text/file
+        if (!teststep.getApiRequest().getClass().equals(oldTeststep.getApiRequest().getClass())) {         //  switching fileFrom between text/file
             saveApiRequest(teststep.getId(), teststep.getApiRequest());
         }
     }
 
-    default void processDBTeststep(Teststep teststep) {
+    default void processDBTeststep(Teststep oldTeststep, Teststep teststep) {
+        DBRequest oldDbRequest = (DBRequest) oldTeststep.getApiRequest();
         DBRequest dbRequest = (DBRequest) teststep.getApiRequest();
-        if (!GeneralUtils.isSQLRequestSingleSelectStatement(dbRequest.getSqlScript())) {
-            teststep.getAssertions().clear();
+        if (GeneralUtils.isSQLRequestSingleSelectStatement(oldDbRequest.getSqlScript()) &&
+                !GeneralUtils.isSQLRequestSingleSelectStatement(dbRequest.getSqlScript())) {  //  changing sql script from single select to update or empty
+            assertionDAO().deleteByTeststepId(teststep.getId());
         }
     }
 
@@ -279,15 +279,15 @@ public interface TeststepDAO extends CrossReferenceDAO {
         }
         if ((Teststep.ACTION_DEQUEUE.equals(oldAction) && !Teststep.ACTION_DEQUEUE.equals(newAction)) ||
                 (Teststep.ACTION_CHECK_DEPTH.equals(oldAction) && !Teststep.ACTION_CHECK_DEPTH.equals(newAction))) {
-            teststep.getAssertions().clear();
+            assertionDAO().deleteByTeststepId(teststep.getId());
         }
         if (!Teststep.ACTION_CHECK_DEPTH.equals(oldAction) && Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
-            teststep.getAssertions().clear();
             Assertion assertion = new Assertion();
-            teststep.getAssertions().add(assertion);
+            assertion.setTeststepId(teststep.getId());
             assertion.setName("MQ queue depth equals");
             assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
             assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
+            assertionDAO().insert(assertion);
         }
         if (newDestinationType != MQDestinationType.QUEUE) {
             newOtherProperties.setQueueName(null);
@@ -371,25 +371,6 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @SqlQuery("select step_data_backup from teststep where id = :teststepId")
     String getStepDataBackupById(@Bind("teststepId") long teststepId);
 
-    @Transaction
-    default void updateAssertions(Teststep teststep) {
-        AssertionDAO assertionDAO = assertionDAO();
-        List<Long> newAssertionIds = new ArrayList<>();
-        for (Assertion assertion: teststep.getAssertions()) {
-            if (assertion.getId() == null) {    //  insert the assertion
-                assertion.setTeststepId(teststep.getId());
-                newAssertionIds.add(assertionDAO.insert(assertion));
-            } else {                            //  update the assertion
-                newAssertionIds.add(assertion.getId());
-                assertionDAO.update(assertion);
-            }
-        }
-        //  delete assertions whose id is not in the newAssertionIds list;
-        //  if newAssertionIds list is empty, delete all assertions
-        newAssertionIds.add(-1L);
-        assertionDAO.deleteByTeststepIdIfIdNotIn(teststep.getId(), newAssertionIds);
-    }
-
     default void updateEndpointIfExists(Endpoint oldEndpoint, Endpoint newEndpoint) {
         if (newEndpoint != null) {
             if (newEndpoint.isManaged()) {
@@ -415,7 +396,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default void deleteById(long id) {
-        Teststep teststep = findById_Complete(id);
+        Teststep teststep = findById_NoAssertions(id);
         _deleteById(id);
         // decrement sequence number of all next test steps
         batchMove(teststep.getTestcaseId(), (short) (teststep.getSequence() + 1), Short.MAX_VALUE, STEP_MOVE_DIRECTION_UP);
@@ -450,15 +431,6 @@ public interface TeststepDAO extends CrossReferenceDAO {
         Teststep teststep = _findById(id);
         if (teststep != null) {
             populateTeststepWithOtherDetails_NoAssertions(teststep);
-        }
-        return teststep;
-    }
-
-    @Transaction
-    default Teststep findById_Complete(long id) {
-        Teststep teststep = _findById(id);
-        if (teststep != null) {
-            populateTeststepWithOtherDetails(teststep);
         }
         return teststep;
     }
@@ -575,23 +547,23 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default Teststep saveApiRequestFile(long teststepId, String fileName, InputStream inputStream) throws IOException {
-        Teststep teststep = findById_Complete(teststepId);
+        APIRequest apiRequest = getAPIRequestById(teststepId);
 
-        if (teststep.getApiRequest() instanceof APIRequestFile) {
-            APIRequestFile apiRequest = (APIRequestFile) teststep.getApiRequest();
-            apiRequest.setFileName(fileName);
+        if (apiRequest instanceof APIRequestFile) {
+            APIRequestFile apiRequestFile = (APIRequestFile) apiRequest;
+            apiRequestFile.setFileName(fileName);
             byte[] fileBytes;
             try {
                 fileBytes = IOUtils.toByteArray(inputStream);
             } finally {
                 inputStream.close();
             }
-            apiRequest.setFileContent(fileBytes);
+            apiRequestFile.setFileContent(fileBytes);
 
-            saveApiRequest(teststepId, teststep.getApiRequest());
+            saveApiRequest(teststepId, apiRequest);
         }
 
-        return findById_Complete(teststepId);
+        return findById_NoAssertions(teststepId);
     }
 
     @Transaction

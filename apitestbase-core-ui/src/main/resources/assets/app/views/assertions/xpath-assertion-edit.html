@@ -7,13 +7,13 @@
     </div>
   </div>
   <div class="col-lg-6">
-    <textarea name="assertionXPath" ng-model="assertionsModelObj.assertion.otherProperties.xPath"
-              id="assertionXPath" rows="4" class="form-control" ng-readonly="appStatus.isForbidden()"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
+    <textarea name="assertionXPath" ng-model="assertion.otherProperties.xPath"
+              id="assertionXPath" rows="4" class="form-control" spellcheck="false"
+              ng-change="assertionAutoSave()" ng-readonly="appStatus.isForbidden()">
     </textarea>
   </div>
   <div class="col-lg-5 no-left-padding">
-    <div ui-grid="assertionsModelObj.xPathNamespacePrefixesGridOptions" ui-grid-resize-columns ui-grid-move-columns
+    <div ui-grid="xPathNamespacePrefixesGridOptions" ui-grid-resize-columns ui-grid-move-columns
          ui-grid-edit ui-grid-selection class="ui-grid xpath-assertion-namespace-prefixes-grid"></div>
   </div>
 </div>
@@ -27,9 +27,9 @@
       </div>
     </div>
     <div class="col-lg-5 no-right-padding">
-      <textarea name="assertionXPathExpectedValue" ng-model="assertionsModelObj.assertion.otherProperties.expectedValue"
-                id="assertionXPathExpectedValue" rows="6" class="form-control" ng-readonly="appStatus.isForbidden()"
-                ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
+      <textarea name="assertionXPathExpectedValue" ng-model="assertion.otherProperties.expectedValue"
+                id="assertionXPathExpectedValue" rows="6" class="form-control" spellcheck="false"
+                ng-change="assertionAutoSave()" ng-readonly="appStatus.isForbidden()">
       </textarea>
     </div>
   </div>
@@ -42,10 +42,10 @@
   </div>
   <div class="col-lg-5 no-left-padding">
     <textarea name="assertionXPathActualValue" id="assertionXPathActualValue" rows="6" class="form-control"
-              ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResults[assertionsModelObj.assertion.id].error }" readonly>{{
-        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error ?
-        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error :
-        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].actualValue }}</textarea>
+              ng-class="{ 'text-red' : assertionVerificationResults[assertion.id].error }" readonly>{{
+        $parent.assertionVerificationResults[$parent.assertion.id].error ?
+        $parent.assertionVerificationResults[$parent.assertion.id].error :
+        $parent.assertionVerificationResults[$parent.assertion.id].actualValue }}</textarea>
   </div>
 </div>
 <script type="text/ng-template" id="namespacePrefixGridEditableCellTemplate.html">

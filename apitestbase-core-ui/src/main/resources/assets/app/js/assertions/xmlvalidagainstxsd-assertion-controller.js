@@ -7,14 +7,14 @@ angular.module('apitestbase').controller('XMLValidAgainstXSDController', ['$scop
   function($scope, GeneralUtils, Upload, $window) {
     $scope.uploadXSDFile = function(file) {
       if (file) {
-        var url = 'api/assertions/' + $scope.assertionsModelObj.assertion.id + '/xsdFile';
+        var url = 'api/assertions/' + $scope.assertion.id + '/xsdFile';
         Upload.upload({
           url: url,
           data: {file: file}
         }).then(function successCallback(response) {
           $scope.$emit('successfullySaved');
-          $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
-          $scope.findOne($scope.assertionsModelObj.reselectCurrentAssertionInGrid);   //  refresh the entire test step to reload the current assertion
+          $scope.clearCurrentAssertionVerificationResult();
+          $scope.assertion.otherProperties.fileName = file.name;
         }, function errorCallback(response) {
           GeneralUtils.openErrorHTTPResponseModal(response);
         });
@@ -22,7 +22,7 @@ angular.module('apitestbase').controller('XMLValidAgainstXSDController', ['$scop
     };
 
     $scope.downloadXSDFile = function() {
-      var url = 'api/assertions/' + $scope.assertionsModelObj.assertion.id + '/xsdFile';
+      var url = 'api/assertions/' + $scope.assertion.id + '/xsdFile';
       $window.open(url, '_blank', '');
     };
   }

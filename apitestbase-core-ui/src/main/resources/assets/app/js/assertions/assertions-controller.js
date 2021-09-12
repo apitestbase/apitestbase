@@ -2,37 +2,43 @@
 
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of the specific test step controller,
-//      such as SOAPTeststepActionController or DBTeststepController.
 //    ng-include also creates a scope.
-//    If unspecified, all grid config is for the assertions grid
-angular.module('apitestbase').controller('AssertionsController', ['$scope', '$rootScope', 'uiGridConstants',
-    'GeneralUtils', '$http',
-  function($scope, $rootScope, uiGridConstants, GeneralUtils, $http) {
-    //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
-    $scope.assertionsModelObj = {
-      assertionVerificationResults: {}
+angular.module('apitestbase').controller('AssertionsController', ['$scope', '$rootScope', 'Assertions', '$stateParams',
+    'uiGridConstants', 'GeneralUtils', '$timeout', '$http',
+  function($scope, $rootScope, Assertions, $stateParams, uiGridConstants, GeneralUtils, $timeout, $http) {
+    $scope.findByTeststepId = function() {
+      Assertions.query({ teststepId: $stateParams.teststepId }, function(returnAssertions) {
+        $scope.assertions = returnAssertions;
+      }, function(response) {
+        GeneralUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.findSingleByTeststepId = function() {
+      Assertions.query({ teststepId: $stateParams.teststepId }, function(returnAssertions) {
+        $scope.assertion = returnAssertions[0];
+      }, function(response) {
+        GeneralUtils.openErrorHTTPResponseModal(response);
+      });
     };
 
     $scope.$watch('$parent.steprun.response', function() {
-      $scope.assertionsModelObj.assertionVerificationResults = {};
+      $scope.assertionVerificationResults = {};
     });
 
-    //  remove currently selected assertion
-    var removeCurrentAssertion = function() {
-      var currentAssertion = $scope.assertionsModelObj.assertion;
-      if (currentAssertion) {
-        //  set current assertion to null
-        $scope.assertionsModelObj.assertion = null;
-        GeneralUtils.deleteArrayElementByProperty($scope.teststep.assertions, 'id', currentAssertion.id);
-        $scope.update(true);
-      }
+    var removeSelectedAssertion = function() {
+      var assertion = $scope.assertion;
+      assertion.$remove(function(response) {
+        delete $scope.assertion;
+        GeneralUtils.deleteArrayElementByProperty($scope.assertions, 'id', assertion.id);
+        $scope.$emit('successfullySaved');
+      }, function(response) {
+        GeneralUtils.openErrorHTTPResponseModal(response);
+      });
     };
 
-    $scope.$watch('teststep.assertions', function() {
-      $scope.assertionsModelObj.gridOptions.data = $scope.teststep.assertions;
-    });
-
-    $scope.assertionsModelObj.gridOptions = {
+    $scope.assertionsGridOptions = {
+      data: 'assertions',
       enableRowHeaderSelection: false, multiSelect: false, noUnselect: true,
       enableGridMenu: true, gridMenuShowHideColumns: false, enableColumnMenus: false,
       columnDefs: [
@@ -44,73 +50,83 @@ angular.module('apitestbase').controller('AssertionsController', ['$scope', '$ro
         { name: 'type', width: 80, minWidth: 80, enableCellEdit: false }
       ],
       gridMenuCustomItems: [
-        { title: 'Delete', order: 210, action: removeCurrentAssertion,
+        { title: 'Delete', order: 210, action: removeSelectedAssertion,
           shown: function() {
             return !$rootScope.appStatus.isForbidden() &&
-              $scope.assertionsModelObj.gridApi.selection.getSelectedRows().length === 1;
+              $scope.assertionsGridApi.selection.getSelectedRows().length === 1;
           }
         }
       ],
       onRegisterApi: function (gridApi) {
         $scope.bottomPaneLoadedCallback();
-        $scope.assertionsModelObj.gridApi = gridApi;
+        $scope.assertionsGridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function(row) {
-          $scope.assertionsModelObj.assertion = row.entity;
+          $scope.assertion = row.entity;
         });
         gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
           if (newValue !== oldValue) {
-            $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
+            $scope.assertionUpdate();
           }
         });
       }
     };
 
     var selectAssertionInGridByProperty = function(propertyName, propertyValue) {
-      var assertions = $scope.teststep.assertions;
+      var assertions = $scope.assertions;
       var assertion = assertions.find(
         function(asrt) {
           return asrt[propertyName] === propertyValue;
         }
       );
-      var gridApi = $scope.assertionsModelObj.gridApi;
+      var gridApi = $scope.assertionsGridApi;
       gridApi.grid.modifyRows(assertions);
       gridApi.selection.selectRow(assertion);
     };
 
-    $scope.assertionsModelObj.reselectCurrentAssertionInGrid = function() {
-       var currentAssertionId = $scope.assertionsModelObj.assertion.id;
-       selectAssertionInGridByProperty('id', currentAssertionId);
+    $scope.clearCurrentAssertionVerificationResult = function() {
+      delete $scope.assertionVerificationResults[$scope.assertion.id];
     };
 
-    $scope.assertionsModelObj.clearCurrentAssertionVerificationResult = function() {
-      delete $scope.assertionsModelObj.assertionVerificationResults[$scope.assertionsModelObj.assertion.id];
+    var timer;
+    $scope.assertionAutoSave = function() {
+      $scope.clearCurrentAssertionVerificationResult();
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.assertionUpdate();
+      }, 2000);
     };
 
-    $scope.assertionsModelObj.autoSave = function(isValid) {
-      $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
-      $scope.autoSave(isValid, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
+    $scope.assertionUpdate = function() {
+      if (timer) $timeout.cancel(timer);  //  cancel existing timer if the update function is called directly (to avoid duplicate save)
+      $scope.assertion.$update(function(response) {
+        $scope.$emit('successfullySaved');
+      }, function(response) {
+        GeneralUtils.openErrorHTTPResponseModal(response);
+      });
     };
 
-    $scope.assertionsModelObj.createAssertion = function(type) {
-      if (!$scope.teststep.assertions) {
-        $scope.teststep.assertions = [];
-      }
-      var assertions = $scope.teststep.assertions;
+    $scope.createAssertion = function(type) {
+      var assertions = $scope.assertions;
       var name = GeneralUtils.getNextNameInSequence(assertions, type + ' ');
-      var assertion = {
+      var assertion = new Assertions({
         name: name,
         type: type,
         otherProperties: {}  //  adding this property here to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
-      };
-      assertions.push(assertion);
-      var selectNewlyCreatedAssertionInGrid = function() {
+      });
+
+      assertion.$save({ teststepId: $stateParams.teststepId }, function(returnAssertion) {
+        assertions.push(returnAssertion);
+        $scope.$emit('successfullySaved');
+
+        //  select newly created assertion in grid
         selectAssertionInGridByProperty('name', name);
-      };
-      $scope.update(true, selectNewlyCreatedAssertionInGrid);
+      }, function(response) {
+        GeneralUtils.openErrorHTTPResponseModal(response);
+      });
     };
 
-    $scope.assertionsModelObj.verifyCurrentAssertion = function() {
-      var assertion = $scope.assertionsModelObj.assertion;
+    $scope.verifyCurrentAssertion = function() {
+      var assertion = $scope.assertion;
 
       //  resolve assertion input
       var input;
@@ -139,7 +155,7 @@ angular.module('apitestbase').controller('AssertionsController', ['$scope', '$ro
         .post(url, assertionVerificationRequest)
         .then(function successCallback(response) {
           var data = response.data;
-          $scope.assertionsModelObj.assertionVerificationResults[assertion.id] = data;
+          $scope.assertionVerificationResults[assertion.id] = data;
         }, function errorCallback(response) {
           GeneralUtils.openErrorHTTPResponseModal(response);
         });

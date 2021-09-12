@@ -81,13 +81,13 @@
   </div>
 </div>
 
-<div ng-if="teststep.action === 'CheckDepth'">
-  <div class="form-group">
+<div ng-if="teststep.action === 'CheckDepth' && !changingAction">
+  <div class="form-group" ng-controller="AssertionsController" ng-init="findSingleByTeststepId()">
     <label for="queueDepthAssertionValue" class="col-lg-2 control-label">Assertion</label>
     <div class="col-lg-2"><h5>Queue depth equals</h5></div>
     <div class="col-lg-5">
       <input name="queueDepthAssertionValue" id="queueDepthAssertionValue" type="number" class="form-control"
-             ng-model="teststep.assertions[0].otherProperties.number" ng-change="autoSave(teststepForm.$valid)"
+             ng-model="assertion.otherProperties.number" ng-change="assertionAutoSave()"
              ng-readonly="appStatus.isForbidden()">
     </div>
   </div>

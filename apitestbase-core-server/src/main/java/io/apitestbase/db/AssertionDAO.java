@@ -5,7 +5,6 @@ import io.apitestbase.models.assertion.Assertion;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -46,13 +45,8 @@ public interface AssertionDAO {
     @SqlUpdate("delete from assertion where id = :id")
     void deleteById(@Bind("id") long id);
 
-    /**
-     *
-     * @param teststepId
-     * @param ids can not be empty, otherwise jdbi will throw exception, though H2 works with empty.
-     */
-    @SqlUpdate("delete from assertion where teststep_id = :teststepId and id not in (<ids>)")
-    void deleteByTeststepIdIfIdNotIn(@Bind("teststepId") long teststepId, @BindList("ids") List<Long> ids);
+    @SqlUpdate("delete from assertion where teststep_id = :teststepId")
+    void deleteByTeststepId(@Bind("teststepId") long teststepId);
 
     @SqlUpdate("insert into assertion (teststep_id, name, type, other_properties) " +
             "select :newTeststepId, name, type, other_properties from assertion where teststep_id = :oldTeststepId")

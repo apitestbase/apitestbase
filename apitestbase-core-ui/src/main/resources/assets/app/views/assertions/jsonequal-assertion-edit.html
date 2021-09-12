@@ -1,21 +1,20 @@
 <div style="margin-left: 10px">
   <div class="form-group form-group-reduced-bottom-margin">
     <div class="col-lg-12">
-    <textarea name="expectedJSON" ng-model="assertionsModelObj.assertion.otherProperties.expectedJSON"
-              id="expectedJSON" rows="7" class="form-control" placeholder="Expected JSON"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false"
-              ng-readonly="appStatus.isForbidden()">
+    <textarea name="expectedJSON" ng-model="assertion.otherProperties.expectedJSON"
+              id="expectedJSON" rows="6" class="form-control" placeholder="Expected JSON" spellcheck="false"
+              ng-change="assertionAutoSave()" ng-readonly="appStatus.isForbidden()">
     </textarea>
     </div>
   </div>
   <div class="form-group form-group-reduced-bottom-margin">
     <div class="col-lg-12">
       <!-- Do not leave white space before {{ or after }}, otherwise the placeholder will not work -->
-      <textarea name="differences" ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResults[assertionsModelObj.assertion.id].error }"
+      <textarea name="differences" ng-class="{ 'text-red' : assertionVerificationResults[assertion.id].error }"
                 placeholder="Differences" id="differences" class="form-control" rows="3" readonly>{{
-        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error ?
-        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error :
-        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].differences }}</textarea>
+        $parent.assertionVerificationResults[$parent.assertion.id].error ?
+        $parent.assertionVerificationResults[$parent.assertion.id].error :
+        $parent.assertionVerificationResults[$parent.assertion.id].differences }}</textarea>
     </div>
   </div>
 </div>

@@ -12,6 +12,7 @@ import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.teststep.MQRFH2Folder;
 import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.TeststepWrapper;
+import io.apitestbase.models.teststep.apirequest.APIRequest;
 import io.apitestbase.models.teststep.apirequest.APIRequestFile;
 import io.apitestbase.models.teststep.apirequest.DBRequest;
 import io.apitestbase.utils.GeneralUtils;
@@ -61,7 +62,7 @@ public class TeststepResource {
     public Teststep create(Teststep teststep) throws JsonProcessingException {
         long teststepId = teststepDAO.insert(teststep, appInfo.getAppMode());
 
-        return teststepDAO.findById_Complete(teststepId);
+        return teststepDAO.findById_NoAssertions(teststepId);
     }
 
     private void populateParametersInWrapper(TeststepWrapper wrapper) {
@@ -93,7 +94,7 @@ public class TeststepResource {
     }
 
     private Teststep _findById(long teststepId) {
-        Teststep teststep = teststepDAO.findById_Complete(teststepId);
+        Teststep teststep = teststepDAO.findById_NoAssertions(teststepId);
         PasswordUtils.maskEndpointPasswordForAPIResponse(teststep.getEndpoint());
 
         return teststep;
@@ -235,13 +236,13 @@ public class TeststepResource {
     @GET @Path("{teststepId}/apiRequestFile")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getAPIRequestFile(@PathParam("teststepId") long teststepId) {
-        Teststep teststep = teststepDAO.findById_Complete(teststepId);
+        APIRequest apiRequest = teststepDAO.getAPIRequestById(teststepId);
         String fileName = null;
         byte[] fileBytes = null;
-        if (teststep.getApiRequest() instanceof APIRequestFile) {
-            APIRequestFile apiRequest = (APIRequestFile) teststep.getApiRequest();
-            fileBytes = apiRequest.getFileContent();
-            fileName = apiRequest.getFileName();
+        if (apiRequest instanceof APIRequestFile) {
+            APIRequestFile apiRequestFile = (APIRequestFile) apiRequest;
+            fileBytes = apiRequestFile.getFileContent();
+            fileName = apiRequestFile.getFileName();
         }
 
         return Response.ok(fileBytes)
@@ -254,7 +255,7 @@ public class TeststepResource {
     public Teststep useEndpointProperty(Teststep teststep) {
         teststepDAO.useEndpointProperty(teststep);
 
-        return teststepDAO.findById_Complete(teststep.getId());
+        return teststepDAO.findById_NoAssertions(teststep.getId());
     }
 
     @POST @Path("{teststepId}/useDirectEndpoint")
@@ -262,6 +263,6 @@ public class TeststepResource {
     public Teststep useDirectEndpoint(Teststep teststep) throws JsonProcessingException {
         teststepDAO.useDirectEndpoint(teststep, appInfo.getAppMode());
 
-        return teststepDAO.findById_Complete(teststep.getId());
+        return teststepDAO.findById_NoAssertions(teststep.getId());
     }
 }

@@ -7,27 +7,23 @@ angular.module('apitestbase').controller('XPathAssertionController', ['$scope', 
     'GeneralUtils',
   function($scope, $rootScope, uiGridConstants, GeneralUtils) {
     var createNamespacePrefix = function(gridMenuEvent) {
-      $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
+      $scope.assertion.otherProperties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
       );
-      $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
-      $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
+      $scope.clearCurrentAssertionVerificationResult();
+      $scope.assertionUpdate();
     };
 
     var removeNamespacePrefix = function(gridMenuEvent) {
-      var selectedRow = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows()[0];
-      var namespacePrefixes = $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes;
+      var selectedRow = $scope.xPathNamespacePrefixGridApi.selection.getSelectedRows()[0];
+      var namespacePrefixes = $scope.assertion.otherProperties.namespacePrefixes;
       GeneralUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRow.$$hashKey);
-      $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
-      $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
+      $scope.clearCurrentAssertionVerificationResult();
+      $scope.assertionUpdate();
     };
 
-    $scope.$watch('assertionsModelObj.assertion.otherProperties.namespacePrefixes', function() {
-      $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions.data =
-        $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes;
-    });
-
-    $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
+    $scope.xPathNamespacePrefixesGridOptions = {
+      data: 'assertion.otherProperties.namespacePrefixes',
       enableRowHeaderSelection: false, multiSelect: false, enableGridMenu: true, gridMenuShowHideColumns: false,
       enableColumnMenus: false, rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [
@@ -50,16 +46,16 @@ angular.module('apitestbase').controller('XPathAssertionController', ['$scope', 
         { title: 'Delete', order: 220, action: removeNamespacePrefix,
           shown: function() {
             return !$rootScope.appStatus.isForbidden() &&
-              $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows().length === 1;
+              $scope.xPathNamespacePrefixGridApi.selection.getSelectedRows().length === 1;
           }
         }
       ],
       onRegisterApi: function (gridApi) {
-        $scope.assertionsModelObj.xPathNamespacePrefixGridApi = gridApi;
+        $scope.xPathNamespacePrefixGridApi = gridApi;
         gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
           if (newValue !== oldValue) {
-            $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
-            $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
+            $scope.clearCurrentAssertionVerificationResult();
+            $scope.assertionUpdate();
           }
         });
       }

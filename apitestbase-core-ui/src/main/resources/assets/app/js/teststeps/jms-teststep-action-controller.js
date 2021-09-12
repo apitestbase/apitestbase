@@ -29,7 +29,10 @@ angular.module('apitestbase').controller('JMSTeststepActionController', ['$scope
       clearPreviousRunStatus();
 
       //  update test step immediately (no timeout)
-      $scope.update(isValid);
+      $scope.changingAction = true;
+      $scope.update(isValid, function() {
+        delete $scope.changingAction;
+      });
     };
 
     $scope.endpointInfoIncomplete = function() {

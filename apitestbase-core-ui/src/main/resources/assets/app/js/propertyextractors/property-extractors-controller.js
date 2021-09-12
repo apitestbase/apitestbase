@@ -15,6 +15,7 @@ angular.module('apitestbase').controller('PropertyExtractorsController', ['$scop
       propertyExtractor.$remove(function(response) {
         delete $scope.propertyExtractor;
         GeneralUtils.deleteArrayElementByProperty($scope.propertyExtractors, 'id', propertyExtractor.id);
+        $scope.$emit('successfullySaved');
       }, function(response) {
         GeneralUtils.openErrorHTTPResponseModal(response);
       });
