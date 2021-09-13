@@ -89,9 +89,11 @@ public interface TeststepDAO extends CrossReferenceDAO {
         switch (teststep.getType()) {
             case Teststep.TYPE_HTTP:
                 apiRequest = new HTTPRequest();
+                otherProperties = new HTTPOrSOAPTeststepProperties();
                 break;
             case Teststep.TYPE_SOAP:
                 apiRequest = new SOAPRequest();
+                otherProperties = new HTTPOrSOAPTeststepProperties();
                 break;
             case Teststep.TYPE_DB:
                 apiRequest = new DBRequest();

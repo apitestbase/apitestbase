@@ -19,7 +19,7 @@ public class TeststepMapper implements RowMapper<Teststep> {
 
         Teststep teststep;
         String type = rs.getString("type");
-        if (!Teststep.TYPE_HTTP.equals(type) && !Teststep.TYPE_SOAP.equals(type) && !Teststep.TYPE_DB.equals(type) &&
+        if (!Teststep.TYPE_DB.equals(type) &&
                 fields.contains("other_properties") && rs.getString("other_properties") != null) {
             String tempTeststepJSON = "{\"type\":\"" + type + "\",\"otherProperties\":" +
                     rs.getString("other_properties") + "}";

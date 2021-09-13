@@ -125,7 +125,7 @@ public final class GeneralUtils {
      * @throws Exception
      */
     public static HTTPAPIResponse invokeHTTPAPI(String url, String username, String password, HTTPMethod httpMethod,
-                                                List<HTTPHeader> httpHeaders, String httpBody) throws Exception {
+                                                List<HTTPHeader> httpHeaders, String httpBody, String timeout) throws Exception {
         UrlValidator urlValidator = new UrlValidator(new String[] {"http", "https"}, UrlValidator.ALLOW_LOCAL_URLS);
         if (!urlValidator.isValid(url)) {
             throw new RuntimeException("Invalid URL");
@@ -183,13 +183,25 @@ public final class GeneralUtils {
         }
         CloseableHttpClient httpClient = httpClientBuilder.build();
 
+        //  set timeout
+        Date[] responseTimeFrame = new Date[2];
+        int hardTimeout = Integer.valueOf(timeout);
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (responseTimeFrame[1] == null) {         //  response not received
+                    httpRequest.abort();
+                }
+            }
+        };
+        new Timer(true).schedule(task, hardTimeout * 1000);
+
         //  invoke the API
-        Date invocationStartTime = new Date();
+        responseTimeFrame[0] = new Date();        //  invocation start time
         final HTTPAPIResponse apiResponse = new HTTPAPIResponse();
-        Date responseReceivedTime;
         try {
             try (CloseableHttpResponse httpResponse = httpClient.execute(httpRequest)) {
-                responseReceivedTime = new Date();
+                responseTimeFrame[1] = new Date();     //  response received time
                 apiResponse.setStatusCode(httpResponse.getCode());
                 StringBuffer statusLine = new StringBuffer();
                 statusLine.append(httpResponse.getVersion()).append(' ').append(httpResponse.getCode()).append(' ')
@@ -208,7 +220,7 @@ public final class GeneralUtils {
             httpClient.close();
         }
 
-        long responseTime = responseReceivedTime.getTime() - invocationStartTime.getTime();
+        long responseTime = responseTimeFrame[1].getTime() - responseTimeFrame[0].getTime();
         apiResponse.setResponseTime(responseTime);
 
         return apiResponse;

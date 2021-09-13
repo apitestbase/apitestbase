@@ -35,4 +35,6 @@ public interface APITestBaseConstants {
     String WIREMOCK_STUB_METADATA_ATTR_NAME_API_TEST_BASE_NUMBER = "apiTestBaseNumber";
 
     String PASSWORD_MASK = "ATB-password-mask-1627810872357";
+
+    String HTTP_REQUEST_DEFAULT_TIMEOUT_IN_SECONDS = "20";
 }

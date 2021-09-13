@@ -91,7 +91,12 @@ selected by default). -->
     <label class="btn btn-info" ng-if="teststep.type === 'HTTP'" ng-model="bottomButtonModel.selectedButton"
            uib-btn-radio="'PropertyExtractors'" uncheckable>Property Extractors</label>
   </div>
-  <div ng-if="steprun.response" class="col-lg-4"><h5>Response Time: {{ steprun.response.responseTime }}ms</h5></div>
+  <div class="col-lg-4"><h5 ng-if="steprun.response">Response Time: {{ steprun.response.responseTime }}ms</h5></div>
+  <label for="timeout" class="col-lg-offset-2 col-lg-2 control-label">Timeout (s)</label>
+  <div class="col-lg-1">
+    <input id="timeout" name="timeout" class="form-control" type="text"
+           ng-model="teststep.otherProperties.timeout" ng-change="autoSave(teststepForm.$valid)"/>
+  </div>
 </div>
 
 <script type="text/ng-template" id="httpHeaderGridEditableCellTemplate.html">

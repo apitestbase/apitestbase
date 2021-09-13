@@ -77,6 +77,8 @@ public class Teststep {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
+            @JsonSubTypes.Type(value = HTTPOrSOAPTeststepProperties.class, name = Teststep.TYPE_HTTP),
+            @JsonSubTypes.Type(value = HTTPOrSOAPTeststepProperties.class, name = Teststep.TYPE_SOAP),
             @JsonSubTypes.Type(value = JMSTeststepProperties.class, name = Teststep.TYPE_JMS),
             @JsonSubTypes.Type(value = FTPTeststepProperties.class, name = Teststep.TYPE_FTP),
             @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TYPE_MQ),
