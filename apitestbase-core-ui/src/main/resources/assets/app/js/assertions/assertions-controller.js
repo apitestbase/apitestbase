@@ -6,7 +6,7 @@
 angular.module('apitestbase').controller('AssertionsController', ['$scope', '$rootScope', 'Assertions', '$stateParams',
     'uiGridConstants', 'GeneralUtils', '$timeout', '$http',
   function($scope, $rootScope, Assertions, $stateParams, uiGridConstants, GeneralUtils, $timeout, $http) {
-    $scope.findByTeststepId = function() {
+    $scope.findAssertionsByTeststepId = function() {
       Assertions.query({ teststepId: $stateParams.teststepId }, function(returnAssertions) {
         $scope.assertions = returnAssertions;
       }, function(response) {
