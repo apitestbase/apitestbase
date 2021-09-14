@@ -3,7 +3,7 @@ package io.apitestbase.core.teststep;
 import io.apitestbase.models.teststep.WaitTeststepProperties;
 
 public class WaitTeststepRunner extends TeststepRunner {
-    public BasicTeststepRun run() throws InterruptedException {
+    public BasicTeststepRun _run() throws InterruptedException {
         WaitTeststepProperties teststepProperties = (WaitTeststepProperties) getTeststep().getOtherProperties();
         long milliseconds = Long.valueOf(teststepProperties.getMilliseconds());
         if (milliseconds > 0) {

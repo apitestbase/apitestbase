@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class FTPTeststepRunner extends TeststepRunner {
-    public BasicTeststepRun run() throws Exception {
+    public BasicTeststepRun _run() throws Exception {
         Teststep teststep = getTeststep();
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         FTPTeststepProperties otherProperties = (FTPTeststepProperties) teststep.getOtherProperties();

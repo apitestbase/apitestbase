@@ -14,7 +14,7 @@ import java.util.List;
 public class AMQPTeststepRunner extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(AMQPTeststepRunner.class);
 
-    public BasicTeststepRun run() throws Exception {
+    public BasicTeststepRun _run() throws Exception {
         Teststep teststep = getTeststep();
         AMQPTeststepProperties otherProperties = (AMQPTeststepProperties) teststep.getOtherProperties();
 

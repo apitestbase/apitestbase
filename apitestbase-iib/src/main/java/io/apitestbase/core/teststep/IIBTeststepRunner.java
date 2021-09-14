@@ -28,13 +28,13 @@ public class IIBTeststepRunner extends TeststepRunner {
         iib100ClassLoader = new IIBTeststepRunnerClassLoader(iib100URLs, IIBTeststepRunner.class.getClassLoader());
     }
 
-    public BasicTeststepRun run() throws Exception {
+    public BasicTeststepRun _run() throws Exception {
         Class actualRunnerClass = Class.forName("io.apitestbase.core.teststep.IIB100TeststepRunner", false, iib100ClassLoader);
         Constructor<TeststepRunner> constructor = actualRunnerClass.getConstructor();
         TeststepRunner actualRunner = constructor.newInstance();
         actualRunner.setTeststep(getTeststep());
         actualRunner.setTestcaseRunContext(getTestcaseRunContext());
 
-        return actualRunner.run();
+        return actualRunner._run();
     }
 }

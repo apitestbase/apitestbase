@@ -25,7 +25,7 @@ import java.util.Hashtable;
 public class MQTeststepRunner extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(MQTeststepRunner.class);
 
-    public BasicTeststepRun run() throws Exception {
+    public BasicTeststepRun _run() throws Exception {
         Teststep teststep = getTeststep();
         String action = teststep.getAction();
         if (teststep.getAction() == null) {

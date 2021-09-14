@@ -144,7 +144,6 @@ public abstract class TestcaseRunner {
         teststepRun.setStartTime(teststepRunStartTime);
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(teststepRunStartTime));
-        LOGGER.info("Start running test step: " + teststep.getName());
 
         //  run test step
         BasicTeststepRun basicTeststepRun;
@@ -153,7 +152,6 @@ public abstract class TestcaseRunner {
             basicTeststepRun = TeststepRunnerFactory.getInstance().newTeststepRunner(
                     teststep, utilsDAO, referenceableStringProperties, referenceableEndpointProperties,
                     testcaseRunContext).run();
-            LOGGER.info("Finish running test step: " + teststep.getName());
             teststepRun.setResponse(basicTeststepRun.getResponse());
             teststepRun.setInfoMessage(basicTeststepRun.getInfoMessage());
         } catch (Exception e) {

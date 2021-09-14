@@ -8,7 +8,7 @@ import io.apitestbase.models.teststep.apirequest.SOAPRequest;
 import io.apitestbase.utils.GeneralUtils;
 
 public class SOAPTeststepRunner extends TeststepRunner {
-    public BasicTeststepRun run() throws Exception {
+    public BasicTeststepRun _run() throws Exception {
         Teststep teststep = getTeststep();
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         HTTPOrSOAPTeststepProperties otherProperties = (HTTPOrSOAPTeststepProperties) teststep.getOtherProperties();

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class HTTPStubRequestsCheckTeststepRunner extends TeststepRunner {
     @Override
-    public BasicTeststepRun run() {
+    public BasicTeststepRun _run() {
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
 
         WireMockServer wireMockServer = getTestcaseRunContext().getWireMockServer();

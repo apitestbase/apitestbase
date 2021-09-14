@@ -11,7 +11,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MQTTTeststepRunner extends TeststepRunner {
     @Override
-    public BasicTeststepRun run() throws Exception {
+    public BasicTeststepRun _run() throws Exception {
         Teststep teststep = getTeststep();
         MQTTTeststepProperties otherProperties = (MQTTTeststepProperties) teststep.getOtherProperties();
 

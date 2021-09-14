@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class HTTPStubsSetupTeststepRunner extends TeststepRunner {
     @Override
-    public BasicTeststepRun run() {
+    public BasicTeststepRun _run() {
         WireMockServer wireMockServer = getTestcaseRunContext().getWireMockServer();
 
         //  reset mock server

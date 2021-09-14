@@ -40,7 +40,7 @@ public class IIB100TeststepRunner extends TeststepRunner {
         @Override public void ignore(Throwable ignored) {}
     }
 
-    public BasicTeststepRun run() throws Exception {
+    public BasicTeststepRun _run() throws Exception {
         Teststep teststep = getTeststep();
 
         String action = teststep.getAction();

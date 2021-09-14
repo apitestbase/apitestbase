@@ -22,7 +22,7 @@ import java.util.Map;
 public class JMSSolaceTeststepRunner extends TeststepRunner {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
-    public BasicTeststepRun run() throws Exception {
+    public BasicTeststepRun _run() throws Exception {
         Teststep teststep = getTeststep();
         String action = teststep.getAction();
         if (teststep.getAction() == null) {
