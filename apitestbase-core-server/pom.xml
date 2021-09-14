@@ -5,7 +5,7 @@
     <parent>
         <artifactId>apitestbase-parent</artifactId>
         <groupId>io.apitestbase</groupId>
-        <version>0.18.6</version>
+        <version>0.19.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>apitestbase-core-server</artifactId>
