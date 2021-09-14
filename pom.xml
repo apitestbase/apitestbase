@@ -344,8 +344,6 @@
                     <useReleaseProfile>false</useReleaseProfile>
                     <releaseProfiles>sonatype-ossrh</releaseProfiles>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
-                    <pushChanges>false</pushChanges>
-                    <localCheckout>true</localCheckout>
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
