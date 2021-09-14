@@ -27,7 +27,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/apitestbase/apitestbase.git</connection>
-        <developerConnection>scm:git:https://github.com:apitestbase/apitestbase.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/apitestbase/apitestbase.git</developerConnection>
         <url>https://github.com/apitestbase/apitestbase</url>
         <tag>HEAD</tag>
     </scm>
