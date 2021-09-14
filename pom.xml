@@ -26,8 +26,8 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/apitestbase/apitestbase.git</connection>
-        <developerConnection>scm:git:git@github.com:apitestbase/apitestbase.git</developerConnection>
+        <connection>scm:git:https://github.com/apitestbase/apitestbase.git</connection>
+        <developerConnection>scm:git:https://github.com:apitestbase/apitestbase.git</developerConnection>
         <url>https://github.com/apitestbase/apitestbase</url>
         <tag>HEAD</tag>
     </scm>
