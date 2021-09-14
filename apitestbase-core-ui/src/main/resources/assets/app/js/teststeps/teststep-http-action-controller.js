@@ -18,6 +18,11 @@ angular.module('apitestbase').controller('TeststepHTTPActionController', ['$scop
     }
 
     var clearRunStatus = function() {
+      if ($scope.steprun && $scope.steprun.response) {  //  clear HTTP response header grid
+        $scope.steprun.response.httpHeaders.length = 0;
+        $scope.responseHTTPHeaderGridApi.core.notifyDataChange(uiGridConstants.dataChange.ROW);
+      }
+
       $scope.steprun = {};
     };
 
@@ -99,6 +104,7 @@ angular.module('apitestbase').controller('TeststepHTTPActionController', ['$scop
         { name: 'value', cellTooltip: true }
       ],
       onRegisterApi: function (gridApi) {
+        $scope.responseHTTPHeaderGridApi = gridApi;
         $scope.httpHeadersAreaLoadedCallback();
       }
     };
