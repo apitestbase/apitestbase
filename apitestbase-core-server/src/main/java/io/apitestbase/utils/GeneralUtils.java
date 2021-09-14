@@ -23,10 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.classic.methods.*;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.classic.*;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
@@ -126,9 +123,15 @@ public final class GeneralUtils {
      */
     public static HTTPAPIResponse invokeHTTPAPI(String url, String username, String password, HTTPMethod httpMethod,
                                                 List<HTTPHeader> httpHeaders, String httpBody, String timeout) throws Exception {
+
+        //  validate parameters
+        int hardTimeout = Integer.valueOf(timeout);
+        if (hardTimeout < 0) {
+            throw new IllegalArgumentException("Timeout can't be negative");
+        }
         UrlValidator urlValidator = new UrlValidator(new String[] {"http", "https"}, UrlValidator.ALLOW_LOCAL_URLS);
         if (!urlValidator.isValid(url)) {
-            throw new RuntimeException("Invalid URL");
+            throw new IllegalArgumentException("Invalid URL");
         }
 
         //  create HTTP request object and set body if applicable
@@ -185,16 +188,19 @@ public final class GeneralUtils {
 
         //  set timeout
         Date[] responseTimeFrame = new Date[2];
-        int hardTimeout = Integer.valueOf(timeout);
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (responseTimeFrame[1] == null) {         //  response not received
-                    httpRequest.abort();
+        boolean[] timedOut = new boolean[1];
+        if (hardTimeout > 0) {
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    if (responseTimeFrame[1] == null) {         //  response not received
+                        timedOut[0] = true;
+                        httpRequest.abort();
+                    }
                 }
-            }
-        };
-        new Timer(true).schedule(task, hardTimeout * 1000);
+            };
+            new Timer(true).schedule(task, hardTimeout * 1000);
+        }
 
         //  invoke the API
         responseTimeFrame[0] = new Date();        //  invocation start time
@@ -216,6 +222,12 @@ public final class GeneralUtils {
             }
         } catch (ClientProtocolException e) {
             throw new RuntimeException(e.getCause().getMessage(), e);
+        } catch (RequestFailedException e) {
+            if (timedOut[0]) {
+                throw new RuntimeException("Timed out. Request is aborted.");
+            } else {
+                throw e;
+            }
         } finally {
             httpClient.close();
         }
