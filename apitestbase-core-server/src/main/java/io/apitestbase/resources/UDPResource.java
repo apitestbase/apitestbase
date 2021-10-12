@@ -1,8 +1,8 @@
 package io.apitestbase.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.apitestbase.db.UserDefinedPropertyDAO;
-import io.apitestbase.models.UserDefinedProperty;
+import io.apitestbase.db.UDPDAO;
+import io.apitestbase.models.UDP;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -11,25 +11,25 @@ import java.util.List;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class UDPResource {
-    private UserDefinedPropertyDAO udpDAO;
-    public UDPResource(UserDefinedPropertyDAO udpDAO) {
+    private UDPDAO udpDAO;
+    public UDPResource(UDPDAO udpDAO) {
         this.udpDAO = udpDAO;
     }
 
     @GET @Path("testcases/{testcaseId}/udps")
-    public List<UserDefinedProperty> findByTestcaseId(@PathParam("testcaseId") long testcaseId) {
+    public List<UDP> findByTestcaseId(@PathParam("testcaseId") long testcaseId) {
         return udpDAO.findByTestcaseId(testcaseId);
     }
 
     @POST @Path("testcases/{testcaseId}/udps")
     @PermitAll
-    public UserDefinedProperty create(@PathParam("testcaseId") long testcaseId) {
+    public UDP create(@PathParam("testcaseId") long testcaseId) {
         return udpDAO.insert(testcaseId);
     }
 
     @PUT @Path("udps/{udpId}")
     @PermitAll
-    public void update(UserDefinedProperty udp) throws JsonProcessingException {
+    public void update(UDP udp) throws JsonProcessingException {
         udpDAO.update(udp);
     }
 
@@ -41,8 +41,8 @@ public class UDPResource {
 
     @POST @Path("testcases/{testcaseId}/udps/move")
     @PermitAll
-    public List<UserDefinedProperty> move(@PathParam("testcaseId") long testcaseId,
-                     @QueryParam("fromSequence") short fromSequence, @QueryParam("toSequence") short toSequence) {
+    public List<UDP> move(@PathParam("testcaseId") long testcaseId,
+                          @QueryParam("fromSequence") short fromSequence, @QueryParam("toSequence") short toSequence) {
         udpDAO.moveInTestcase(testcaseId, fromSequence, toSequence);
         return udpDAO.findByTestcaseId(testcaseId);
     }

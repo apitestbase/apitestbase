@@ -5,7 +5,6 @@
 angular.module('apitestbase').controller('UDPsController', ['$scope', 'UDPs', 'GeneralUtils', '$stateParams',
     '$uibModal',
   function($scope, UDPs, GeneralUtils, $stateParams, $uibModal) {
-    //  user defined properties of the test case
     $scope.udps = [];
 
     var udpUpdate = function(udp) {

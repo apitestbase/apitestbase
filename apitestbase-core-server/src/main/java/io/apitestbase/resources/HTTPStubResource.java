@@ -9,10 +9,10 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import io.apitestbase.core.MapValueLookup;
 import io.apitestbase.db.DataTableDAO;
 import io.apitestbase.db.HTTPStubMappingDAO;
-import io.apitestbase.db.UserDefinedPropertyDAO;
+import io.apitestbase.db.UDPDAO;
 import io.apitestbase.models.DataTable;
 import io.apitestbase.models.HTTPStubMapping;
-import io.apitestbase.models.UserDefinedProperty;
+import io.apitestbase.models.UDP;
 import io.apitestbase.utils.GeneralUtils;
 import org.apache.commons.text.StrSubstitutor;
 
@@ -32,11 +32,11 @@ import static io.apitestbase.APITestBaseConstants.WIREMOCK_STUB_METADATA_ATTR_NA
 public class HTTPStubResource {
     private HTTPStubMappingDAO httpStubMappingDAO;
     private WireMockServer wireMockServer;
-    private UserDefinedPropertyDAO udpDAO;
+    private UDPDAO udpDAO;
     private DataTableDAO dataTableDAO;
 
     public HTTPStubResource(HTTPStubMappingDAO httpStubMappingDAO, WireMockServer wireMockServer,
-                            UserDefinedPropertyDAO udpDAO, DataTableDAO dataTableDAO) {
+                            UDPDAO udpDAO, DataTableDAO dataTableDAO) {
         this.httpStubMappingDAO = httpStubMappingDAO;
         this.wireMockServer = wireMockServer;
         this.udpDAO = udpDAO;
@@ -77,7 +77,7 @@ public class HTTPStubResource {
     @PermitAll
     public void loadAll(@PathParam("testcaseId") long testcaseId) throws IOException {
         //  gather referenceable string properties
-        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
+        List<UDP> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
         if (dataTable.getRows().size() > 0) {

@@ -206,7 +206,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         final PropertyExtractorDAO propertyExtractorDAO = systemDBJdbi.onDemand(PropertyExtractorDAO.class);
         final UtilsDAO utilsDAO = systemDBJdbi.onDemand(UtilsDAO.class);
         final FolderTreeNodeDAO folderTreeNodeDAO = systemDBJdbi.onDemand(FolderTreeNodeDAO.class);
-        final UserDefinedPropertyDAO udpDAO = systemDBJdbi.onDemand(UserDefinedPropertyDAO.class);
+        final UDPDAO udpDAO = systemDBJdbi.onDemand(UDPDAO.class);
         final DataTableDAO dataTableDAO = systemDBJdbi.onDemand(DataTableDAO.class);
         final DataTableColumnDAO dataTableColumnDAO = systemDBJdbi.onDemand(DataTableColumnDAO.class);
         final DataTableCellDAO dataTableCellDAO = systemDBJdbi.onDemand(DataTableCellDAO.class);

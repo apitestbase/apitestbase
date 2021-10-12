@@ -6,10 +6,10 @@ import io.apitestbase.core.assertion.AssertionVerifierFactory;
 import io.apitestbase.db.AssertionDAO;
 import io.apitestbase.db.DataTableDAO;
 import io.apitestbase.db.TeststepDAO;
-import io.apitestbase.db.UserDefinedPropertyDAO;
+import io.apitestbase.db.UDPDAO;
 import io.apitestbase.models.DataTable;
 import io.apitestbase.models.TestResult;
-import io.apitestbase.models.UserDefinedProperty;
+import io.apitestbase.models.UDP;
 import io.apitestbase.models.assertion.*;
 import io.apitestbase.models.teststep.MQRFH2Header;
 import io.apitestbase.utils.GeneralUtils;
@@ -34,12 +34,12 @@ import java.util.Set;
 public class AssertionResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssertionResource.class);
 
-    private final UserDefinedPropertyDAO udpDAO;
+    private final UDPDAO udpDAO;
     private final TeststepDAO teststepDAO;
     private final DataTableDAO dataTableDAO;
     private final AssertionDAO assertionDAO;
 
-    public AssertionResource(UserDefinedPropertyDAO udpDAO, TeststepDAO teststepDAO, DataTableDAO dataTableDAO,
+    public AssertionResource(UDPDAO udpDAO, TeststepDAO teststepDAO, DataTableDAO dataTableDAO,
                              AssertionDAO assertionDAO) {
         this.udpDAO = udpDAO;
         this.teststepDAO = teststepDAO;
@@ -91,7 +91,7 @@ public class AssertionResource {
 
         //  gather referenceable string properties
         long testcaseId = teststepDAO.findTestcaseIdById(assertion.getTeststepId());
-        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
+        List<UDP> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         Set<String> udpNames = referenceableStringProperties.keySet();
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);

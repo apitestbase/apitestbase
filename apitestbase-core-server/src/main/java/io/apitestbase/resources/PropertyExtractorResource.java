@@ -4,9 +4,9 @@ import io.apitestbase.core.propertyextractor.PropertyExtractorRunner;
 import io.apitestbase.core.propertyextractor.PropertyExtractorRunnerFactory;
 import io.apitestbase.db.DataTableDAO;
 import io.apitestbase.db.PropertyExtractorDAO;
-import io.apitestbase.db.UserDefinedPropertyDAO;
+import io.apitestbase.db.UDPDAO;
 import io.apitestbase.models.DataTable;
-import io.apitestbase.models.UserDefinedProperty;
+import io.apitestbase.models.UDP;
 import io.apitestbase.models.propertyextractor.PropertyExtractionRequest;
 import io.apitestbase.models.propertyextractor.PropertyExtractionResult;
 import io.apitestbase.models.propertyextractor.PropertyExtractor;
@@ -26,11 +26,11 @@ import java.util.Set;
 public class PropertyExtractorResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssertionResource.class);
 
-    private final UserDefinedPropertyDAO udpDAO;
+    private final UDPDAO udpDAO;
     private final DataTableDAO dataTableDAO;
     private final PropertyExtractorDAO propertyExtractorDAO;
 
-    public PropertyExtractorResource(UserDefinedPropertyDAO udpDAO, DataTableDAO dataTableDAO,
+    public PropertyExtractorResource(UDPDAO udpDAO, DataTableDAO dataTableDAO,
                                      PropertyExtractorDAO propertyExtractorDAO) {
         this.udpDAO = udpDAO;
         this.dataTableDAO = dataTableDAO;
@@ -75,7 +75,7 @@ public class PropertyExtractorResource {
 
         //  gather referenceable string properties
         long testcaseId = propertyExtractorDAO.findTestcaseIdById(propertyExtractor.getId());
-        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
+        List<UDP> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         Set<String> udpNames = referenceableStringProperties.keySet();
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);

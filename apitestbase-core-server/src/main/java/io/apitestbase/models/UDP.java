@@ -3,7 +3,7 @@ package io.apitestbase.models;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.resources.ResourceJsonViews;
 
-public class UserDefinedProperty {
+public class UDP {
     private long id;
     private short sequence;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
@@ -11,9 +11,9 @@ public class UserDefinedProperty {
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String value;
 
-    public UserDefinedProperty() {}
+    public UDP() {}
 
-    public UserDefinedProperty(long id, short sequence, String name, String value) {
+    public UDP(long id, short sequence, String name, String value) {
         this.id = id;
         this.sequence = sequence;
         this.name = name;

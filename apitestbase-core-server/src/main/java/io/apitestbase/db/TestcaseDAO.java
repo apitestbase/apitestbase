@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.apitestbase.models.DataTable;
 import io.apitestbase.models.HTTPStubMapping;
 import io.apitestbase.models.Testcase;
-import io.apitestbase.models.UserDefinedProperty;
+import io.apitestbase.models.UDP;
 import io.apitestbase.models.teststep.Teststep;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -87,7 +87,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
 
         result.setFolderPath(getFolderPath(id));
 
-        List<UserDefinedProperty> udps = udpDAO().findByTestcaseId(id);
+        List<UDP> udps = udpDAO().findByTestcaseId(id);
         result.setUdps(udps);
 
         List<Teststep> teststeps = teststepDAO().findByTestcaseId_Complete(id);
@@ -136,7 +136,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
         //  duplicate the test case record
         long newTestcaseId = duplicateById(newTestcaseName, targetFolderId, sourceTestcaseId);
 
-        //  duplicate user defined properties
+        //  duplicate UDPs
         udpDAO().duplicateByTestcase(sourceTestcaseId, newTestcaseId);
 
         //  duplicate test steps
@@ -162,7 +162,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
         long testcaseId = _insertWithName(testcase);
 
         //  insert UDPs
-        for (UserDefinedProperty udp: testcase.getUdps()) {
+        for (UDP udp: testcase.getUdps()) {
             udpDAO()._insertWithName(testcaseId, udp.getName(), udp.getValue());
         }
 

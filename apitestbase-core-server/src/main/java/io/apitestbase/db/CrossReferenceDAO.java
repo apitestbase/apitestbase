@@ -34,7 +34,7 @@ public interface CrossReferenceDAO {
     TestcaseIndividualRunDAO testcaseIndividualRunDAO();
 
     @CreateSqlObject
-    UserDefinedPropertyDAO udpDAO();
+    UDPDAO udpDAO();
 
     @CreateSqlObject
     TeststepDAO teststepDAO();

@@ -1,6 +1,6 @@
 package io.apitestbase.db;
 
-import io.apitestbase.models.UserDefinedProperty;
+import io.apitestbase.models.UDP;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -13,8 +13,8 @@ import java.util.List;
 
 import static io.apitestbase.APITestBaseConstants.*;
 
-@RegisterRowMapper(UserDefinedPropertyMapper.class)
-public interface UserDefinedPropertyDAO {
+@RegisterRowMapper(UDPMapper.class)
+public interface UDPDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS udp_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     void createSequenceIfNotExists();
 
@@ -43,7 +43,7 @@ public interface UserDefinedPropertyDAO {
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    default UserDefinedProperty insert(long testcaseId) {
+    default UDP insert(long testcaseId) {
         long id = _insertWithoutName(testcaseId);
         String name = "P" + id;
         updateNameForInsert(id, name);
@@ -51,19 +51,19 @@ public interface UserDefinedPropertyDAO {
     }
 
     @SqlQuery("select * from udp where id = :id")
-    UserDefinedProperty findById(@Bind("id") long id);
+    UDP findById(@Bind("id") long id);
 
     @SqlQuery("select * from udp where testcase_id = :testcaseId order by sequence")
-    List<UserDefinedProperty> findByTestcaseId(@Bind("testcaseId") long testcaseId);
+    List<UDP> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
     @SqlUpdate("update udp set name = :name, value = :value, updated = CURRENT_TIMESTAMP where id = :id")
-    void update(@BindBean UserDefinedProperty udp);
+    void update(@BindBean UDP udp);
 
     @SqlUpdate("delete from udp where id = :id")
     void deleteById(@Bind("id") long id);
 
     /**
-     * Copy user defined properties from source test case to target test case.
+     * Copy UDPs from source test case to target test case.
      * @param sourceTestcaseId
      * @param targetTestcaseId
      */
@@ -72,7 +72,7 @@ public interface UserDefinedPropertyDAO {
                              @Bind("targetTestcaseId") long targetTestcaseId);
 
     @SqlQuery("select * from udp where testcase_id = :testcaseId and sequence = :sequence")
-    UserDefinedProperty findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
+    UDP findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
 
     @SqlUpdate("update udp set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :id")
     void updateSequenceById(@Bind("id") long id, @Bind("newSequence") short newSequence);

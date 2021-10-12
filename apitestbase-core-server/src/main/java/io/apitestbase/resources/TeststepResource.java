@@ -6,7 +6,7 @@ import io.apitestbase.core.teststep.*;
 import io.apitestbase.db.*;
 import io.apitestbase.models.AppInfo;
 import io.apitestbase.models.DataTable;
-import io.apitestbase.models.UserDefinedProperty;
+import io.apitestbase.models.UDP;
 import io.apitestbase.models.assertion.Assertion;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.teststep.MQRFH2Folder;
@@ -40,13 +40,13 @@ import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_ST
 public class TeststepResource {
     private AppInfo appInfo;
     private TeststepDAO teststepDAO;
-    private UserDefinedPropertyDAO udpDAO;
+    private UDPDAO udpDAO;
     private UtilsDAO utilsDAO;
     private DataTableDAO dataTableDAO;
     private AssertionDAO assertionDAO;
     private EndpointDAO endpointDAO;
 
-    public TeststepResource(AppInfo appInfo, TeststepDAO teststepDAO, UserDefinedPropertyDAO udpDAO, UtilsDAO utilsDAO,
+    public TeststepResource(AppInfo appInfo, TeststepDAO teststepDAO, UDPDAO udpDAO, UtilsDAO utilsDAO,
                             DataTableDAO dataTableDAO, AssertionDAO assertionDAO, EndpointDAO endpointDAO) {
         this.appInfo = appInfo;
         this.teststepDAO = teststepDAO;
@@ -162,7 +162,7 @@ public class TeststepResource {
         }
 
         //  gather referenceable string properties and endpoint properties
-        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
+        List<UDP> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
         Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));

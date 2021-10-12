@@ -91,9 +91,9 @@ public final class GeneralUtils {
         return statements;
     }
 
-    public static Map<String, String> udpListToMap(List<UserDefinedProperty> testcaseUDPs) {
+    public static Map<String, String> udpListToMap(List<UDP> testcaseUDPs) {
         Map<String, String> result = new HashMap<>();
-        for (UserDefinedProperty udp: testcaseUDPs) {
+        for (UDP udp: testcaseUDPs) {
             result.put(udp.getName(), udp.getValue());
         }
         return result;

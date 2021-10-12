@@ -18,7 +18,7 @@ public class Testcase {
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String description;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
-    private List<UserDefinedProperty> udps = new ArrayList<>();
+    private List<UDP> udps = new ArrayList<>();
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<Teststep> teststeps;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
@@ -62,11 +62,11 @@ public class Testcase {
         this.description = description;
     }
 
-    public List<UserDefinedProperty> getUdps() {
+    public List<UDP> getUdps() {
         return udps;
     }
 
-    public void setUdps(List<UserDefinedProperty> udps) {
+    public void setUdps(List<UDP> udps) {
         this.udps = udps;
     }
 
