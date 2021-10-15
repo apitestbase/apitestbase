@@ -21,13 +21,17 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS datatable_column (" +
             "id BIGINT DEFAULT datatable_column_sequence.NEXTVAL PRIMARY KEY, " +
             "name VARCHAR(200) NOT NULL DEFAULT 'COL' || DATEDIFF('MS', '1970-01-01', CURRENT_TIMESTAMP), " +
-            "type VARCHAR(50) NOT NULL, sequence SMALLINT NOT NULL, testcase_id BIGINT NOT NULL, " +
+            "type VARCHAR(50) NOT NULL, sequence SMALLINT NOT NULL, testcase_id BIGINT NULL, teststep_id BIGINT NULL, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
+            "FOREIGN KEY (teststep_id) REFERENCES teststep(id) ON DELETE CASCADE, " +
+            "CONSTRAINT DATATABLE_COLUMN_EXCLUSIVE_CONTAINER_TYPE_CONSTRAINT CHECK((testcase_id IS NULL AND teststep_id IS NOT NULL) OR (testcase_id IS NOT NULL AND teststep_id IS NULL)), " +
             "CONSTRAINT DATATABLE_COLUMN_CAPTION_COLUMN_UNRENAMEABLE_CONSTRAINT CHECK(NOT(sequence = 1 AND name <> 'Caption')), " +
             "CONSTRAINT DATATABLE_COLUMN_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
+            "CONSTRAINT DATATABLE_COLUMN_UNIQUE_SEQUENCE_CONSTRAINT2 UNIQUE(teststep_id, sequence), " +
             "CONSTRAINT DATATABLE_COLUMN_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name), " +
+            "CONSTRAINT DATATABLE_COLUMN_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + "2 UNIQUE(teststep_id, name), " +
             "CONSTRAINT DATATABLE_COLUMN_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" +
                 CUSTOM_PROPERTY_NAME_CHECK + "))")
     void createTableIfNotExists();
