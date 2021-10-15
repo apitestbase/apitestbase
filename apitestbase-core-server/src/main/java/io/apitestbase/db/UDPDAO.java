@@ -25,7 +25,7 @@ public interface UDPDAO {
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
             "FOREIGN KEY (folder_id) REFERENCES folder(id) ON DELETE CASCADE, " +
-            "CONSTRAINT UDP_EXCLUSIVE_CONTAINER_TYPE_CONSTRAINT CHECK(testcase_id is null OR folder_id is null), " +
+            "CONSTRAINT UDP_EXCLUSIVE_CONTAINER_TYPE_CONSTRAINT CHECK((testcase_id IS NULL AND folder_id IS NOT NULL) OR (testcase_id IS NOT NULL AND folder_id IS NULL)), " +
             "CONSTRAINT UDP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
             "CONSTRAINT UDP_UNIQUE_SEQUENCE_CONSTRAINT2 UNIQUE(folder_id, sequence), " +
             "CONSTRAINT UDP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name), " +
