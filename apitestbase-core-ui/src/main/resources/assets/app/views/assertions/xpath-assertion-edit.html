@@ -12,7 +12,7 @@
               ng-change="assertionAutoSave()" ng-readonly="appStatus.isForbidden()">
     </textarea>
   </div>
-  <div class="col-lg-5 no-left-padding">
+  <div class="col-lg-5 no-left-padding" style="z-index: 1000">   <!-- z-index is to avoid grid menu being covered by the Actual Value textarea -->
     <div ui-grid="xPathNamespacePrefixesGridOptions" ui-grid-resize-columns ui-grid-move-columns
          ui-grid-edit ui-grid-selection class="ui-grid xpath-assertion-namespace-prefixes-grid"></div>
   </div>

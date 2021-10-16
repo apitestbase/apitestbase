@@ -173,6 +173,9 @@
 .xpath-assertion-namespace-prefixes-grid .ui-grid-menu-button {
   height: 20px;
 }
+.xpath-assertion-namespace-prefixes-grid .ui-grid-menu-mid {
+  max-height: none !important;
+}
 .udp-grid-value-editable-cell-textarea, .udp-grid-string-editable-cell-textarea {
   overflow: hidden;
   resize: none;
