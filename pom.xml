@@ -60,7 +60,7 @@
 
         <!-- not putting dependency version properties in BOM, because the properties are also used at other places (like files filtering in apitestbase-core-ui module -->
         <junit-jupiter.version>5.7.2</junit-jupiter.version>  <!-- JUnit 5 -->
-        <h2database.version>1.4.199</h2database.version>
+        <h2database.version>1.4.200</h2database.version>
         <jackson.version>2.10.5</jackson.version>    <!-- check dropwizard-dependencies/pom.xml -->
         <dropwizard.version>2.0.25</dropwizard.version>
         <dropwizard-jaxws.version>1.2.2</dropwizard-jaxws.version>
