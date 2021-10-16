@@ -10,122 +10,19 @@
   <div class="row">
     <uib-tabset active="activeTabIndex">
       <uib-tab heading="Basic Info" select="tabSelected(BASIC_INFO_TAB_INDEX)">
-        <form name="testcaseForm" class="form-horizontal col-lg-10" role="form" novalidate>
-          <div class="form-group"></div> <!-- spacer -->
-          <div class="form-group no-bottom-margin">  <!-- use no-bottom-margin class to facilitate testcase run result outline area display -->
-            <label for="description" class="col-lg-2 control-label">Description</label>
-            <div class="col-lg-10">
-              <textarea name="description" id="description" class="form-control" rows="30"
-                        ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)"
-                        ng-readonly="appStatus.isForbidden()" ng-style="styleOfMajorElementOnSelectedTab"></textarea>
-            </div>
-          </div>
-        </form>
+        <div ng-include="'/ui/views/testcases/edit-basic-info.html'"></div>
       </uib-tab>
       <uib-tab heading="Properties" select="tabSelected(PROPERTIES_TAB_INDEX)">
-        <div ng-controller="UDPsController" ng-init="findByTestcaseId()">
-          <div class="form-group">
-            <div class="col-lg-1">
-              <button class="btn btn-info" ng-click="createUDP()" ng-disabled="appStatus.isForbidden()">Create</button>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-lg-12">
-              <div ng-if="activeTabIndex === PROPERTIES_TAB_INDEX" ui-grid="udpGridOptions" ui-grid-resize-columns
-                   ui-grid-edit ui-grid-cellNav ui-grid-draggable-rows class="ui-grid" id="testcase-udp-grid"
-                   ng-style="styleOfMajorElementOnSelectedTab"></div>
-            </div>
-          </div>
-        </div>
+        <div ng-include="'/ui/views/testcases/edit-udps.html'"></div>
       </uib-tab>
       <uib-tab heading="Test Steps" select="tabSelected(TEST_STEPS_TAB_INDEX)">
-        <div class="form-group">
-          <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
-            <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
-                    ng-disabled="appStatus.isForbidden()">
-              Create <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-              <li role="menuitem"><a ng-click="createTeststep('HTTP')" href="">HTTP Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('SOAP')" href="">SOAP Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('DB')" href="">Database Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('JMS')" href="">JMS Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('FTP')" href="">FTP Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('MQ')" href="">MQ Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('IIB')" href="">IIB Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('AMQP')" href="">AMQP Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('MQTT')" href="">MQTT Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('Wait')" href="">Wait Step</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-lg-12" id="teststepGrid">
-            <div ng-if="activeTabIndex === TEST_STEPS_TAB_INDEX" ui-grid="teststepGridOptions" ui-grid-resize-columns
-                 ui-grid-move-columns class="ui-grid" ui-grid-draggable-rows id="teststep-grid"
-                 ng-style="styleOfMajorElementOnSelectedTab"></div>
-          </div>
-        </div>
+        <div ng-include="'/ui/views/testcases/edit-teststeps.html'"></div>
       </uib-tab>
       <uib-tab heading="Data Table" select="tabSelected(DATA_TABLE_TAB_INDEX)">
-        <div ng-controller="DataTableController" ng-init="findByTestcaseId()">
-          <div class="form-group">
-            <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
-              <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
-                      ng-disabled="appStatus.isForbidden()">
-                Add Column <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-                <li role="menuitem"><a ng-click="addColumn('String')" href="">String Column</a></li>
-                <li role="menuitem"><a ng-click="addColumn('DBEndpoint')" href="">DB Endpoint Column</a></li>
-              </ul>
-            </div>
-            <div class="col-lg-2">
-              <button class="btn btn-info" ng-click="addRow()" ng-disabled="appStatus.isForbidden()">Add Row</button>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-lg-12">
-              <div ng-if="activeTabIndex === DATA_TABLE_TAB_INDEX && dataTable" ui-grid="dataTableGridOptions"
-                   ui-grid-move-columns ui-grid-resize-columns ui-grid-edit ui-grid-cellNav class="ui-grid"
-                   id="testcase-datatable-grid" ng-style="styleOfMajorElementOnSelectedTab"></div>
-            </div>
-          </div>
-        </div>
+        <div ng-include="'/ui/views/testcases/edit-data-table.html'"></div>
       </uib-tab>
       <uib-tab heading="HTTP Stubs" select="tabSelected(HTTP_STUBS_TAB_INDEX)">
-        <div ng-controller="HTTPStubsController" ng-init="findByTestcaseId()">
-          <div class="form-group">
-            <div class="col-lg-1">
-              <button class="btn btn-info" ng-click="createHTTPStub()" ng-disabled="appStatus.isForbidden()">Create</button>
-            </div>
-            <div class="col-lg-offset-1 col-lg-1">
-              <button class="btn btn-info" ng-click="loadAllHTTPStubs()" ng-disabled="appStatus.isForbidden()">Load All</button>
-            </div>
-            <div class="col-lg-3">
-              <h5 ng-if="stubsLoadingStatus === 'finished'">All stubs have been loaded into mock server</h5>
-            </div>
-            <div class="col-lg-2 checkbox">
-              <label>
-                <input name="checkHTTPStubsHitOrder" id="checkHTTPStubsHitOrder" type="checkbox"
-                       ng-model="testcase.checkHTTPStubsHitOrder" ng-change="update(testcaseForm.$valid)"
-                       ng-disabled="appStatus.isForbidden()"> Check Hit Order
-              </label>
-            </div>
-            <div class="col-lg-2 pull-right">
-              <a ng-href="ui/mockserver" target='_blank'>
-                <h5>Mock Server</h5>
-              </a>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-lg-12">
-              <div ng-if="activeTabIndex === HTTP_STUBS_TAB_INDEX" ui-grid="httpStubGridOptions" ui-grid-resize-columns
-                   ui-grid-draggable-rows class="ui-grid" id="testcase-httpstub-grid"
-                   ng-style="styleOfMajorElementOnSelectedTab"></div>
-            </div>
-          </div>
-        </div>
+        <div ng-include="'/ui/views/testcases/edit-http-stubs.html'"></div>
       </uib-tab>
 
       <div class="col-lg-offset-1 col-lg-1">
@@ -189,102 +86,3 @@
     <div ng-init="handleTestcaseRunResultOutlineAreaDisplay()"></div>
   </div>
 </div>
-
-<!-- UDP grid cell templates -->
-<script type="text/ng-template" id="udpGridNameEditableCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD" spellcheck="false"
-           ng-readonly="grid.appScope.appStatus.isForbidden()">
-  </div>
-</script>
-<script type="text/ng-template" id="udpGridValueEditableCellTemplate.html">
-  <div class="ui-grid-cell-contents" ng-dblclick="grid.appScope.valueCellDblClicked(row.entity)">
-    <textarea class="form-control udp-grid-value-editable-cell-textarea" ui-grid-editor ng-model="MODEL_COL_FIELD"
-              spellcheck="false" ng-readonly="grid.appScope.appStatus.isForbidden()"></textarea>
-  </div>
-</script>
-<script type="text/ng-template" id="udpGridDeleteCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.removeUDP(row.entity)"
-       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
-      <i class="glyphicon glyphicon-trash center-block text-center"></i>
-    </a>
-  </div>
-</script>
-
-<!-- teststep grid cell templates -->
-<script type="text/ng-template" id="teststepGridSequenceCellTemplate.html">
-  <div class="ui-grid-cell-contents text-center">{{COL_FIELD}}</div>
-</script>
-<script type="text/ng-template" id="teststepGridNameCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a>
-  </div>
-</script>
-<script type="text/ng-template" id="teststepGridDeleteCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.removeTeststep(row.entity)"
-       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
-      <i class="glyphicon glyphicon-trash center-block text-center"></i>
-    </a>
-  </div>
-</script>
-
-<!-- data table grid cell templates -->
-<script type="text/ng-template" id="dataTableGridEditableHeaderCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <input type="text" class="form-control" ng-model="col.name" irt-select="true"
-           ng-keypress="grid.appScope.afterColumnNameEdit(col, $event)"
-           ng-keydown="grid.appScope.afterColumnNameEdit(col, $event)"
-           ng-blur="grid.appScope.afterColumnNameEdit(col)">
-  </div>
-</script>
-<script type="text/ng-template" id="dataTableGridStringCellTemplate.html">
-  <div class="ui-grid-cell-contents">{{ COL_FIELD.value }}</div>
-</script>
-<script type="text/ng-template" id="dataTableGridCaptionEditableCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD"
-           ng-readonly="grid.appScope.appStatus.isForbidden()">
-  </div>
-</script>
-<script type="text/ng-template" id="dataTableGridStringEditableCellTemplate.html">
-  <div class="ui-grid-cell-contents" ng-dblclick="grid.appScope.stringCellDblClicked(row.entity, col)">
-    <textarea class="form-control udp-grid-string-editable-cell-textarea" ui-grid-editor ng-model="MODEL_COL_FIELD"
-              spellcheck="false" ng-readonly="grid.appScope.appStatus.isForbidden()"></textarea>
-  </div>
-</script>
-<script type="text/ng-template" id="dataTableGridEndpointCellTemplate.html">
-  <div class="ui-grid-cell-contents" ng-click="grid.appScope.appStatus.isForbidden() ?
-      angular.noop() : grid.appScope.selectManagedEndpoint(row.entity, col)">
-    {{ COL_FIELD.endpoint ? COL_FIELD.endpoint.environment.name + '#' + COL_FIELD.endpoint.name : ''}}
-  </div>
-</script>
-<script type="text/ng-template" id="dataTableGridDeleteCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.deleteRow(row.entity)"
-       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
-      <i class="glyphicon glyphicon-trash center-block text-center"></i>
-    </a>
-  </div>
-</script>
-
-<!-- HTTP stub grid cell templates -->
-<script type="text/ng-template" id="httpStubGridNOCellTemplate.html">
-  <div class="ui-grid-cell-contents text-center">{{COL_FIELD}}</div>
-</script>
-<script type="text/ng-template" id="httpStubGridURLCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <a ui-sref="httpstub_edit({ testcaseId: row.entity.testcaseId, httpStubId: row.entity.id })">
-      {{ row.entity.spec.request.urlPattern ? row.entity.spec.request.urlPattern : row.entity.spec.request.url }}
-    </a>
-  </div>
-</script>
-<script type="text/ng-template" id="httpStubGridDeleteCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.removeHTTPStub(row.entity)"
-       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
-      <i class="glyphicon glyphicon-trash center-block text-center"></i>
-    </a>
-  </div>
-</script>

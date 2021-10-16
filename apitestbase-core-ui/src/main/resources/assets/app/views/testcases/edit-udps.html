@@ -1,0 +1,36 @@
+<div ng-controller="UDPsController" ng-init="findByTestcaseId()">
+  <div class="form-group">
+    <div class="col-lg-1">
+      <button class="btn btn-info" ng-click="createUDP()" ng-disabled="appStatus.isForbidden()">Create</button>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-lg-12">
+      <div ng-if="activeTabIndex === PROPERTIES_TAB_INDEX" ui-grid="udpGridOptions" ui-grid-resize-columns
+           ui-grid-edit ui-grid-cellNav ui-grid-draggable-rows class="ui-grid" id="testcase-udp-grid"
+           ng-style="styleOfMajorElementOnSelectedTab"></div>
+    </div>
+  </div>
+</div>
+
+<!-- UDP grid cell templates -->
+<script type="text/ng-template" id="udpGridNameEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD" spellcheck="false"
+           ng-readonly="grid.appScope.appStatus.isForbidden()">
+  </div>
+</script>
+<script type="text/ng-template" id="udpGridValueEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents" ng-dblclick="grid.appScope.valueCellDblClicked(row.entity)">
+    <textarea class="form-control udp-grid-value-editable-cell-textarea" ui-grid-editor ng-model="MODEL_COL_FIELD"
+              spellcheck="false" ng-readonly="grid.appScope.appStatus.isForbidden()"></textarea>
+  </div>
+</script>
+<script type="text/ng-template" id="udpGridDeleteCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.removeUDP(row.entity)"
+       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
+      <i class="glyphicon glyphicon-trash center-block text-center"></i>
+    </a>
+  </div>
+</script>
