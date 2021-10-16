@@ -80,7 +80,8 @@
   <script src="/ui/js/udps/udps-controller.js"></script>
   <script src="/ui/js/udps/udp-value-textarea-editor-modal-controller.js"></script>
   <script src="/ui/js/datatable/datatable-services.js"></script>
-  <script src="/ui/js/datatable/datatable-controller.js"></script>
+  <script src="/ui/js/datatable/testcase-datatable-controller.js"></script>
+  <script src="/ui/js/datatable/teststep-datatable-controller.js"></script>
   <script src="/ui/js/datatable/datatable-string-cell-textarea-editor-modal-controller.js"></script>
   <script src="/ui/js/teststeps/teststeps-routes.js"></script>
   <script src="/ui/js/teststeps/teststeps-services.js"></script>
@@ -128,7 +129,8 @@
 
   <!-- Always load the error message modal template, in case API Test Base server is down during using
     and browser is unable to alert user of the error. -->
-  <div ng-include="'/ui/common/errorMessageModalTemplate.html'"></div>
+  <div ng-include="'/ui/common/error-message-modal-template.html'"></div>
+  <div ng-include="'/ui/app/data-table-grid-cell-templates.html'"></div>
 </body>
 
 </html>

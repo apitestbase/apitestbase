@@ -28,6 +28,9 @@
                  deselect="getActionOrInvocationTabHeading() === 'Invocation' ? $broadcast('InvocationTabDeselected') : angular.noop()">
           <div ng-include="'/ui/views/teststeps/edit-invocation-details.html'"></div>
         </uib-tab>
+        <uib-tab heading="Data Table">
+          <div ng-include="'/ui/views/teststeps/edit-data-table.html'"></div>
+        </uib-tab>
       </uib-tabset>
     </form>
   </div>

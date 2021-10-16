@@ -2,7 +2,7 @@
 
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController.
-angular.module('apitestbase').controller('DataTableController', ['$scope', 'GeneralUtils', '$stateParams', 'DataTable',
+angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope', 'GeneralUtils', '$stateParams', 'DataTable',
     '$timeout', '$uibModal', '$rootScope',
   function($scope, GeneralUtils, $stateParams, DataTable, $timeout, $uibModal, $rootScope) {
     var DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE = 'dataTableGridEditableHeaderCellTemplate.html';

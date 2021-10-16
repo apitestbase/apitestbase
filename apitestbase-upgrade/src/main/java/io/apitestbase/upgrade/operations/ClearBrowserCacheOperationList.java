@@ -7,5 +7,6 @@ public class ClearBrowserCacheOperationList extends OperationList {
         getOperationList().add(new Operation(new DefaultArtifactVersion("0.18.3"), new DefaultArtifactVersion("0.18.4")));
         getOperationList().add(new Operation(new DefaultArtifactVersion("0.18.4"), new DefaultArtifactVersion("0.18.5")));
         getOperationList().add(new Operation(new DefaultArtifactVersion("0.18.5"), new DefaultArtifactVersion("0.18.6")));
+        getOperationList().add(new Operation(new DefaultArtifactVersion("0.18.7"), new DefaultArtifactVersion("0.19.0")));
     }
 }
