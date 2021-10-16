@@ -2,13 +2,13 @@
 
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController.
-angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope', 'GeneralUtils', '$stateParams', 'DataTable',
-    '$timeout', '$uibModal', '$rootScope',
-  function($scope, GeneralUtils, $stateParams, DataTable, $timeout, $uibModal, $rootScope) {
+angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope', 'GeneralUtils', '$stateParams',
+    'TestcaseDataTable', '$timeout', '$uibModal', '$rootScope',
+  function($scope, GeneralUtils, $stateParams, TestcaseDataTable, $timeout, $uibModal, $rootScope) {
     var DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE = 'dataTableGridEditableHeaderCellTemplate.html';
 
     var stringCellUpdate = function(dataTableCellId, newValue) {
-      DataTable.updateCell({
+      TestcaseDataTable.updateCell({
         testcaseId: $stateParams.testcaseId
       }, {
         id: dataTableCellId,
@@ -34,7 +34,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
         gridApi.colMovable.on.columnPositionChanged($scope, function(colDef, originalPosition, newPosition) {
           var toSequence = $scope.dataTableGridOptions.columnDefs[newPosition].dataTableColumnSequence;
 
-          DataTable.moveColumn({
+          TestcaseDataTable.moveColumn({
             testcaseId: $scope.testcase.id,
             fromSequence: colDef.dataTableColumnSequence,
             toSequence: toSequence
@@ -66,7 +66,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
     };
 
     var deleteColumn = function(columnId) {
-      DataTable.deleteColumn({ testcaseId: $stateParams.testcaseId, columnId: columnId }, {}, function(dataTable) {
+      TestcaseDataTable.deleteColumn({ testcaseId: $stateParams.testcaseId, columnId: columnId }, {}, function(dataTable) {
         $scope.$emit('successfullySaved');
         updateDataTableGrid(dataTable);
       }, function(response) {
@@ -151,7 +151,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
     };
 
     $scope.findByTestcaseId = function() {
-      DataTable.get({ testcaseId: $stateParams.testcaseId }, function(dataTable) {
+      TestcaseDataTable.get({ testcaseId: $stateParams.testcaseId }, function(dataTable) {
         updateDataTableGrid(dataTable);
 
         //  show the grid
@@ -162,7 +162,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
     };
 
     $scope.addColumn = function(columnType) {
-      DataTable.addColumn({ testcaseId: $stateParams.testcaseId, columnType: columnType }, {}, function(dataTable) {
+      TestcaseDataTable.addColumn({ testcaseId: $stateParams.testcaseId, columnType: columnType }, {}, function(dataTable) {
         updateDataTableGrid(dataTable, true);
       }, function(response) {
         GeneralUtils.openErrorHTTPResponseModal(response);
@@ -184,7 +184,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
       var newName = col.name;
 
       if (newName !== oldName) {
-        DataTable.renameColumn({
+        TestcaseDataTable.renameColumn({
           testcaseId: $stateParams.testcaseId, columnId: colDef.dataTableColumnId, newName: newName
         }, {
         }, function(dataTable) {
@@ -200,7 +200,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
     };
 
     $scope.addRow = function() {
-      DataTable.addRow({ testcaseId: $stateParams.testcaseId }, {}, function(dataTable) {
+      TestcaseDataTable.addRow({ testcaseId: $stateParams.testcaseId }, {}, function(dataTable) {
         $scope.$emit('successfullySaved');
         updateDataTableGrid(dataTable);
       }, function(response) {
@@ -209,7 +209,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
     };
 
     $scope.deleteRow = function(rowEntity) {
-      DataTable.deleteRow({ testcaseId: $stateParams.testcaseId, rowSequence: rowEntity.Caption.rowSequence }, {
+      TestcaseDataTable.deleteRow({ testcaseId: $stateParams.testcaseId, rowSequence: rowEntity.Caption.rowSequence }, {
       }, function(dataTable) {
         $scope.$emit('successfullySaved');
         updateDataTableGrid(dataTable);
@@ -269,7 +269,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
 
       //  handle result from modal dialog
       modalInstance.result.then(function closed(selectedEndpoint) {
-        DataTable.updateCell({
+        TestcaseDataTable.updateCell({
           testcaseId: $stateParams.testcaseId
         }, {
           id: rowEntity[columnName].id,

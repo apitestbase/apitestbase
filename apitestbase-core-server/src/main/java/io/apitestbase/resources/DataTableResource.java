@@ -31,6 +31,13 @@ public class DataTableResource {
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
     }
 
+    @GET
+    @Path("teststeps/{teststepId}/datatable")
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    public DataTable findByTeststepId(@PathParam("teststepId") long teststepId) {
+        return dataTableDAO.getTeststepDataTable(teststepId, false);
+    }
+
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/addColumn")
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)

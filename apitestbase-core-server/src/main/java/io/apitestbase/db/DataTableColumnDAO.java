@@ -44,6 +44,9 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
     @SqlQuery("select * from datatable_column where testcase_id = :testcaseId order by sequence")
     List<DataTableColumn> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
+    @SqlQuery("select * from datatable_column where teststep_id = :teststepId order by sequence")
+    List<DataTableColumn> findByTeststepId(@Bind("teststepId") long teststepId);
+
     /**
      * @param testcaseId
      * @param column

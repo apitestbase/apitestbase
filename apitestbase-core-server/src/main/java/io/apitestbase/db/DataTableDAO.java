@@ -21,18 +21,8 @@ public interface DataTableDAO extends CrossReferenceDAO {
         dataTableColumnDAO().insert(testcaseId, dataTableColumn, DataTableColumnType.STRING.toString());
     }
 
-    /**
-     * @param testcaseId
-     * @param fetchFirstRowOnly if true, only the first data table row (if exists) will be fetched; if false, all rows will be fetched.
-     * @return
-     */
-    @Transaction
-    default DataTable getTestcaseDataTable(long testcaseId, boolean fetchFirstRowOnly) {
-        DataTable dataTable = new DataTable();
-
-        List<DataTableColumn> columns = dataTableColumnDAO().findByTestcaseId(testcaseId);
-
-        //  populate the data table rows Java model column by column
+    //  populate the data table rows Java model column by column
+    default void populateColumnsAndRows(DataTable dataTable, List<DataTableColumn> columns, boolean fetchFirstRowOnly) {
         List<LinkedHashMap<String, DataTableCell>> rows = new ArrayList<>();
         Map<Short, LinkedHashMap<String, DataTableCell>> rowSequenceMap = new HashMap<>();  //  map rowSequence to row object (because rowSequence is not consecutive)
         for (DataTableColumn column: columns) {
@@ -57,11 +47,36 @@ public interface DataTableDAO extends CrossReferenceDAO {
             }
         }
 
-        if (columns.size() > 0) {
-            dataTable = new DataTable();
-            dataTable.setColumns(columns);
-            dataTable.setRows(rows);
-        }
+        dataTable.setColumns(columns);
+        dataTable.setRows(rows);
+    }
+
+    /**
+     * @param testcaseId
+     * @param fetchFirstRowOnly if true, only the first data table row (if exists) will be fetched; if false, all rows will be fetched.
+     * @return
+     */
+    @Transaction
+    default DataTable getTestcaseDataTable(long testcaseId, boolean fetchFirstRowOnly) {
+        List<DataTableColumn> columns = dataTableColumnDAO().findByTestcaseId(testcaseId);
+
+        DataTable dataTable = new DataTable();
+        populateColumnsAndRows(dataTable, columns, fetchFirstRowOnly);
+
+        return dataTable;
+    }
+
+    /**
+     * @param teststepId
+     * @param fetchFirstRowOnly if true, only the first data table row (if exists) will be fetched; if false, all rows will be fetched.
+     * @return
+     */
+    @Transaction
+    default DataTable getTeststepDataTable(long teststepId, boolean fetchFirstRowOnly) {
+        List<DataTableColumn> columns = dataTableColumnDAO().findByTeststepId(teststepId);
+
+        DataTable dataTable = new DataTable();
+        populateColumnsAndRows(dataTable, columns, fetchFirstRowOnly);
 
         return dataTable;
     }
