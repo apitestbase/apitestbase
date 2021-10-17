@@ -50,7 +50,7 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
           title: 'Delete Column',
           icon: 'glyphicon glyphicon-trash',
           action: function() {
-            deleteColumn(this.context.col.colDef.dataTableColumnId);
+            this.grid.appScope.$parent.deleteColumn(this.context.col.colDef.dataTableColumnId);
           },
           shown: function() {
             return !$rootScope.appStatus.isForbidden();
@@ -181,6 +181,15 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
         scope.$emit('successfullySaved');
         updateDataTableGridOptions(scope.dataTableGridOptions, dataTable);
         scope.dataTable = dataTable;    // this is necessary as server side will change sequence values of data table columns (including the dragged column and some not-dragged columns).
+      }, function(response) {
+        GeneralUtils.openErrorHTTPResponseModal(response);
+      });
+    },
+
+    deleteColumn: function(scope, restService, restRequestObj) {
+      restService.deleteColumn(restRequestObj, {}, function(dataTable) {
+        scope.$emit('successfullySaved');
+        updateDataTableGridOptions(scope.dataTableGridOptions, dataTable);
       }, function(response) {
         GeneralUtils.openErrorHTTPResponseModal(response);
       });

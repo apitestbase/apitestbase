@@ -44,13 +44,9 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
       }
     });
 
-    var deleteColumn = function(columnId) {
-      TestcaseDataTable.deleteColumn({ testcaseId: $stateParams.testcaseId, columnId: columnId }, {}, function(dataTable) {
-        $scope.$emit('successfullySaved');
-        DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
-      }, function(response) {
-        GeneralUtils.openErrorHTTPResponseModal(response);
-      });
+    $scope.deleteColumn = function(columnId) {
+      DataTableUtils.deleteColumn($scope, TestcaseDataTable,
+        { testcaseId: $stateParams.testcaseId, columnId: columnId });
     };
 
     $scope.findByTestcaseId = function() {

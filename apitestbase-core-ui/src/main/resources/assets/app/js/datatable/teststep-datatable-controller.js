@@ -35,5 +35,10 @@ angular.module('apitestbase').controller('TeststepDataTableController', ['$scope
     $scope.afterColumnNameEdit = function(col, event) {
       DataTableUtils.afterColumnNameEdit($scope, TeststepDataTable, { teststepId: $stateParams.teststepId }, col, event);
     };
+
+    $scope.deleteColumn = function(columnId) {
+      DataTableUtils.deleteColumn($scope, TeststepDataTable,
+        { teststepId: $stateParams.teststepId, columnId: columnId });
+    };
   }
 ]);

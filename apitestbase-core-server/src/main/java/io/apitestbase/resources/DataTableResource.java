@@ -59,9 +59,19 @@ public class DataTableResource {
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/deleteColumn")
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
-    public DataTable deleteColumn(@PathParam("testcaseId") long testcaseId, @QueryParam("columnId") long columnId) {
+    public DataTable deleteColumnFromTestcaseDataTable(@PathParam("testcaseId") long testcaseId,
+                                                       @QueryParam("columnId") long columnId) {
         dataTableColumnDAO.delete(columnId);
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
+    @Path("teststeps/{teststepId}/datatable/deleteColumn")
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    public DataTable deleteColumnFromTeststepDataTable(@PathParam("teststepId") long teststepId,
+                                                       @QueryParam("columnId") long columnId) {
+        dataTableColumnDAO.delete(columnId);
+        return dataTableDAO.getTeststepDataTable(teststepId, false);
     }
 
     @POST @PermitAll
