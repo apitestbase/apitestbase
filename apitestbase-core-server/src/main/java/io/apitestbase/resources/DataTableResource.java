@@ -73,9 +73,17 @@ public class DataTableResource {
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/addRow")
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
-    public DataTable addRow(@PathParam("testcaseId") long testcaseId) {
-        dataTableCellDAO.addRow(testcaseId);
+    public DataTable addRowToTestcaseDataTable(@PathParam("testcaseId") long testcaseId) {
+        dataTableCellDAO.addRow(testcaseId, null);
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
+    @Path("teststeps/{teststepId}/datatable/addRow")
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    public DataTable addRowToTeststepDataTable(@PathParam("teststepId") long teststepId) {
+        dataTableCellDAO.addRow(null, teststepId);
+        return dataTableDAO.getTeststepDataTable(teststepId, false);
     }
 
     @POST @PermitAll

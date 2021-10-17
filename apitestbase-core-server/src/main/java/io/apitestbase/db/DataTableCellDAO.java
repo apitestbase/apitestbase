@@ -39,13 +39,16 @@ public interface DataTableCellDAO extends CrossReferenceDAO {
                 "select case when max_row_sequence is null then 1 else max_row_sequence + 1 end as new_row_sequence from (" +
                     "select max(row_sequence) as max_row_sequence " +
                     "from datatable_column col left outer join datatable_cell cel on cel.column_id = col.id " +
-                    "where col.testcase_id = :testcaseId and col.name = 'Caption'" +
+                    "where col.name = 'Caption' and ((col.testcase_id is not null and col.testcase_id = :testcaseId) or " +
+                        "(col.teststep_id is not null and col.teststep_id = :teststepId))" +
                 ")" +
             ")" +
             "select col.id as column_id, subquery1.new_row_sequence as row_sequence, " +
                 "case when col.name = 'Caption' then 'Row ' || to_char(subquery1.new_row_sequence) else '' end as value " +
-            "from datatable_column col, subquery1 where col.testcase_id = :testcaseId;")
-    void addRow(@Bind("testcaseId") long testcaseId);
+            "from datatable_column col, subquery1 " +
+            "where (col.testcase_id is not null and col.testcase_id = :testcaseId) or " +
+                "(col.teststep_id is not null and col.teststep_id = :teststepId)")
+    void addRow(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId);
 
     @SqlUpdate("delete from datatable_cell where row_sequence = :rowSequence and column_id in (" +
             "select id from datatable_column where testcase_id = :testcaseId)")

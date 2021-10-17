@@ -20,5 +20,13 @@ angular.module('apitestbase').controller('TeststepDataTableController', ['$scope
       });
     };
 
+    $scope.addRow = function() {
+      TeststepDataTable.addRow({ teststepId: $stateParams.teststepId }, {}, function(dataTable) {
+        $scope.$emit('successfullySaved');
+        DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
+      }, function(response) {
+        GeneralUtils.openErrorHTTPResponseModal(response);
+      });
+    };
   }
 ]);
