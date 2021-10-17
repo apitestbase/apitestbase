@@ -33,7 +33,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
           var toSequence = $scope.dataTableGridOptions.columnDefs[newPosition].dataTableColumnSequence;
 
           TestcaseDataTable.moveColumn({
-            testcaseId: $scope.testcase.id,
+            testcaseId: $stateParams.testcaseId,
             fromSequence: colDef.dataTableColumnSequence,
             toSequence: toSequence
           }, {}, function(dataTable) {
@@ -65,71 +65,25 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
     };
 
     $scope.findByTestcaseId = function() {
-      TestcaseDataTable.get({ testcaseId: $stateParams.testcaseId }, function(dataTable) {
-        DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
-
-        //  show the grid
-        $scope.dataTable = dataTable;
-      }, function(response) {
-        GeneralUtils.openErrorHTTPResponseModal(response);
-      });
+      DataTableUtils.findByContainerId($scope, TestcaseDataTable, { testcaseId: $stateParams.testcaseId });
     };
 
     $scope.addColumn = function(columnType) {
-      TestcaseDataTable.addColumn({ testcaseId: $stateParams.testcaseId, columnType: columnType }, {}, function(dataTable) {
-        DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable, true);
-      }, function(response) {
-        GeneralUtils.openErrorHTTPResponseModal(response);
-      });
+      DataTableUtils.addColumn($scope, TestcaseDataTable,
+        { testcaseId: $stateParams.testcaseId, columnType: columnType });
     };
 
     $scope.afterColumnNameEdit = function(col, event) {
-      if (event) {
-        if (event.keyCode === 13 || event.keyCode === 27) {
-          event.preventDefault();
-        } else {                     // keys typed other than Enter and ESC do not trigger anything
-          return;
-        }
-      }
-
-      var colDef = col.colDef;
-      delete colDef.headerCellTemplate;
-      var oldName = colDef.name;
-      var newName = col.name;
-
-      if (newName !== oldName) {
-        TestcaseDataTable.renameColumn({
-          testcaseId: $stateParams.testcaseId, columnId: colDef.dataTableColumnId, newName: newName
-        }, {
-        }, function(dataTable) {
-          $scope.$emit('successfullySaved');
-          DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
-          DataTableUtils.refreshDataTableGrid($scope);
-        }, function(response) {
-          GeneralUtils.openErrorHTTPResponseModal(response);
-        });
-      } else {
-        DataTableUtils.refreshDataTableGrid($scope);
-      }
+      DataTableUtils.afterColumnNameEdit($scope, TestcaseDataTable, { testcaseId: $stateParams.testcaseId }, col, event);
     };
 
     $scope.addRow = function() {
-      TestcaseDataTable.addRow({ testcaseId: $stateParams.testcaseId }, {}, function(dataTable) {
-        $scope.$emit('successfullySaved');
-        DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
-      }, function(response) {
-        GeneralUtils.openErrorHTTPResponseModal(response);
-      });
+      DataTableUtils.addRow($scope, TestcaseDataTable, { testcaseId: $stateParams.testcaseId });
     };
 
     $scope.deleteRow = function(rowEntity) {
-      TestcaseDataTable.deleteRow({ testcaseId: $stateParams.testcaseId, rowSequence: rowEntity.Caption.rowSequence }, {
-      }, function(dataTable) {
-        $scope.$emit('successfullySaved');
-        DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
-      }, function(response) {
-        GeneralUtils.openErrorHTTPResponseModal(response);
-      });
+      DataTableUtils.deleteRow($scope, TestcaseDataTable,
+        { testcaseId: $stateParams.testcaseId, rowSequence: rowEntity.Caption.rowSequence });
     };
 
     $scope.stringCellDblClicked = function(rowEntity, col) {
