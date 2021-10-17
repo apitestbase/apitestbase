@@ -14,11 +14,11 @@ public interface DataTableDAO extends CrossReferenceDAO {
      * Caption column is the initial column in a data table.
      * @param testcaseId
      */
-    default void createCaptionColumn(long testcaseId) {
+    default void createCaptionColumn(Long testcaseId, Long teststepId) {
         DataTableColumn dataTableColumn = new DataTableColumn();
         dataTableColumn.setName(DataTableColumn.COLUMN_NAME_CAPTION);
         dataTableColumn.setSequence((short) 1);
-        dataTableColumnDAO().insert(testcaseId, dataTableColumn, DataTableColumnType.STRING.toString());
+        dataTableColumnDAO().insert(testcaseId, teststepId, dataTableColumn, DataTableColumnType.STRING.toString());
     }
 
     //  populate the data table rows Java model column by column

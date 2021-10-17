@@ -123,6 +123,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
                 new ObjectMapper().writeValueAsString(apiRequest));
 
         updateNameForInsert(id, "Step " + id);
+        dataTableDAO().createCaptionColumn(null, id);
 
         return id;
     }

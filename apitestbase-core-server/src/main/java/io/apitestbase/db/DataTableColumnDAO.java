@@ -49,15 +49,16 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
 
     /**
      * @param testcaseId
+     * @param teststepId
      * @param column
      * @param type for enum, name instead of value is bound by JDBI, so use a separate @Bind here instead of taking advantage of the @BindBean.
      * @return
      */
-    @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:c.name, :type, " +
-            ":c.sequence, :testcaseId)")
+    @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id, teststep_id) values (:c.name, :type, " +
+            ":c.sequence, :testcaseId, :teststepId)")
     @GetGeneratedKeys
-    long insert(@Bind("testcaseId") long testcaseId, @BindBean("c") DataTableColumn column,
-                @Bind("type") String type);
+    long insert(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId,
+                @BindBean("c") DataTableColumn column, @Bind("type") String type);
 
     @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:name, :type, " +
             "select coalesce(max(sequence), 0) + 1 from datatable_column where testcase_id = :testcaseId, :testcaseId)")

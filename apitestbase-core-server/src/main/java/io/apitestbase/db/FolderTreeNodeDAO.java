@@ -41,7 +41,7 @@ public interface FolderTreeNodeDAO extends CrossReferenceDAO {
             Testcase testcase = new Testcase();
             testcase.setParentFolderId(node.getParentFolderId());
             testcase = testcaseDAO().insert(testcase);
-            dataTableDAO().createCaptionColumn(testcase.getId());
+            dataTableDAO().createCaptionColumn(testcase.getId(), null);
             node.setIdPerType(testcase.getId());
             node.setText(testcase.getName());
         } else if (node.getType() == FolderTreeNodeType.FOLDER) {
