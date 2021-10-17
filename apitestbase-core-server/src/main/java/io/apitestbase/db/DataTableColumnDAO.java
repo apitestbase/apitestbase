@@ -95,8 +95,11 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
     void duplicateByTestcase(@Bind("sourceTestcaseId") long sourceTestcaseId,
                              @Bind("targetTestcaseId") long targetTestcaseId);
 
-    @SqlQuery("select * from datatable_column where testcase_id = :testcaseId and sequence = :sequence")
-    DataTableColumn findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
+    @SqlQuery("select id from datatable_column where sequence = :sequence and (" +
+            "(testcase_id is not null and testcase_id = :testcaseId) or " +
+            "(teststep_id is not null and teststep_id = :teststepId))")
+    long findIdBySequence(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId,
+                          @Bind("sequence") short sequence);
 
     @SqlUpdate("update datatable_column set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :id")
     void updateSequenceById(@Bind("id") long id, @Bind("newSequence") short newSequence);
@@ -104,24 +107,26 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
     @SqlUpdate("update datatable_column set " +
             "sequence = case when :direction = 'left' then sequence - 1 else sequence + 1 end, " +
             "updated = CURRENT_TIMESTAMP " +
-            "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
-    void batchMove(@Bind("testcaseId") long testcaseId,
-                   @Bind("firstSequence") short firstSequence,
-                   @Bind("lastSequence") short lastSequence,
+            "where sequence >= :firstSequence and sequence <= :lastSequence and (" +
+                "(testcase_id is not null and testcase_id = :testcaseId) or " +
+                "(teststep_id is not null and teststep_id = :teststepId))")
+    void batchMove(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId,
+                   @Bind("firstSequence") short firstSequence, @Bind("lastSequence") short lastSequence,
                    @Bind("direction") String direction);
 
+    //  move column in testcase or teststep that contains the data table
     @Transaction
-    default void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
+    default void moveInContainer(Long testcaseId, Long teststepId, short fromSequence, short toSequence) {
         if (fromSequence != toSequence) {
-            long draggedColumnId = findBySequence(testcaseId, fromSequence).getId();
+            long draggedColumnId = findIdBySequence(testcaseId, teststepId, fromSequence);
 
             //  shelve the dragged column first
             updateSequenceById(draggedColumnId, (short) -1);
 
             if (fromSequence < toSequence) {
-                batchMove(testcaseId, (short) (fromSequence + 1), toSequence, "left");
+                batchMove(testcaseId, teststepId, (short) (fromSequence + 1), toSequence, "left");
             } else {
-                batchMove(testcaseId, toSequence, (short) (fromSequence - 1), "right");
+                batchMove(testcaseId, teststepId, toSequence, (short) (fromSequence - 1), "right");
             }
 
             //  move the dragged column last

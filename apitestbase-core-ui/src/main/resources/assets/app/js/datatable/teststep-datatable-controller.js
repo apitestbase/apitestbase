@@ -6,8 +6,14 @@ angular.module('apitestbase').controller('TeststepDataTableController', ['$scope
     'TeststepDataTable', 'DataTableUtils',
   function($scope, GeneralUtils, $stateParams, TeststepDataTable, DataTableUtils) {
     $scope.dataTableGridOptions = {
-      enableSorting: false
-    }
+      enableSorting: false,
+      onRegisterApi: function(gridApi) {
+        gridApi.colMovable.on.columnPositionChanged($scope, function(colDef, originalPosition, newPosition) {
+          DataTableUtils.moveColumn($scope, TeststepDataTable, { teststepId: $stateParams.teststepId,
+            fromSequence: colDef.dataTableColumnSequence }, newPosition);
+        });
+      }
+    };
 
     $scope.findByTeststepId = function() {
       DataTableUtils.findByContainerId($scope, TeststepDataTable, { teststepId: $stateParams.teststepId });

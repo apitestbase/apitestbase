@@ -30,19 +30,8 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
         });
 
         gridApi.colMovable.on.columnPositionChanged($scope, function(colDef, originalPosition, newPosition) {
-          var toSequence = $scope.dataTableGridOptions.columnDefs[newPosition].dataTableColumnSequence;
-
-          TestcaseDataTable.moveColumn({
-            testcaseId: $stateParams.testcaseId,
-            fromSequence: colDef.dataTableColumnSequence,
-            toSequence: toSequence
-          }, {}, function(dataTable) {
-            $scope.$emit('successfullySaved');
-              DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
-              $scope.dataTable = dataTable;    // this is necessary as server side will change sequence values of data table columns (including the dragged column and some not-dragged columns).
-          }, function(response) {
-            GeneralUtils.openErrorHTTPResponseModal(response);
-          });
+          DataTableUtils.moveColumn($scope, TestcaseDataTable, { testcaseId: $stateParams.testcaseId,
+            fromSequence: colDef.dataTableColumnSequence }, newPosition);
         });
 
         $scope.$parent.handleTestcaseRunResultOutlineAreaDisplay();

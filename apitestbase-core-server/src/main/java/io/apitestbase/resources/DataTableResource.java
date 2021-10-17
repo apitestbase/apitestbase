@@ -84,10 +84,20 @@ public class DataTableResource {
 
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/moveColumn")
-    public DataTable moveColumn(@PathParam("testcaseId") long testcaseId,
-                                @QueryParam("fromSequence") short fromSequence, @QueryParam("toSequence") short toSequence) {
-        dataTableColumnDAO.moveInTestcase(testcaseId, fromSequence, toSequence);
+    public DataTable moveColumnOfTestcaseDataTable(@PathParam("testcaseId") long testcaseId,
+                                                   @QueryParam("fromSequence") short fromSequence,
+                                                   @QueryParam("toSequence") short toSequence) {
+        dataTableColumnDAO.moveInContainer(testcaseId, null, fromSequence, toSequence);
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
+    @Path("teststeps/{teststepId}/datatable/moveColumn")
+    public DataTable moveColumnOfTeststepDataTable(@PathParam("teststepId") long teststepId,
+                                                   @QueryParam("fromSequence") short fromSequence,
+                                                   @QueryParam("toSequence") short toSequence) {
+        dataTableColumnDAO.moveInContainer(null, teststepId, fromSequence, toSequence);
+        return dataTableDAO.getTeststepDataTable(teststepId, false);
     }
 
     @POST @PermitAll

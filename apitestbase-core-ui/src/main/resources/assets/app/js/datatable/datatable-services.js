@@ -172,6 +172,18 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
       } else {
         refreshDataTableGrid(scope);
       }
+    },
+
+    moveColumn: function(scope, restService, restRequestObj, newPosition) {
+      var toSequence = scope.dataTableGridOptions.columnDefs[newPosition].dataTableColumnSequence;
+      restRequestObj.toSequence = toSequence;
+      restService.moveColumn(restRequestObj, {}, function(dataTable) {
+        scope.$emit('successfullySaved');
+        updateDataTableGridOptions(scope.dataTableGridOptions, dataTable);
+        scope.dataTable = dataTable;    // this is necessary as server side will change sequence values of data table columns (including the dragged column and some not-dragged columns).
+      }, function(response) {
+        GeneralUtils.openErrorHTTPResponseModal(response);
+      });
     }
   };
 }]);
