@@ -5,28 +5,13 @@
 angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope', 'GeneralUtils', '$stateParams',
     'TestcaseDataTable', 'DataTableUtils', '$uibModal', '$rootScope',
   function($scope, GeneralUtils, $stateParams, TestcaseDataTable, DataTableUtils, $uibModal, $rootScope) {
-    var stringCellUpdate = function(dataTableCellId, newValue) {
-      TestcaseDataTable.updateCell({
-        testcaseId: $stateParams.testcaseId
-      }, {
-        id: dataTableCellId,
-        value: newValue
-      }, function() {
-        $scope.$emit('successfullySaved');
-      }, function(response) {
-        GeneralUtils.openErrorHTTPResponseModal(response);
-      });
-    };
-
     $scope.dataTableGridOptions = {
       enableSorting: false,
       onRegisterApi: function(gridApi) {
         $scope.gridApi = gridApi;
 
         gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
-          if (newValue !== oldValue) {
-            stringCellUpdate(rowEntity[colDef.name].id, newValue);
-          }
+          DataTableUtils.updateStringCell($scope, TestcaseDataTable, rowEntity[colDef.name].id, oldValue, newValue);
         });
 
         gridApi.colMovable.on.columnPositionChanged($scope, function(colDef, originalPosition, newPosition) {
@@ -94,9 +79,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
       //  handle result from modal dialog
       modalInstance.result.then(function closed() {}, function dismissed() {
         var newValue = rowEntity[columnName].value;
-        if (newValue !== oldValue) {
-          stringCellUpdate(rowEntity[columnName].id, newValue); //  save immediately (no timeout)
-        }
+        DataTableUtils.updateStringCell($scope, TestcaseDataTable, rowEntity[columnName].id, oldValue, newValue);
       });
     };
 

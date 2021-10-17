@@ -103,11 +103,11 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
       moveColumn: { method: 'POST', params: { verb: 'moveColumn' } },
       addRow: { method: 'POST', params: { verb: 'addRow' } },
       deleteRow: { method: 'POST', params: { verb: 'deleteRow' } },
-      updateCell: { method: 'POST', params: { verb: 'updateCell' } }
+      updateCell: { method: 'PUT', url: 'api/dataTableCells/:cellId' }
     },
 
-    findByContainerId: function(scope, restService, restRequestObj) {
-      restService.get(restRequestObj, function(dataTable) {
+    findByContainerId: function(scope, restService, restRequestParams) {
+      restService.get(restRequestParams, function(dataTable) {
         updateDataTableGridOptions(scope.dataTableGridOptions, dataTable);
 
         //  show the grid
@@ -117,8 +117,8 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
       });
     },
 
-    addRow: function(scope, restService, restRequestObj) {
-      restService.addRow(restRequestObj, {}, function(dataTable) {
+    addRow: function(scope, restService, restRequestParams) {
+      restService.addRow(restRequestParams, {}, function(dataTable) {
         scope.$emit('successfullySaved');
         updateDataTableGridOptions(scope.dataTableGridOptions, dataTable);
       }, function(response) {
@@ -126,8 +126,8 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
       });
     },
 
-    deleteRow: function(scope, restService, restRequestObj) {
-      restService.deleteRow(restRequestObj, {
+    deleteRow: function(scope, restService, restRequestParams) {
+      restService.deleteRow(restRequestParams, {
       }, function(dataTable) {
         scope.$emit('successfullySaved');
         updateDataTableGridOptions(scope.dataTableGridOptions, dataTable);
@@ -136,15 +136,15 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
       });
     },
 
-    addColumn: function(scope, restService, restRequestObj) {
-      restService.addColumn(restRequestObj, {}, function(dataTable) {
+    addColumn: function(scope, restService, restRequestParams) {
+      restService.addColumn(restRequestParams, {}, function(dataTable) {
         updateDataTableGridOptions(scope.dataTableGridOptions, dataTable, true);
       }, function(response) {
         GeneralUtils.openErrorHTTPResponseModal(response);
       });
     },
 
-    afterColumnNameEdit: function(scope, restService, restRequestIdObj, col, event) {
+    afterColumnNameEdit: function(scope, restService, restRequestParams, col, event) {
       if (event) {
         if (event.keyCode === 13 || event.keyCode === 27) {
           event.preventDefault();
@@ -159,9 +159,9 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
       var newName = col.name;
 
       if (newName !== oldName) {
-        restRequestIdObj.columnId = colDef.dataTableColumnId;
-        restRequestIdObj.newName = newName;
-        restService.renameColumn(restRequestIdObj, {
+        restRequestParams.columnId = colDef.dataTableColumnId;
+        restRequestParams.newName = newName;
+        restService.renameColumn(restRequestParams, {
         }, function(dataTable) {
           scope.$emit('successfullySaved');
           updateDataTableGridOptions(scope.dataTableGridOptions, dataTable);
@@ -174,10 +174,10 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
       }
     },
 
-    moveColumn: function(scope, restService, restRequestObj, newPosition) {
+    moveColumn: function(scope, restService, restRequestParams, newPosition) {
       var toSequence = scope.dataTableGridOptions.columnDefs[newPosition].dataTableColumnSequence;
-      restRequestObj.toSequence = toSequence;
-      restService.moveColumn(restRequestObj, {}, function(dataTable) {
+      restRequestParams.toSequence = toSequence;
+      restService.moveColumn(restRequestParams, {}, function(dataTable) {
         scope.$emit('successfullySaved');
         updateDataTableGridOptions(scope.dataTableGridOptions, dataTable);
         scope.dataTable = dataTable;    // this is necessary as server side will change sequence values of data table columns (including the dragged column and some not-dragged columns).
@@ -186,13 +186,23 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
       });
     },
 
-    deleteColumn: function(scope, restService, restRequestObj) {
-      restService.deleteColumn(restRequestObj, {}, function(dataTable) {
+    deleteColumn: function(scope, restService, restRequestParams) {
+      restService.deleteColumn(restRequestParams, {}, function(dataTable) {
         scope.$emit('successfullySaved');
         updateDataTableGridOptions(scope.dataTableGridOptions, dataTable);
       }, function(response) {
         GeneralUtils.openErrorHTTPResponseModal(response);
       });
+    },
+
+    updateStringCell: function(scope, restService, cellId, oldValue, newValue) {
+      if (newValue !== oldValue) {
+        restService.updateCell({ cellId: cellId }, { value: newValue }, function() {
+          scope.$emit('successfullySaved');
+        }, function(response) {
+          GeneralUtils.openErrorHTTPResponseModal(response);
+        });
+      }
     }
   };
 }]);

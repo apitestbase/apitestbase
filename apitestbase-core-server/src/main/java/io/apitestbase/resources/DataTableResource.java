@@ -144,9 +144,10 @@ public class DataTableResource {
         return dataTableDAO.getTeststepDataTable(teststepId, false);
     }
 
-    @POST @PermitAll
-    @Path("testcases/{testcaseId}/datatable/updateCell")
-    public void updateCell(DataTableCell dataTableCell) {
+    @PUT @PermitAll
+    @Path("dataTableCells/{cellId}")
+    public void updateCell(@PathParam("cellId") long cellId, DataTableCell dataTableCell) {
+        dataTableCell.setId(cellId);
         dataTableCellDAO.update(dataTableCell,
                 dataTableCell.getEndpoint() == null ? null : dataTableCell.getEndpoint().getId());
     }

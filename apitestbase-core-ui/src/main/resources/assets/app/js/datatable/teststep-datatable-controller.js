@@ -8,6 +8,10 @@ angular.module('apitestbase').controller('TeststepDataTableController', ['$scope
     $scope.dataTableGridOptions = {
       enableSorting: false,
       onRegisterApi: function(gridApi) {
+        gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
+          DataTableUtils.updateStringCell($scope, TeststepDataTable, rowEntity[colDef.name].id, oldValue, newValue);
+        });
+
         gridApi.colMovable.on.columnPositionChanged($scope, function(colDef, originalPosition, newPosition) {
           DataTableUtils.moveColumn($scope, TeststepDataTable, { teststepId: $stateParams.teststepId,
             fromSequence: colDef.dataTableColumnSequence }, newPosition);
