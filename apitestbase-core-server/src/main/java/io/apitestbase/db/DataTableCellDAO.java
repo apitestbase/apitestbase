@@ -51,8 +51,11 @@ public interface DataTableCellDAO extends CrossReferenceDAO {
     void addRow(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId);
 
     @SqlUpdate("delete from datatable_cell where row_sequence = :rowSequence and column_id in (" +
-            "select id from datatable_column where testcase_id = :testcaseId)")
-    void deleteRow(@Bind("testcaseId") long testcaseId, @Bind("rowSequence") short rowSequence);
+            "select id from datatable_column " +
+            "where (testcase_id is not null and testcase_id = :testcaseId) or " +
+                "(teststep_id is not null and teststep_id = :teststepId))")
+    void deleteRow(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId,
+                   @Bind("rowSequence") short rowSequence);
 
     @SqlUpdate("update datatable_cell set value = :cell.value, endpoint_id = :endpointId, updated = CURRENT_TIMESTAMP " +
             "where id = :cell.id")

@@ -28,5 +28,15 @@ angular.module('apitestbase').controller('TeststepDataTableController', ['$scope
         GeneralUtils.openErrorHTTPResponseModal(response);
       });
     };
+
+    $scope.deleteRow = function(rowEntity) {
+      TeststepDataTable.deleteRow({ teststepId: $stateParams.teststepId, rowSequence: rowEntity.Caption.rowSequence }, {
+      }, function(dataTable) {
+        $scope.$emit('successfullySaved');
+        DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
+      }, function(response) {
+        GeneralUtils.openErrorHTTPResponseModal(response);
+      });
+    };
   }
 ]);

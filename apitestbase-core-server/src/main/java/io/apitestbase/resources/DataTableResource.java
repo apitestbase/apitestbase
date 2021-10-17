@@ -89,9 +89,19 @@ public class DataTableResource {
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/deleteRow")
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
-    public DataTable deleteRow(@PathParam("testcaseId") long testcaseId, @QueryParam("rowSequence") short rowSequence) {
-        dataTableCellDAO.deleteRow(testcaseId, rowSequence);
+    public DataTable deleteRowFromTestcaseDataTable(@PathParam("testcaseId") long testcaseId,
+                                                    @QueryParam("rowSequence") short rowSequence) {
+        dataTableCellDAO.deleteRow(testcaseId, null, rowSequence);
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
+    @Path("teststeps/{teststepId}/datatable/deleteRow")
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    public DataTable deleteRowFromTeststepDataTable(@PathParam("teststepId") long teststepId,
+                                                    @QueryParam("rowSequence") short rowSequence) {
+        dataTableCellDAO.deleteRow(null, teststepId, rowSequence);
+        return dataTableDAO.getTeststepDataTable(teststepId, false);
     }
 
     @POST @PermitAll
