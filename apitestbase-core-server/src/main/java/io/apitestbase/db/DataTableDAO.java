@@ -1,6 +1,5 @@
 package io.apitestbase.db;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.apitestbase.models.DataTable;
 import io.apitestbase.models.DataTableCell;
 import io.apitestbase.models.DataTableColumn;
@@ -99,9 +98,9 @@ public interface DataTableDAO extends CrossReferenceDAO {
     }
 
     @Transaction
-    default void insertByImport(long testcaseId, DataTable dataTable) throws JsonProcessingException {
+    default void insertByImport(long testcaseId, DataTable dataTable) {
         for (DataTableColumn column: dataTable.getColumns()) {
-            long columnId = dataTableColumnDAO().insert(testcaseId, column.getName(), column.getType().toString());
+            long columnId = dataTableColumnDAO().insertByImport(testcaseId, column.getName(), column.getType().toString());
             for (LinkedHashMap<String, DataTableCell> row: dataTable.getRows()) {
                 for (Map.Entry<String, DataTableCell> cellEntry: row.entrySet()) {
                     if (cellEntry.getKey().equals(column.getName())) {

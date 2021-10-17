@@ -63,23 +63,25 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
     @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:name, :type, " +
             "select coalesce(max(sequence), 0) + 1 from datatable_column where testcase_id = :testcaseId, :testcaseId)")
     @GetGeneratedKeys
-    long insert(@Bind("testcaseId") long testcaseId, @Bind("name") String name, @Bind("type") String type);
+    long insertByImport(@Bind("testcaseId") long testcaseId, @Bind("name") String name, @Bind("type") String type);
 
-    @SqlUpdate("insert into datatable_column (type, sequence, testcase_id) values (:type, " +
-            "select max(sequence) + 1 from datatable_column where testcase_id = :testcaseId, :testcaseId)")
+    @SqlUpdate("insert into datatable_column (type, sequence, testcase_id, teststep_id) values (:type, " +
+            "select max(sequence) + 1 from datatable_column " +
+            "where (testcase_id is not null and testcase_id = :testcaseId) or " +
+                "(teststep_id is not null and teststep_id = :teststepId), :testcaseId, :teststepId)")
     @GetGeneratedKeys
-    long _insert(@Bind("testcaseId") long testcaseId, @Bind("type") String type);
+    long _insert(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId, @Bind("type") String type);
 
     @SqlUpdate("update datatable_column set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    default void insert(long testcaseId, String columnType) {
-        long id = _insert(testcaseId, columnType);
+    default void insert(Long testcaseId, Long teststepId, String columnType) {
+        long id = _insert(testcaseId, teststepId, columnType);
         String name = "COL" + id;
         updateNameForInsert(id, name);
 
-        dataTableCellDAO().insertCellsForNewColumn(testcaseId, id);
+        dataTableCellDAO().insertCellsForNewColumn(testcaseId, teststepId, id);
     }
 
     @SqlUpdate("update datatable_column set name = :name, updated = CURRENT_TIMESTAMP where id = :id")

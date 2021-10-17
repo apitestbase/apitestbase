@@ -9,6 +9,8 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
     return $resource('api/teststeps/:teststepId/datatable/:verb', {}, DataTableUtils.resourceOperations);
   }
 ]).factory('DataTableUtils', ['$rootScope', function ($rootScope) {
+  var DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE = 'dataTableGridEditableHeaderCellTemplate.html';
+
   var getDefaultColumnDef = function(dataTableColumnId, columnName, dataTableColumnType, dataTableColumnSequence) {
     return {
       dataTableColumnId: dataTableColumnId,    //  not standard ui grid property for column def

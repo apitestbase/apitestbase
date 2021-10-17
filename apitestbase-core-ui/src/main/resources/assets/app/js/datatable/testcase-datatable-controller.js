@@ -5,8 +5,6 @@
 angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope', 'GeneralUtils', '$stateParams',
     'TestcaseDataTable', 'DataTableUtils', '$timeout', '$uibModal', '$rootScope',
   function($scope, GeneralUtils, $stateParams, TestcaseDataTable, DataTableUtils, $timeout, $uibModal, $rootScope) {
-    var DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE = 'dataTableGridEditableHeaderCellTemplate.html';
-
     var stringCellUpdate = function(dataTableCellId, newValue) {
       TestcaseDataTable.updateCell({
         testcaseId: $stateParams.testcaseId
@@ -57,14 +55,6 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
       }
     });
 
-    var refreshDataTableGrid = function() {
-      var dataTable = $scope.dataTable;
-      delete $scope.dataTable;
-      $timeout(function() {
-        $scope.dataTable = dataTable;
-      }, 0);
-    };
-
     var deleteColumn = function(columnId) {
       TestcaseDataTable.deleteColumn({ testcaseId: $stateParams.testcaseId, columnId: columnId }, {}, function(dataTable) {
         $scope.$emit('successfullySaved');
@@ -91,6 +81,14 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
       }, function(response) {
         GeneralUtils.openErrorHTTPResponseModal(response);
       });
+    };
+
+    var refreshDataTableGrid = function() {
+      var dataTable = $scope.dataTable;
+      delete $scope.dataTable;
+      $timeout(function() {
+        $scope.dataTable = dataTable;
+      }, 0);
     };
 
     $scope.afterColumnNameEdit = function(col, event) {

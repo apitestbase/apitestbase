@@ -4,6 +4,7 @@ angular.module('apitestbase').controller('TeststepsController', ['$scope', 'Test
     'GeneralUtils',
   function($scope, Teststeps, $stateParams, $timeout, GeneralUtils) {
     $scope.INVOCATION_TAB_INDEX = 2;
+    $scope.DATA_TABLE_TAB_INDEX = 3;
 
     $scope.teststep = {
       assertions: []

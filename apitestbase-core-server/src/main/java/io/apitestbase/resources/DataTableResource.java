@@ -6,6 +6,7 @@ import io.apitestbase.db.DataTableColumnDAO;
 import io.apitestbase.db.DataTableDAO;
 import io.apitestbase.models.DataTable;
 import io.apitestbase.models.DataTableCell;
+import io.apitestbase.models.DataTableColumnType;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -41,9 +42,18 @@ public class DataTableResource {
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/addColumn")
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
-    public DataTable addColumn(@PathParam("testcaseId") long testcaseId, @QueryParam("columnType") String columnType) {
-        dataTableColumnDAO.insert(testcaseId, columnType);
+    public DataTable addColumnToTestcaseDataTable(@PathParam("testcaseId") long testcaseId,
+                                                  @QueryParam("columnType") String columnType) {
+        dataTableColumnDAO.insert(testcaseId, null, columnType);
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
+    @Path("teststeps/{teststepId}/datatable/addColumn")
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    public DataTable addColumnToTeststepDataTable(@PathParam("teststepId") long teststepId) {
+        dataTableColumnDAO.insert(null, teststepId, DataTableColumnType.STRING.toString());
+        return dataTableDAO.getTeststepDataTable(teststepId, false);
     }
 
     @POST @PermitAll

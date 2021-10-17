@@ -30,9 +30,12 @@ public interface DataTableCellDAO extends CrossReferenceDAO {
     List<DataTableCell> findByColumnId(@Bind("columnId") long columnId);
 
     @SqlUpdate("insert into datatable_cell (column_id, row_sequence) " +
-            "select :columnId, row_sequence from datatable_cell " +
-            "where column_id = (select id from datatable_column where testcase_id = :testcaseId and sequence = 1)")
-    void insertCellsForNewColumn(@Bind("testcaseId") long testcaseId, @Bind("columnId") long columnId);
+            "select :columnId, row_sequence from datatable_cell where column_id = (" +
+                "select id from datatable_column where sequence = 1 and (" +
+                    "(testcase_id is not null and testcase_id = :testcaseId) or " +
+                    "(teststep_id is not null and teststep_id = :teststepId)))")
+    void insertCellsForNewColumn(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId,
+                                 @Bind("columnId") long columnId);
 
     @SqlUpdate("insert into datatable_cell (column_id, row_sequence, value) " +
             "with subquery1 as (" +
