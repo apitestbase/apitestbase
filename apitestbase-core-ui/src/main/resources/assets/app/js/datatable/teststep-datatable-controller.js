@@ -3,8 +3,8 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsController.
 angular.module('apitestbase').controller('TeststepDataTableController', ['$scope', 'GeneralUtils', '$stateParams',
-    'TeststepDataTable', 'DataTableUtils', '$timeout',
-  function($scope, GeneralUtils, $stateParams, TeststepDataTable, DataTableUtils, $timeout) {
+    'TeststepDataTable', 'DataTableUtils',
+  function($scope, GeneralUtils, $stateParams, TeststepDataTable, DataTableUtils) {
     $scope.dataTableGridOptions = {
       enableSorting: false
     }
@@ -47,14 +47,6 @@ angular.module('apitestbase').controller('TeststepDataTableController', ['$scope
       });
     };
 
-    var refreshDataTableGrid = function() {
-      var dataTable = $scope.dataTable;
-      delete $scope.dataTable;
-      $timeout(function() {
-        $scope.dataTable = dataTable;
-      }, 0);
-    };
-
     $scope.afterColumnNameEdit = function(col, event) {
       if (event) {
         if (event.keyCode === 13 || event.keyCode === 27) {
@@ -76,12 +68,12 @@ angular.module('apitestbase').controller('TeststepDataTableController', ['$scope
         }, function(dataTable) {
           $scope.$emit('successfullySaved');
           DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
-          refreshDataTableGrid();
+          DataTableUtils.refreshDataTableGrid($scope);
         }, function(response) {
           GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
-        refreshDataTableGrid();
+        DataTableUtils.refreshDataTableGrid($scope);
       }
     };
   }

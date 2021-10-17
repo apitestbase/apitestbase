@@ -66,10 +66,20 @@ public class DataTableResource {
 
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/renameColumn")
-    public DataTable renameColumn(@PathParam("testcaseId") long testcaseId, @QueryParam("columnId") long columnId,
-                                  @QueryParam("newName") String newName) {
+    public DataTable renameColumnOfTestcaseDataTable(@PathParam("testcaseId") long testcaseId,
+                                                     @QueryParam("columnId") long columnId,
+                                                     @QueryParam("newName") String newName) {
         dataTableColumnDAO.rename(columnId, newName);
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
+    @Path("teststeps/{teststepId}/datatable/renameColumn")
+    public DataTable renameColumnOfTeststepDataTable(@PathParam("teststepId") long teststepId,
+                                                     @QueryParam("columnId") long columnId,
+                                                     @QueryParam("newName") String newName) {
+        dataTableColumnDAO.rename(columnId, newName);
+        return dataTableDAO.getTeststepDataTable(teststepId, false);
     }
 
     @POST @PermitAll

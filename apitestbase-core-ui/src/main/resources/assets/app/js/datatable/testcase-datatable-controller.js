@@ -3,8 +3,8 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController.
 angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope', 'GeneralUtils', '$stateParams',
-    'TestcaseDataTable', 'DataTableUtils', '$timeout', '$uibModal', '$rootScope',
-  function($scope, GeneralUtils, $stateParams, TestcaseDataTable, DataTableUtils, $timeout, $uibModal, $rootScope) {
+    'TestcaseDataTable', 'DataTableUtils', '$uibModal', '$rootScope',
+  function($scope, GeneralUtils, $stateParams, TestcaseDataTable, DataTableUtils, $uibModal, $rootScope) {
     var stringCellUpdate = function(dataTableCellId, newValue) {
       TestcaseDataTable.updateCell({
         testcaseId: $stateParams.testcaseId
@@ -83,14 +83,6 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
       });
     };
 
-    var refreshDataTableGrid = function() {
-      var dataTable = $scope.dataTable;
-      delete $scope.dataTable;
-      $timeout(function() {
-        $scope.dataTable = dataTable;
-      }, 0);
-    };
-
     $scope.afterColumnNameEdit = function(col, event) {
       if (event) {
         if (event.keyCode === 13 || event.keyCode === 27) {
@@ -112,12 +104,12 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
         }, function(dataTable) {
           $scope.$emit('successfullySaved');
           DataTableUtils.updateDataTableGridOptions($scope.dataTableGridOptions, dataTable);
-          refreshDataTableGrid();
+          DataTableUtils.refreshDataTableGrid($scope);
         }, function(response) {
           GeneralUtils.openErrorHTTPResponseModal(response);
         });
       } else {
-        refreshDataTableGrid();
+        DataTableUtils.refreshDataTableGrid($scope);
       }
     };
 

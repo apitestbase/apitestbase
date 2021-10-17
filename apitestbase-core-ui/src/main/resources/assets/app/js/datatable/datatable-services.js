@@ -8,8 +8,16 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
   function($resource, DataTableUtils) {
     return $resource('api/teststeps/:teststepId/datatable/:verb', {}, DataTableUtils.resourceOperations);
   }
-]).factory('DataTableUtils', ['$rootScope', function ($rootScope) {
+]).factory('DataTableUtils', ['$timeout', '$rootScope', function ($timeout, $rootScope) {
   var DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE = 'dataTableGridEditableHeaderCellTemplate.html';
+
+  var refreshDataTableGrid = function(scope) {
+    var dataTable = scope.dataTable;
+    delete scope.dataTable;
+    $timeout(function() {
+      scope.dataTable = dataTable;
+    }, 0);
+  };
 
   var getDefaultColumnDef = function(dataTableColumnId, columnName, dataTableColumnType, dataTableColumnSequence) {
     return {
@@ -32,7 +40,7 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
           action: function() {
             this.context.col.colDef.headerCellTemplate = DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE;
 
-            refreshDataTableGrid();
+            refreshDataTableGrid(this.grid.appScope.$parent);
           },
           shown: function() {
             return !$rootScope.appStatus.isForbidden();
@@ -96,6 +104,8 @@ angular.module('apitestbase').factory('TestcaseDataTable', ['$resource', 'DataTa
       };
       dataTableGridOptions.columnDefs.push(deletionColumn);
       dataTableGridOptions.data = dataTable.rows;
-    }
+    },
+
+    refreshDataTableGrid: refreshDataTableGrid
   };
 }]);
