@@ -166,12 +166,17 @@ public class TeststepResource {
         Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));
-        DataTable dataTable = dataTableDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
+        DataTable teststepDataTable = dataTableDAO.getTeststepDataTable(teststep.getId(), true);
+        DataTable testcaseDataTable = dataTableDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
+        GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(),
+                teststepDataTable.getNonCaptionColumnNames(), testcaseDataTable.getNonCaptionColumnNames());
         Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
-        if (dataTable.getRows().size() > 0) {
-            GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(referenceableStringProperties.keySet(), dataTable);
-            referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
-            referenceableEndpointProperties.putAll(dataTable.getEndpointPropertiesInRow(0));
+        if (teststepDataTable.getRows().size() > 0) {
+            referenceableStringProperties.putAll(teststepDataTable.getStringPropertiesInRow(0));
+        }
+        if (testcaseDataTable.getRows().size() > 0) {
+            referenceableStringProperties.putAll(testcaseDataTable.getStringPropertiesInRow(0));
+            referenceableEndpointProperties.putAll(testcaseDataTable.getEndpointPropertiesInRow(0));
         }
 
         //  run the test step

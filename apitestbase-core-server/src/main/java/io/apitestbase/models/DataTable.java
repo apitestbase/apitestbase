@@ -16,6 +16,16 @@ public class DataTable {
         return columns;
     }
 
+    public List<String> getNonCaptionColumnNames() {
+        List<String> columnNames = new ArrayList<>();
+        for (DataTableColumn column : columns) {
+            if (!DataTableColumn.COLUMN_NAME_CAPTION.equals(column.getName())) {
+                columnNames.add(column.getName());
+            }
+        }
+        return columnNames;
+    }
+
     public void setColumns(List<DataTableColumn> columns) {
         this.columns = columns;
     }

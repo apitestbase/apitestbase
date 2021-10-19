@@ -99,6 +99,21 @@ public final class GeneralUtils {
         return result;
     }
 
+    public static void checkDuplicatePropertyNames(Set<String> names, List<String> names2, List<String> names3) {
+        Set<String> set = new HashSet<>();
+        set.addAll(names);
+        for (String name2 : names2) {
+            if (!set.add(name2)) {
+                throw new RuntimeException("Duplicate property name between data tables and/or UDPs: " + name2);
+            }
+        }
+        for (String name3 : names3) {
+            if (!set.add(name3)) {
+                throw new RuntimeException("Duplicate property name between data tables and/or UDPs: " + name3);
+            }
+        }
+    }
+
     public static void checkDuplicatePropertyNameBetweenDataTableAndUPDs(Set<String> udpNames, DataTable dataTable) {
         Set<String> set = new HashSet<>();
         set.addAll(udpNames);
