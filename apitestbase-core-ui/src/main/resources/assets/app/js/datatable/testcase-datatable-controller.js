@@ -2,9 +2,9 @@
 
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController.
-angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope', 'GeneralUtils', '$stateParams',
-    'TestcaseDataTable', 'DataTableUtils', '$uibModal', '$rootScope',
-  function($scope, GeneralUtils, $stateParams, TestcaseDataTable, DataTableUtils, $uibModal, $rootScope) {
+angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope', '$stateParams', 'TestcaseDataTable',
+    'DataTableUtils', '$uibModal', 'GeneralUtils',
+  function($scope, $stateParams, TestcaseDataTable, DataTableUtils, $uibModal, GeneralUtils) {
     $scope.dataTableGridOptions = {
       enableSorting: false,
       onRegisterApi: function(gridApi) {
@@ -57,30 +57,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
     };
 
     $scope.stringCellDblClicked = function(rowEntity, col) {
-      var columnName = col.name;
-      var oldValue = rowEntity[columnName].value;
-
-      //  open modal dialog
-      var modalInstance = $uibModal.open({
-        templateUrl: '/ui/views/testcases/datatable-string-cell-textarea-editor-modal.html',
-        controller: 'DataTableStringCellTextareaEditorModalController',
-        size: 'lg',
-        windowClass: 'datatable-string-cell-textarea-editor-modal',
-        resolve: {
-          rowEntity: function() {
-            return rowEntity;
-          },
-          columnName: function() {
-            return columnName;
-          }
-        }
-      });
-
-      //  handle result from modal dialog
-      modalInstance.result.then(function closed() {}, function dismissed() {
-        var newValue = rowEntity[columnName].value;
-        DataTableUtils.updateStringCell($scope, TestcaseDataTable, rowEntity[columnName].id, oldValue, newValue);
-      });
+      DataTableUtils.stringCellDblClicked($scope, TestcaseDataTable, rowEntity, col);
     };
 
     $scope.selectManagedEndpoint = function(rowEntity, col) {
@@ -105,11 +82,7 @@ angular.module('apitestbase').controller('TestcaseDataTableController', ['$scope
 
       //  handle result from modal dialog
       modalInstance.result.then(function closed(selectedEndpoint) {
-        TestcaseDataTable.updateCell({
-          testcaseId: $stateParams.testcaseId
-        }, {
-          id: rowEntity[columnName].id,
-          endpoint: { id: selectedEndpoint.id }
+        TestcaseDataTable.updateCell({ cellId: rowEntity[columnName].id }, { endpoint: { id: selectedEndpoint.id }
         }, function() {
           rowEntity[columnName].endpoint = selectedEndpoint;
           $scope.$emit('successfullySaved');
