@@ -104,12 +104,12 @@ public final class GeneralUtils {
         set.addAll(names);
         for (String name2 : names2) {
             if (!set.add(name2)) {
-                throw new RuntimeException("Duplicate property name between data tables and/or UDPs: " + name2);
+                throw new RuntimeException("Duplicate property name " + name2 + " between data tables and/or UDPs");
             }
         }
         for (String name3 : names3) {
             if (!set.add(name3)) {
-                throw new RuntimeException("Duplicate property name between data tables and/or UDPs: " + name3);
+                throw new RuntimeException("Duplicate property name " + name3 + " between data tables and/or UDPs");
             }
         }
     }
