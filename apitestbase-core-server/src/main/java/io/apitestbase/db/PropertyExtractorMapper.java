@@ -25,6 +25,7 @@ public class PropertyExtractorMapper implements RowMapper<PropertyExtractor> {
             propertyExtractor = new PropertyExtractor();
         }
         propertyExtractor.setId(rs.getLong("id"));
+        propertyExtractor.setTeststepId(rs.getLong("teststep_id"));
         propertyExtractor.setPropertyName(rs.getString("property_name"));
         propertyExtractor.setType(type);
 

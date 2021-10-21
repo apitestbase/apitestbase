@@ -11,6 +11,7 @@ public class PropertyExtractor {
     public static final String TYPE_COOKIE = "Cookie";
 
     private long id;
+    private long teststepId;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String propertyName;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
@@ -29,6 +30,14 @@ public class PropertyExtractor {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getTeststepId() {
+        return teststepId;
+    }
+
+    public void setTeststepId(long teststepId) {
+        this.teststepId = teststepId;
     }
 
     public String getPropertyName() {

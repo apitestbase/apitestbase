@@ -20,7 +20,6 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class PropertyExtractorResource {
@@ -77,11 +76,15 @@ public class PropertyExtractorResource {
         long testcaseId = propertyExtractorDAO.findTestcaseIdById(propertyExtractor.getId());
         List<UDP> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
-        Set<String> udpNames = referenceableStringProperties.keySet();
-        DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
-        if (dataTable.getRows().size() > 0) {
-            GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
-            referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
+        DataTable teststepDataTable = dataTableDAO.getTeststepDataTable(propertyExtractor.getTeststepId(), true);
+        DataTable testcaseDataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
+        GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(),
+                teststepDataTable.getNonCaptionColumnNames(), testcaseDataTable.getNonCaptionColumnNames());
+        if (teststepDataTable.getRows().size() > 0) {
+            referenceableStringProperties.putAll(teststepDataTable.getStringPropertiesInRow(0));
+        }
+        if (testcaseDataTable.getRows().size() > 0) {
+            referenceableStringProperties.putAll(testcaseDataTable.getStringPropertiesInRow(0));
         }
 
         PropertyExtractorRunner propertyExtractorRunner = PropertyExtractorRunnerFactory.getInstance().create(
