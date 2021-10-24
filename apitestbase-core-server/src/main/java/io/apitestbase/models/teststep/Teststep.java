@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.apitestbase.models.DataTable;
 import io.apitestbase.models.Properties;
 import io.apitestbase.models.assertion.Assertion;
 import io.apitestbase.models.endpoint.Endpoint;
@@ -73,6 +74,7 @@ public class Teststep {
     private List<Assertion> assertions = new ArrayList<>();
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<PropertyExtractor> propertyExtractors = new ArrayList<>();
+    private DataTable dataTable;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
@@ -197,5 +199,13 @@ public class Teststep {
 
     public void setPropertyExtractors(List<PropertyExtractor> propertyExtractors) {
         this.propertyExtractors = propertyExtractors;
+    }
+
+    public DataTable getDataTable() {
+        return dataTable;
+    }
+
+    public void setDataTable(DataTable dataTable) {
+        this.dataTable = dataTable;
     }
 }

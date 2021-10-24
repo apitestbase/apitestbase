@@ -417,7 +417,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     long findTestcaseIdById(@Bind("id") long id);
 
     @Transaction
-    default void populateTeststepWithOtherDetails_NoAssertions(Teststep teststep) {
+    default void populateTeststepWithEndpointAndPropertyExtractors(Teststep teststep) {
         Endpoint endpoint = endpointDAO().findById_NotMaskingPassword(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
         teststep.setPropertyExtractors(propertyExtractorDAO().findByTeststepId(teststep.getId()));
@@ -425,15 +425,16 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default void populateTeststepWithOtherDetails(Teststep teststep) {
-        populateTeststepWithOtherDetails_NoAssertions(teststep);
+        populateTeststepWithEndpointAndPropertyExtractors(teststep);
         teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
+        teststep.setDataTable(dataTableDAO().getTeststepDataTable(teststep.getId(), false));
     }
 
     @Transaction
     default Teststep findById_NoAssertions(long id) {
         Teststep teststep = _findById(id);
         if (teststep != null) {
-            populateTeststepWithOtherDetails_NoAssertions(teststep);
+            populateTeststepWithEndpointAndPropertyExtractors(teststep);
         }
         return teststep;
     }
