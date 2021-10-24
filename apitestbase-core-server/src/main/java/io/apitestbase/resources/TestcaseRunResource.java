@@ -58,8 +58,8 @@ public class TestcaseRunResource {
 
     @GET @Path("teststepruns/{stepRunId}/htmlreport") @Produces(MediaType.TEXT_HTML)
     public TeststepRunView getStepRunHTMLReportById(@PathParam("stepRunId") long stepRunId) {
-        TeststepRun sstepRun = teststepRunDAO.findById(stepRunId);
-        return new TeststepRunView(sstepRun);
+        TeststepRun stepRun = teststepRunDAO.findById(stepRunId);
+        return new TeststepRunView(stepRun);
     }
 
     @GET @Path("testcaseruns/lastrun/htmlreport") @Produces(MediaType.TEXT_HTML)

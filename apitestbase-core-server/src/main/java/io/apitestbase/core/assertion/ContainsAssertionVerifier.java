@@ -16,14 +16,16 @@ public class ContainsAssertionVerifier extends AssertionVerifier {
         ContainsAssertionProperties otherProperties =
                 (ContainsAssertionProperties) getAssertion().getOtherProperties();
         String contains = otherProperties.getContains();
+        String inputStr = (String) inputs[0];
 
         //  validate argument
         if ("".equals(StringUtils.trimToEmpty(contains))) {
             throw new IllegalArgumentException("Contains not specified");
+        } else if (inputStr == null) {
+            throw new IllegalArgumentException("Input string can not be null");
         }
 
         AssertionVerificationResult result = new AssertionVerificationResult();
-        String inputStr = (String) inputs[0];
         result.setResult(inputStr.contains(contains) ? TestResult.PASSED : TestResult.FAILED);
         return result;
     }
