@@ -98,15 +98,35 @@ public interface DataTableDAO extends CrossReferenceDAO {
     }
 
     @Transaction
-    default void insertByImport(long testcaseId, DataTable dataTable) {
+    default void insertTestcaseDataTableByImport(long testcaseId, DataTable dataTable) {
         for (DataTableColumn column: dataTable.getColumns()) {
-            long columnId = dataTableColumnDAO().insertByImport(testcaseId, column.getName(), column.getType().toString());
-            for (LinkedHashMap<String, DataTableCell> row: dataTable.getRows()) {
-                for (Map.Entry<String, DataTableCell> cellEntry: row.entrySet()) {
-                    if (cellEntry.getKey().equals(column.getName())) {
-                        dataTableCellDAO().insert(columnId, cellEntry.getValue());
-                        break;
-                    }
+            String columnName = column.getName();
+            long columnId = dataTableColumnDAO().insertTestcaseDataTableColumnByImport(
+                    testcaseId, columnName, column.getType().toString());
+            insertDataTableRows(columnId, columnName, dataTable.getRows());
+        }
+    }
+
+    @Transaction
+    default void insertTeststepDataTableByImport(long teststepId, DataTable dataTable) {
+        if (dataTable == null) {
+            dataTableDAO().createCaptionColumn(null, teststepId);
+        } else {
+            for (DataTableColumn column : dataTable.getColumns()) {
+                String columnName = column.getName();
+                long columnId = dataTableColumnDAO().insertTeststepDataTableColumnByImport(
+                        teststepId, columnName, column.getType().toString());
+                insertDataTableRows(columnId, columnName, dataTable.getRows());
+            }
+        }
+    }
+
+    default void insertDataTableRows(long columnId, String columnName, List<LinkedHashMap<String, DataTableCell>> rows) {
+        for (LinkedHashMap<String, DataTableCell> row: rows) {
+            for (Map.Entry<String, DataTableCell> cellEntry: row.entrySet()) {
+                if (cellEntry.getKey().equals(columnName)) {
+                    dataTableCellDAO().insert(columnId, cellEntry.getValue());
+                    break;
                 }
             }
         }

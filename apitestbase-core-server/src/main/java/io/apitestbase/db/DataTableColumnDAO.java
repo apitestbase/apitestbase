@@ -63,7 +63,14 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
     @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:name, :type, " +
             "select coalesce(max(sequence), 0) + 1 from datatable_column where testcase_id = :testcaseId, :testcaseId)")
     @GetGeneratedKeys
-    long insertByImport(@Bind("testcaseId") long testcaseId, @Bind("name") String name, @Bind("type") String type);
+    long insertTestcaseDataTableColumnByImport(
+            @Bind("testcaseId") long testcaseId, @Bind("name") String name, @Bind("type") String type);
+
+    @SqlUpdate("insert into datatable_column (name, type, sequence, teststep_id) values (:name, :type, " +
+            "select coalesce(max(sequence), 0) + 1 from datatable_column where teststep_id = :teststepId, :teststepId)")
+    @GetGeneratedKeys
+    long insertTeststepDataTableColumnByImport(
+            @Bind("teststepId") long teststepId, @Bind("name") String name, @Bind("type") String type);
 
     @SqlUpdate("insert into datatable_column (type, sequence, testcase_id, teststep_id) values (:type, " +
             "select max(sequence) + 1 from datatable_column " +

@@ -173,7 +173,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
         }
 
         //  insert data table
-        dataTableDAO().insertByImport(testcaseId, testcase.getDataTable());
+        dataTableDAO().insertTestcaseDataTableByImport(testcaseId, testcase.getDataTable());
 
         //  insert HTTP stubs
         for (HTTPStubMapping stub: testcase.getHttpStubMappings()) {
