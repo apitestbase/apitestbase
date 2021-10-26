@@ -26,11 +26,11 @@ public interface TestcaseRunDAO extends CrossReferenceDAO {
 
     @SqlUpdate("insert into testcase_run " +
             "(testcase_id, testcase_name, testcase_folderpath, starttime, duration, result) values " +
-            "(:testcase_id, :testcase_name, :testcase_folderpath, :starttime, :duration, :result)")
-    @GetGeneratedKeys
-    long _insert(@Bind("testcase_id") long testcaseId, @Bind("testcase_name") String testcaseName,
-                 @Bind("testcase_folderpath") String testcaseFolderPath,
-                 @Bind("starttime") Date startTime, @Bind("duration") long duration,
+            "(:testcaseId, :testcaseName, :testcaseFolderPath, :startTime, :duration, :result)")
+    @GetGeneratedKeys("id")
+    long _insert(@Bind("testcaseId") long testcaseId, @Bind("testcaseName") String testcaseName,
+                 @Bind("testcaseFolderPath") String testcaseFolderPath,
+                 @Bind("startTime") Date startTime, @Bind("duration") long duration,
                  @Bind("result") String result);
 
     @Transaction

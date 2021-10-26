@@ -29,7 +29,7 @@ public interface TestcaseIndividualRunDAO extends CrossReferenceDAO {
 
     @SqlUpdate("insert into testcase_individualrun (testcase_run_id, caption, starttime, duration, result) values (" +
             ":testcaseRunId, :caption, :startTime, :duration, :result)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insert(@Bind("testcaseRunId") long testcaseRunId, @Bind("caption") String caption,
                  @Bind("startTime") Date startTime, @Bind("duration") long duration,
                  @Bind("result") String result);
