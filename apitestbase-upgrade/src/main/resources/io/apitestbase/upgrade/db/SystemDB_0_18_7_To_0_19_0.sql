@@ -16,23 +16,3 @@ insert into datatable_column (name, type, sequence, teststep_id) select 'Caption
 delete from testcase_run;
 DROP TABLE TESTSTEP_RUN;
 DROP SEQUENCE TESTSTEP_RUN_SEQUENCE;
-CREATE TABLE IF NOT EXISTS teststep_run (
-    id IDENTITY PRIMARY KEY, testcase_run_id BIGINT NOT NULL, testcase_individualrun_id BIGINT,
-    starttime TIMESTAMP NOT NULL, duration BIGINT NOT NULL, result varchar(15) NOT NULL,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (testcase_run_id) REFERENCES testcase_run(id) ON DELETE CASCADE,
-    FOREIGN KEY (testcase_individualrun_id) REFERENCES testcase_individualrun(id) ON DELETE CASCADE
-);
-CREATE TABLE IF NOT EXISTS teststep_individualrun (
-    id IDENTITY PRIMARY KEY, teststep_run_id BIGINT NOT NULL, caption VARCHAR(500),
-    starttime TIMESTAMP NOT NULL, duration BIGINT NOT NULL, result varchar(15) NOT NULL,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (teststep_run_id) REFERENCES teststep_run(id) ON DELETE CASCADE
-);
-CREATE TABLE IF NOT EXISTS teststep_atomicrun_content (
-    id IDENTITY PRIMARY KEY, teststep_run_id BIGINT NOT NULL, teststep_individualrun_id BIGINT, teststep CLOB NOT NULL,
-    response CLOB, info_message CLOB, error_message CLOB, assertion_verifications CLOB,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (teststep_run_id) REFERENCES teststep_run(id) ON DELETE CASCADE,
-    FOREIGN KEY (teststep_individualrun_id) REFERENCES teststep_individualrun(id) ON DELETE CASCADE
-);
