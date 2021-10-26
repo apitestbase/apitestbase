@@ -35,12 +35,12 @@ public interface UDPDAO {
 
     @SqlUpdate("insert into udp (testcase_id, sequence) values (:testcaseId, (" +
             "select coalesce(max(sequence), 0) + 1 from udp where testcase_id = :testcaseId))")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insertWithoutName(@Bind("testcaseId") long testcaseId);
 
     @SqlUpdate("insert into udp (testcase_id, sequence, name, value) values (:testcaseId, (" +
             "select coalesce(max(sequence), 0) + 1 from udp where testcase_id = :testcaseId), :name, :value)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insertWithName(@Bind("testcaseId") long testcaseId, @Bind("name") String name, @Bind("value") String value);
 
     @SqlUpdate("update udp set name = :name where id = :id")

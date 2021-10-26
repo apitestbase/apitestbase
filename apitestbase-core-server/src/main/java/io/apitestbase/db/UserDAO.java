@@ -50,7 +50,7 @@ public interface UserDAO {
     User findById(@Bind("id") long id);
 
     @SqlUpdate("insert into user (username, password, salt) values (:username, :password, :salt)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insert(@Bind("username") String username, @Bind("password") String password,
                  @Bind("salt") String salt);
 

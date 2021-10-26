@@ -34,7 +34,7 @@ public interface EndpointDAO {
     void createTableIfNotExists();
 
     @SqlUpdate("insert into endpoint (environment_id, type, other_properties) values (:evId, :ep.type, :ep.otherProperties)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insertManagedEndpoint(@BindBean("ep") Endpoint endpoint, @Bind("evId") long environmentId);
 
     @SqlUpdate("update endpoint set name = :name where id = :id")
@@ -54,7 +54,7 @@ public interface EndpointDAO {
      */
     @SqlUpdate("insert into endpoint (name, type, description, url, host, port, username, password, other_properties) " +
                "values (:ep.name, :ep.type, :ep.description, :ep.url, :ep.host, :ep.port, :ep.username, :ep.password, :ep.otherProperties)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long insertUnmanagedEndpoint(@BindBean("ep") Endpoint endpoint);
 
     default Endpoint createUnmanagedEndpoint(String teststepType, AppMode appMode) {
@@ -158,7 +158,7 @@ public interface EndpointDAO {
             "select e.name, e.type, e.url, e.host, e.port, e.username, e.password, e.other_properties " +
             "from teststep t left outer join endpoint e on t.endpoint_id = e.id where t.id = :teststepId " +
             "and e.id is not null and e.environment_id is null")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     Long duplicateUnmanagedEndpoint(@Bind("teststepId") long teststepId);
 
     /**
@@ -170,7 +170,7 @@ public interface EndpointDAO {
             "select 'Unmanaged Endpoint', e.type, e.url, e.host, e.port, e.username, e.password, e.other_properties " +
             "from teststep t left outer join endpoint e on t.endpoint_id = e.id where t.id = :teststepId " +
             "and e.id is not null and e.environment_id is not null")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long duplicateManagedEndpointIntoUnmanaged(@Bind("teststepId") long teststepId);
 
     @SqlQuery("select password from endpoint where id = :id")

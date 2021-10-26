@@ -35,7 +35,7 @@ public interface HTTPStubMappingDAO {
 
     @SqlUpdate("insert into httpstubmapping (testcase_id, number) values (:testcaseId, (" +
             "select coalesce(max(number), 0) + 1 from httpstubmapping where testcase_id = :testcaseId))")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long insert(@Bind("testcaseId") long testcaseId);
 
     @SqlUpdate("insert into httpstubmapping (testcase_id, number, spec_json, request_body_main_pattern_value, " +

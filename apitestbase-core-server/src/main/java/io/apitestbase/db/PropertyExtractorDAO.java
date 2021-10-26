@@ -32,7 +32,7 @@ public interface PropertyExtractorDAO {
 
     @SqlUpdate("insert into property_extractor (teststep_id, property_name, type, other_properties) values " +
             "(:teststepId, :p.propertyName, :p.type, :p.otherProperties)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long insert(@Bind("teststepId") long teststepId, @BindBean("p") PropertyExtractor propertyExtractor);
 
     @SqlQuery("select * from property_extractor where teststep_id = :teststepId")

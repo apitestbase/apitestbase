@@ -27,7 +27,7 @@ public interface EnvironmentDAO extends CrossReferenceDAO {
     void createTableIfNotExists();
 
     @SqlUpdate("insert into environment values ()")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insert();
 
     @SqlUpdate("update environment set name = :name where id = :id")

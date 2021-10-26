@@ -56,19 +56,19 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
      */
     @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id, teststep_id) values (:c.name, :type, " +
             ":c.sequence, :testcaseId, :teststepId)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long insert(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId,
                 @BindBean("c") DataTableColumn column, @Bind("type") String type);
 
     @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:name, :type, " +
             "select coalesce(max(sequence), 0) + 1 from datatable_column where testcase_id = :testcaseId, :testcaseId)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long insertTestcaseDataTableColumnByImport(
             @Bind("testcaseId") long testcaseId, @Bind("name") String name, @Bind("type") String type);
 
     @SqlUpdate("insert into datatable_column (name, type, sequence, teststep_id) values (:name, :type, " +
             "select coalesce(max(sequence), 0) + 1 from datatable_column where teststep_id = :teststepId, :teststepId)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long insertTeststepDataTableColumnByImport(
             @Bind("teststepId") long teststepId, @Bind("name") String name, @Bind("type") String type);
 
@@ -76,7 +76,7 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
             "select max(sequence) + 1 from datatable_column " +
             "where (testcase_id is not null and testcase_id = :testcaseId) or " +
                 "(teststep_id is not null and teststep_id = :teststepId), :testcaseId, :teststepId)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insert(@Bind("testcaseId") Long testcaseId, @Bind("teststepId") Long teststepId, @Bind("type") String type);
 
     @SqlUpdate("update datatable_column set name = :name where id = :id")

@@ -30,7 +30,7 @@ public interface FolderDAO {
     void insertARootNodeIfNotExists();
 
     @SqlUpdate("insert into folder (parent_folder_id) values (:parentFolderId)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insert(@Bind("parentFolderId") long parentFolderId);
 
     @SqlUpdate("update folder set name = :name where id = :id")

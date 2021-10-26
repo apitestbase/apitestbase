@@ -29,7 +29,7 @@ public interface AssertionDAO {
 
     @SqlUpdate("insert into assertion (teststep_id, name, type, other_properties) values " +
             "(:a.teststepId, :a.name, :a.type, :a.otherProperties)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long insert(@BindBean("a") Assertion assertion);
 
     @SqlUpdate("update assertion set name = :a.name, other_properties = :a.otherProperties, " +

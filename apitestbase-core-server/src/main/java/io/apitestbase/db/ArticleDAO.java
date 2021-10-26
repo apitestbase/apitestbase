@@ -23,7 +23,7 @@ public interface ArticleDAO {
     void insertArticle1IfNotExists();
 
     @SqlUpdate("insert into article (title, content) values (:title, :content)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long insert(@BindBean Article article);
 
     @SqlUpdate("update article set title = :title, content = :content, updated = CURRENT_TIMESTAMP where id = :id")

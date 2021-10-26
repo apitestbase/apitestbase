@@ -33,12 +33,12 @@ public interface TestcaseDAO extends CrossReferenceDAO {
     void createTableIfNotExists();
 
     @SqlUpdate("insert into testcase (description, parent_folder_id) values (:description, :parentFolderId)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insertWithoutName(@BindBean Testcase testcase);
 
     @SqlUpdate("insert into testcase (name, description, parent_folder_id, check_http_stubs_hit_order) values (" +
             ":name, :description, :parentFolderId, :checkHTTPStubsHitOrder)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insertWithName(@BindBean Testcase testcase);
 
     @SqlUpdate("update testcase set name = :name where id = :id")
@@ -108,7 +108,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
 
     @SqlUpdate("insert into testcase (name, description, parent_folder_id, check_http_stubs_hit_order) " +
             "select :name, description, :parentFolderId, check_http_stubs_hit_order from testcase where id = :sourceTestcaseId")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long duplicateById(@Bind("name") String name, @Bind("parentFolderId") long parentFolderId,
                        @Bind("sourceTestcaseId") long sourceTestcaseId);
 

@@ -65,7 +65,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "other_properties) values (:t.testcaseId, " +
               "(select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId), " +
             ":t.type, :apiRequest, :endpointId, :t.otherProperties)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("endpointId") Long endpointId,
                             @Bind("apiRequest") String apiRequest);
 
@@ -74,7 +74,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId, :t.name, " +
             ":t.type, :t.description, :t.action, :apiRequest, " +
             ":endpointId, :t.endpointProperty, :t.otherProperties)")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long _insertWithName(@BindBean("t") Teststep teststep, @Bind("apiRequest") String apiRequest,
                          @Bind("endpointId") Long endpointId);
 
@@ -524,7 +524,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "api_request, endpoint_id, endpoint_property, other_properties) select :newTestcaseId, " +
             "sequence, name, type, description, action, api_request, " +
             "endpoint_id, endpoint_property, other_properties from teststep where id = :oldTeststepId")
-    @GetGeneratedKeys
+    @GetGeneratedKeys("id")
     long duplicateById(@Bind("oldTeststepId") long oldTeststepId, @Bind("newTestcaseId") long newTestcaseId);
 
     @Transaction
