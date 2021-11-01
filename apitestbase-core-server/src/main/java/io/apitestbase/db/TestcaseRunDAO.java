@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.apitestbase.models.testrun.*;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
-import java.util.Date;
 import java.util.List;
 
 @RegisterRowMapper(TestcaseRunMapper.class)
@@ -26,18 +26,13 @@ public interface TestcaseRunDAO extends CrossReferenceDAO {
 
     @SqlUpdate("insert into testcase_run " +
             "(testcase_id, testcase_name, testcase_folderpath, starttime, duration, result) values " +
-            "(:testcaseId, :testcaseName, :testcaseFolderPath, :startTime, :duration, :result)")
+            "(:t.testcaseId, :t.testcaseName, :t.testcaseFolderPath, :t.startTime, :t.duration, :t.result)")
     @GetGeneratedKeys("id")
-    long _insert(@Bind("testcaseId") long testcaseId, @Bind("testcaseName") String testcaseName,
-                 @Bind("testcaseFolderPath") String testcaseFolderPath,
-                 @Bind("startTime") Date startTime, @Bind("duration") long duration,
-                 @Bind("result") String result);
+    long _insert(@BindBean("t") TestcaseRun testcaseRun);
 
     @Transaction
     default void insert(TestcaseRun testcaseRun) throws JsonProcessingException {
-        long id = _insert(testcaseRun.getTestcaseId(), testcaseRun.getTestcaseName(),
-                testcaseRun.getTestcaseFolderPath(), testcaseRun.getStartTime(), testcaseRun.getDuration(),
-                testcaseRun.getResult().toString());
+        long id = _insert(testcaseRun);
         testcaseRun.setId(id);
 
         if (testcaseRun instanceof RegularTestcaseRun) {

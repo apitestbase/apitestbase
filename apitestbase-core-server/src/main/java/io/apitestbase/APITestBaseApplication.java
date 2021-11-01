@@ -194,6 +194,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         systemDBJdbi.registerArgument(new ApiRequestArgumentFactory());
         systemDBJdbi.registerArgument(new PropertiesArgumentFactory());
         systemDBJdbi.registerArgument(new EndpointPropertiesArgumentFactory());
+        systemDBJdbi.registerArgument(new TestResultArgumentFactory());
 
         //  create DAO objects
         final VersionDAO versionDAO = systemDBJdbi.onDemand(VersionDAO.class);

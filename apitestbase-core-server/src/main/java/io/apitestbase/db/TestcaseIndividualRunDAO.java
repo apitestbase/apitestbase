@@ -5,12 +5,12 @@ import io.apitestbase.models.testrun.TestcaseIndividualRun;
 import io.apitestbase.models.testrun.TeststepRun;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
-import java.util.Date;
 import java.util.List;
 
 @RegisterRowMapper(TestcaseIndividualRunMapper.class)
@@ -28,16 +28,13 @@ public interface TestcaseIndividualRunDAO extends CrossReferenceDAO {
     void createTableIfNotExists();
 
     @SqlUpdate("insert into testcase_individualrun (testcase_run_id, caption, starttime, duration, result) values (" +
-            ":testcaseRunId, :caption, :startTime, :duration, :result)")
+            ":testcaseRunId, :t.caption, :t.startTime, :t.duration, :t.result)")
     @GetGeneratedKeys("id")
-    long _insert(@Bind("testcaseRunId") long testcaseRunId, @Bind("caption") String caption,
-                 @Bind("startTime") Date startTime, @Bind("duration") long duration,
-                 @Bind("result") String result);
+    long _insert(@Bind("testcaseRunId") long testcaseRunId, @BindBean("t") TestcaseIndividualRun testcaseIndividualRun);
 
     @Transaction
     default void insert(long testcaseRunId, TestcaseIndividualRun testcaseIndividualRun) throws JsonProcessingException {
-        long id = _insert(testcaseRunId, testcaseIndividualRun.getCaption(), testcaseIndividualRun.getStartTime(),
-                testcaseIndividualRun.getDuration(), testcaseIndividualRun.getResult().toString());
+        long id = _insert(testcaseRunId, testcaseIndividualRun);
 
         for (TeststepRun teststepRun: testcaseIndividualRun.getStepRuns()) {
             teststepRunDAO().insert(testcaseRunId, id, teststepRun);
