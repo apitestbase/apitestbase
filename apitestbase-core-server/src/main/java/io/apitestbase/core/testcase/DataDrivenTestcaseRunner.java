@@ -47,12 +47,12 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
 
             //  start test case individual run
             individualRun.setStartTime(new Date());
+            individualRun.setCaption(dataTableRow.get(DataTableColumn.COLUMN_NAME_CAPTION).getValue());
             LOGGER.info("Start individually running test case with data table row: " + individualRun.getCaption());
             individualRun.setResult(TestResult.PASSED);
             getTestcaseRunContext().setTestcaseIndividualRunStartTime(individualRun.getStartTime());
             getReferenceableStringProperties().put(IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME,
                     IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(individualRun.getStartTime()));
-            individualRun.setCaption(dataTableRow.get(DataTableColumn.COLUMN_NAME_CAPTION).getValue());
             getReferenceableEndpointProperties().putAll(dataTable.getEndpointPropertiesInRow(dataTableRowIndex));
             getReferenceableStringProperties().putAll(dataTable.getStringPropertiesInRow(dataTableRowIndex));
 
