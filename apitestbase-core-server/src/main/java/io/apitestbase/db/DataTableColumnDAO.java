@@ -102,6 +102,11 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
     void duplicateByTestcase(@Bind("sourceTestcaseId") long sourceTestcaseId,
                              @Bind("targetTestcaseId") long targetTestcaseId);
 
+    @SqlUpdate("insert into datatable_column (name, type, sequence, teststep_id) " +
+            "select name, type, sequence, :targetTeststepId from datatable_column where teststep_id = :sourceTeststepId")
+    void duplicateByTeststep(@Bind("sourceTeststepId") long sourceTeststepId,
+                             @Bind("targetTeststepId") long targetTeststepId);
+
     @SqlQuery("select id from datatable_column where sequence = :sequence and (" +
             "(testcase_id is not null and testcase_id = :testcaseId) or " +
             "(teststep_id is not null and teststep_id = :teststepId))")

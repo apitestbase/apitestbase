@@ -80,11 +80,7 @@ public interface DataTableDAO extends CrossReferenceDAO {
         return dataTable;
     }
 
-    @Transaction
-    default void duplicateByTestcase(long sourceTestcaseId, long targetTestcaseId) {
-        dataTableColumnDAO().duplicateByTestcase(sourceTestcaseId, targetTestcaseId);
-        List<DataTableColumn> sourceColumns = dataTableColumnDAO().findByTestcaseId(sourceTestcaseId);
-        List<DataTableColumn> targetColumns = dataTableColumnDAO().findByTestcaseId(targetTestcaseId);
+    default void duplicateColumns(List<DataTableColumn> sourceColumns, List<DataTableColumn> targetColumns) {
         for (DataTableColumn targetColumn: targetColumns) {
             long sourceColumnId = -1;
             for (DataTableColumn sourceColumn: sourceColumns) {
@@ -95,6 +91,22 @@ public interface DataTableDAO extends CrossReferenceDAO {
             }
             dataTableCellDAO().duplicateByColumn(sourceColumnId, targetColumn.getId());
         }
+    }
+
+    @Transaction
+    default void duplicateByTestcase(long sourceTestcaseId, long targetTestcaseId) {
+        dataTableColumnDAO().duplicateByTestcase(sourceTestcaseId, targetTestcaseId);
+        List<DataTableColumn> sourceColumns = dataTableColumnDAO().findByTestcaseId(sourceTestcaseId);
+        List<DataTableColumn> targetColumns = dataTableColumnDAO().findByTestcaseId(targetTestcaseId);
+        duplicateColumns(sourceColumns, targetColumns);
+    }
+
+    @Transaction
+    default void duplicateByTeststep(long sourceTeststepId, long targetTeststepId) {
+        dataTableColumnDAO().duplicateByTeststep(sourceTeststepId, targetTeststepId);
+        List<DataTableColumn> sourceColumns = dataTableColumnDAO().findByTeststepId(sourceTeststepId);
+        List<DataTableColumn> targetColumns = dataTableColumnDAO().findByTeststepId(targetTeststepId);
+        duplicateColumns(sourceColumns, targetColumns);
     }
 
     @Transaction

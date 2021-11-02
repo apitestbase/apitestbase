@@ -545,6 +545,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
             //  duplicate property extractors
             propertyExtractorDAO().duplicateByTeststep(oldTeststepId, newTeststepId);
+
+            //  duplicate data table
+            dataTableDAO().duplicateByTeststep(oldTeststepId, newTeststepId);
         }
     }
 
