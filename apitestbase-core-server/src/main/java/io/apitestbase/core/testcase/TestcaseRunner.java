@@ -1,32 +1,27 @@
 package io.apitestbase.core.testcase;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import io.apitestbase.core.assertion.AssertionVerifier;
-import io.apitestbase.core.assertion.AssertionVerifierFactory;
-import io.apitestbase.core.propertyextractor.PropertyExtractorRunner;
-import io.apitestbase.core.propertyextractor.PropertyExtractorRunnerFactory;
-import io.apitestbase.core.teststep.*;
 import io.apitestbase.db.TestcaseRunDAO;
 import io.apitestbase.db.UtilsDAO;
 import io.apitestbase.models.HTTPStubMapping;
 import io.apitestbase.models.TestResult;
 import io.apitestbase.models.Testcase;
-import io.apitestbase.models.assertion.*;
+import io.apitestbase.models.assertion.Assertion;
+import io.apitestbase.models.assertion.HTTPStubHitAssertionProperties;
+import io.apitestbase.models.assertion.HTTPStubsHitInOrderAssertionProperties;
 import io.apitestbase.models.endpoint.Endpoint;
-import io.apitestbase.models.propertyextractor.PropertyExtractor;
 import io.apitestbase.models.testrun.TestcaseRun;
 import io.apitestbase.models.testrun.TeststepRun;
-import io.apitestbase.models.teststep.HTTPHeader;
 import io.apitestbase.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.utils.GeneralUtils;
-import org.eclipse.jetty.http.HttpHeader;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.*;
 
-import static io.apitestbase.APITestBaseConstants.*;
+import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
+import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME;
 
 public abstract class TestcaseRunner {
     private Testcase testcase;
@@ -136,171 +131,8 @@ public abstract class TestcaseRunner {
     }
 
     TeststepRun runTeststep(Teststep teststep) throws IOException {
-        TeststepRun teststepRun = new TeststepRun();
-        teststepRun.setTeststep(teststep);
-
-        //  test step run starts
-        Date teststepRunStartTime = new Date();
-        teststepRun.setStartTime(teststepRunStartTime);
-        referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
-                IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(teststepRunStartTime));
-
-        //  run test step
-        BasicTeststepRun basicTeststepRun;
-        boolean exceptionOccurred = false;  //  use this flag instead of checking stepRun.getErrorMessage() != null, for code clarity
-        try {
-            basicTeststepRun = TeststepRunnerFactory.getInstance().newTeststepRunner(
-                    teststep, utilsDAO, referenceableStringProperties, referenceableEndpointProperties,
-                    testcaseRunContext).run();
-            teststepRun.setResponse(basicTeststepRun.getResponse());
-            teststepRun.setInfoMessage(basicTeststepRun.getInfoMessage());
-        } catch (Exception e) {
-            exceptionOccurred = true;
-            String message = e.getMessage();
-            teststepRun.setErrorMessage(message == null ? "null" : message);  // exception message could be null (though rarely)
-            LOGGER.error(message, e);
-        }
-
-        if (exceptionOccurred) {
-            teststepRun.setResult(TestResult.FAILED);
-        } else {
-            teststepRun.setResult(TestResult.PASSED);
-            Object apiResponse = teststepRun.getResponse();
-
-            verifyAssertions(teststep.getType(), teststep.getAction(), teststep.getAssertions(), apiResponse, teststepRun);
-
-            Map<String, String> extractedProperties = new HashMap<>();
-            try {
-                extractedProperties = extractPropertiesOutOfAPIResponse(teststep.getType(),
-                        teststep.getPropertyExtractors(), apiResponse, referenceableStringProperties);
-            } catch (Exception e) {
-                String errorMessage = "Failed to extract properties out of API response.";
-                LOGGER.error(errorMessage, e);
-                teststepRun.setErrorMessage(errorMessage + " " + e.getMessage());
-                teststepRun.setResult(TestResult.FAILED);
-            }
-            referenceableStringProperties.putAll(extractedProperties);
-        }
-
-        //  test step run ends
-        teststepRun.setDuration(new Date().getTime() - teststepRun.getStartTime().getTime());
-
-        return teststepRun;
-    }
-
-    private Object resolveAssertionVerificationInputFromAPIResponse(String teststepType, String teststepAction,
-                                                                    String assertionType, Object apiResponse) {
-        Object result = apiResponse;
-
-        if (Assertion.TYPE_STATUS_CODE_EQUAL.equals(assertionType)) {
-            result = ((HTTPAPIResponse) apiResponse).getStatusCode();
-        } else if (Teststep.TYPE_SOAP.equals(teststepType) || Teststep.TYPE_HTTP.equals(teststepType)) {
-            result = ((HTTPAPIResponse) apiResponse).getHttpBody();
-        } else if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertionType) ||
-                Assertion.TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED.equals(assertionType) ||
-                Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER.equals(assertionType)) {
-            result = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
-        } else if (Teststep.TYPE_DB.equals(teststepType)) {
-            result = ((DBAPIResponse) apiResponse).getRowsJSON();
-        } else if (Teststep.TYPE_JMS.equals(teststepType)) {
-            if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
-                result = ((JMSCheckQueueDepthResponse) apiResponse).getQueueDepth();
-            } else if (Teststep.ACTION_BROWSE.equals(teststepAction)) {
-                result = apiResponse == null ? null : ((JMSBrowseQueueResponse) apiResponse).getBody();
-            }
-        } else if (Teststep.TYPE_MQ.equals(teststepType)) {
-            if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
-                result = ((MQCheckQueueDepthResponse) apiResponse).getQueueDepth();
-            } else if (Teststep.ACTION_DEQUEUE.equals(teststepAction)) {
-                MQDequeueResponse mqDequeueResponse = (MQDequeueResponse) apiResponse;
-                if (mqDequeueResponse == null) {
-                    result = null;
-                } else {
-                    if (Assertion.TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML.equals(assertionType)) {
-                        result = mqDequeueResponse.getMqrfh2Header();
-                    } else {
-                        result = mqDequeueResponse.getBodyAsText();
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Verify assertions against the API response.
-     * @param teststepType
-     * @param teststepAction
-     * @param assertions
-     * @param apiResponse
-     * @param teststepRun
-     */
-    private void verifyAssertions(String teststepType, String teststepAction, List<Assertion> assertions,
-                                  Object apiResponse, TeststepRun teststepRun) throws IOException {
-        for (Assertion assertion : assertions) {
-            Object assertionVerificationInput = resolveAssertionVerificationInputFromAPIResponse(teststepType,
-                    teststepAction, assertion.getType(), apiResponse);
-
-            //  resolve assertion verification input2 if applicable
-            Object assertionVerificationInput2 = null;
-            if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertion.getType())) {
-                HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
-                assertionVerificationInput2 = getTestcaseRunContext().getHttpStubMappingInstanceIds().get(otherProperties.getStubNumber());
-            }
-
-            AssertionVerification verification = new AssertionVerification();
-            teststepRun.getAssertionVerifications().add(verification);
-            verification.setAssertion(assertion);
-
-            AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(
-                    assertion, referenceableStringProperties);
-            AssertionVerificationResult verificationResult;
-            try {
-                verificationResult = verifier.verify(assertionVerificationInput, assertionVerificationInput2);
-            } catch (Exception e) {
-                LOGGER.error("Failed to verify assertion", e);
-                verificationResult = new AssertionVerificationResult();
-                verificationResult.setResult(TestResult.FAILED);
-                String message = e.getMessage();
-                verificationResult.setError(message == null ? "null" : message);  // exception message could be null (though rarely)
-            }
-
-            verification.setVerificationResult(verificationResult);
-
-            if (TestResult.FAILED == verificationResult.getResult()) {
-                teststepRun.setResult(TestResult.FAILED);
-            }
-        }
-    }
-
-    /**
-     * Extract properties out of API response, and make the properties visible to the next test step run.
-     */
-    private Map<String, String> extractPropertiesOutOfAPIResponse(String teststepType,
-                                                                  List<PropertyExtractor> propertyExtractors,
-                                                                  Object apiResponse,
-                                                                  Map<String, String> referenceableStringProperties) throws Exception {
-        Map<String, String> extractedProperties = new HashMap<>();
-        for (PropertyExtractor propertyExtractor: propertyExtractors) {
-            String propertyExtractionInput = null;
-            if (Teststep.TYPE_HTTP.equals(teststepType)) {
-                HTTPAPIResponse httpApiResponse = (HTTPAPIResponse) apiResponse;
-                if (PropertyExtractor.TYPE_COOKIE.equals(propertyExtractor.getType())) {
-                    Optional<HTTPHeader> setCookieHeader = httpApiResponse.getHttpHeaders().stream()
-                            .filter(httpHeader -> HttpHeader.SET_COOKIE.asString().equals(httpHeader.getName())).findFirst();
-                    propertyExtractionInput = setCookieHeader.isPresent() ? setCookieHeader.get().getValue() : null;
-                } else {
-                    propertyExtractionInput = httpApiResponse.getHttpBody();
-                }
-            }
-
-            PropertyExtractorRunner propertyExtractorRunner = PropertyExtractorRunnerFactory.getInstance().create(
-                    propertyExtractor, referenceableStringProperties);
-            String propertyValue = propertyExtractorRunner.extract(propertyExtractionInput);
-            extractedProperties.put(propertyExtractor.getPropertyName(), propertyValue);
-        }
-
-        return extractedProperties;
+        Map<String, String> referenceableStringPropertiesShallowCopy = new HashMap<>(referenceableStringProperties);
+        return new TestcaseStepRunner(LOGGER).run(teststep, utilsDAO, referenceableStringPropertiesShallowCopy,
+                referenceableEndpointProperties, testcaseRunContext);
     }
 }

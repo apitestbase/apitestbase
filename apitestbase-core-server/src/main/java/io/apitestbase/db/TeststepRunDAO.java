@@ -1,28 +1,24 @@
 package io.apitestbase.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.apitestbase.models.endpoint.Endpoint;
+import io.apitestbase.models.testrun.DataDrivenTeststepRun;
+import io.apitestbase.models.testrun.RegularTeststepRun;
+import io.apitestbase.models.testrun.TeststepIndividualRun;
 import io.apitestbase.models.testrun.TeststepRun;
-import io.apitestbase.models.teststep.Teststep;
-import io.apitestbase.utils.GeneralUtils;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 @RegisterRowMapper(TeststepRunMapper.class)
-public interface TeststepRunDAO {
-    @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS teststep_run_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
-    void createSequenceIfNotExists();
-
-    @SqlUpdate("CREATE TABLE IF NOT EXISTS teststep_run (id BIGINT DEFAULT teststep_run_sequence.NEXTVAL PRIMARY KEY, " +
-            "testcase_run_id BIGINT NOT NULL, testcase_individualrun_id BIGINT, teststep CLOB NOT NULL, response CLOB, " +
-            "info_message CLOB, error_message CLOB, assertion_verifications CLOB, " +
+public interface TeststepRunDAO extends CrossReferenceDAO {
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS teststep_run (id IDENTITY PRIMARY KEY, " +
+            "testcase_run_id BIGINT NOT NULL, testcase_individualrun_id BIGINT, " +
             "starttime TIMESTAMP NOT NULL, duration BIGINT NOT NULL, result varchar(15) NOT NULL, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
@@ -30,44 +26,65 @@ public interface TeststepRunDAO {
             "FOREIGN KEY (testcase_individualrun_id) REFERENCES testcase_individualrun(id) ON DELETE CASCADE)")
     void createTableIfNotExists();
 
-    @SqlUpdate("insert into teststep_run (testcase_run_id, testcase_individualrun_id, teststep, response, info_message," +
-            " error_message, assertion_verifications, starttime, duration, result) values (" +
-            ":testcaseRunId, :testcaseIndividualRunId, :teststep, :response, :infoMessage, :errorMessage, " +
-            ":assertionVerifications, :startTime, :duration, :result)")
-    @GetGeneratedKeys
+    @SqlUpdate("insert into teststep_run (testcase_run_id, testcase_individualrun_id, starttime, duration, " +
+            "result) values (:testcaseRunId, :testcaseIndividualRunId, :t.startTime, :t.duration, :t.result)")
+    @GetGeneratedKeys("id")
     long _insert(@Bind("testcaseRunId") long testcaseRunId,
-                 @Bind("testcaseIndividualRunId") Long testcaseIndividualRunId,
-                 @Bind("teststep") String teststep, @Bind("response") String response,
-                 @Bind("infoMessage") String infoMessage, @Bind("errorMessage") String errorMessage,
-                 @Bind("assertionVerifications") String assertionVerifications,
-                 @Bind("startTime") Date startTime, @Bind("duration") long duration,
-                 @Bind("result") String result);
+                 @Bind("testcaseIndividualRunId") Long testcaseIndividualRunId, @BindBean("t") TeststepRun teststepRun);
 
-    default void insert(long testcaseRunId, Long testcaseIndividualRunId,
-                        TeststepRun teststepRun) throws JsonProcessingException {
-        //  remove contents that are not to be serialized into the teststep column
-        Teststep teststep = teststepRun.getTeststep();
-        teststep.getAssertions().clear();
-        Endpoint endpoint = teststep.getEndpoint();
-        if (endpoint != null) {
-            endpoint.setPassword(null);
+    default void insert(long testcaseRunId, Long testcaseIndividualRunId, TeststepRun teststepRun)
+            throws JsonProcessingException {
+        long id = _insert(testcaseRunId, testcaseIndividualRunId, teststepRun);
+
+        if (teststepRun instanceof RegularTeststepRun) {
+            teststepAtomicRunResultDAO().insert(id, null,
+                    ((RegularTeststepRun) teststepRun).getAtomicRunResult());
+        } else if (teststepRun instanceof DataDrivenTeststepRun) {
+            DataDrivenTeststepRun dataDrivenTeststepRun = (DataDrivenTeststepRun) teststepRun;
+            for (TeststepIndividualRun teststepIndividualRun: dataDrivenTeststepRun.getIndividualRuns()) {
+                teststepIndividualRunDAO().insert(id, teststepIndividualRun);
+            }
         }
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        GeneralUtils.addMixInsForWireMock(objectMapper);
-        long id = _insert(testcaseRunId, testcaseIndividualRunId, objectMapper.writeValueAsString(teststep),
-                objectMapper.writeValueAsString(teststepRun.getResponse()), teststepRun.getInfoMessage(),
-                teststepRun.getErrorMessage(), objectMapper.writeValueAsString(teststepRun.getAssertionVerifications()),
-                teststepRun.getStartTime(), teststepRun.getDuration(), teststepRun.getResult().toString());
         teststepRun.setId(id);
     }
 
     @SqlQuery("select * from teststep_run where testcase_run_id = :testcaseRunId")
-    List<TeststepRun> findByTestcaseRunId(@Bind("testcaseRunId") long testcaseRunId);
+    List<TeststepRun> _findByTestcaseRunId(@Bind("testcaseRunId") long testcaseRunId);
+
+    default void resolveTeststepRuns(List<TeststepRun> stepRuns) {
+        ListIterator<TeststepRun> stepRunsIterator = stepRuns.listIterator();
+        while (stepRunsIterator.hasNext()) {
+            TeststepRun stepRun = stepRunsIterator.next();
+            List<TeststepIndividualRun> individualRuns = teststepIndividualRunDAO().findByTeststepRunId(stepRun.getId());
+            if (individualRuns.size() > 0) {  //  it is a data driven test step run
+                DataDrivenTeststepRun dataDrivenTeststepRun = new DataDrivenTeststepRun(stepRun);
+                dataDrivenTeststepRun.setIndividualRuns(individualRuns);
+                stepRunsIterator.set(dataDrivenTeststepRun);
+            } else {                          //  it is a regular test step run
+                RegularTeststepRun regularTeststepRun = new RegularTeststepRun(stepRun);
+                regularTeststepRun.setAtomicRunResult(
+                        teststepAtomicRunResultDAO().findFirstByTeststepRunId(stepRun.getId()));
+                stepRunsIterator.set(regularTeststepRun);
+            }
+        }
+    }
+
+    default List<TeststepRun> findByTestcaseRunId(long testcaseRunId) {
+        List<TeststepRun> stepRuns = _findByTestcaseRunId(testcaseRunId);
+        resolveTeststepRuns(stepRuns);
+        return stepRuns;
+    }
+
+    @SqlQuery("select * from teststep_run where testcase_individualrun_id = :testcaseIndividualRunId")
+    List<TeststepRun> _findByTestcaseIndividualRunId(@Bind("testcaseIndividualRunId") long testcaseIndividualRunId);
+
+    default List<TeststepRun> findByTestcaseIndividualRunId(long testcaseIndividualRunId) {
+        List<TeststepRun> stepRuns = _findByTestcaseIndividualRunId(testcaseIndividualRunId);
+        resolveTeststepRuns(stepRuns);
+        return stepRuns;
+    }
 
     @SqlQuery("select * from teststep_run where id = :id")
     TeststepRun findById(@Bind("id") long id);
-
-    @SqlQuery("select * from teststep_run where testcase_individualrun_id = :testcaseIndividualRunId")
-    List<TeststepRun> findByTestcaseIndividualRunId(@Bind("testcaseIndividualRunId") long testcaseIndividualRunId);
 }

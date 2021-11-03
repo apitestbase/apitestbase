@@ -1,7 +1,6 @@
 package io.apitestbase.core.testcase;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.rits.cloning.Cloner;
 import io.apitestbase.db.TestcaseRunDAO;
 import io.apitestbase.db.UtilsDAO;
 import io.apitestbase.models.*;
@@ -31,7 +30,6 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
     @Override
     public TestcaseRun run() throws IOException {
         DataDrivenTestcaseRun testcaseRun = new DataDrivenTestcaseRun();
-        Cloner cloner = new Cloner();
 
         preProcessing();
 
@@ -58,8 +56,7 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
 
             //  run test steps
             for (Teststep teststep : getTestcase().getTeststeps()) {
-                Teststep clonedTeststep = cloner.deepClone(teststep);
-                individualRun.getStepRuns().add(runTeststep(clonedTeststep));
+                individualRun.getStepRuns().add(runTeststep(teststep));
             }
 
             //  test case individual run ends

@@ -191,6 +191,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
 
     private void createSystemResources(APITestBaseConfiguration configuration, Environment environment, Jdbi systemDBJdbi,
                                        WireMockServer wireMockServer) {
+        systemDBJdbi.registerArgument(new TeststepArgumentFactory());
         systemDBJdbi.registerArgument(new ApiRequestArgumentFactory());
         systemDBJdbi.registerArgument(new PropertiesArgumentFactory());
         systemDBJdbi.registerArgument(new EndpointPropertiesArgumentFactory());
@@ -214,6 +215,8 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         final TestcaseRunDAO testcaseRunDAO = systemDBJdbi.onDemand(TestcaseRunDAO.class);
         final TestcaseIndividualRunDAO testcaseIndividualRunDAO = systemDBJdbi.onDemand(TestcaseIndividualRunDAO.class);
         final TeststepRunDAO teststepRunDAO = systemDBJdbi.onDemand(TeststepRunDAO.class);
+        final TeststepIndividualRunDAO teststepIndividualRunDAO = systemDBJdbi.onDemand(TeststepIndividualRunDAO.class);
+        final TeststepAtomicRunResultDAO teststepAtomicRunResultDAO = systemDBJdbi.onDemand(TeststepAtomicRunResultDAO.class);
         final HTTPStubMappingDAO httpStubMappingDAO = systemDBJdbi.onDemand(HTTPStubMappingDAO.class);
         UserDAO userDAO = null;
         if (isInTeamMode(configuration)) {
@@ -270,8 +273,9 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         testcaseRunDAO.createTableIfNotExists();
         testcaseIndividualRunDAO.createSequenceIfNotExists();
         testcaseIndividualRunDAO.createTableIfNotExists();
-        teststepRunDAO.createSequenceIfNotExists();
         teststepRunDAO.createTableIfNotExists();
+        teststepIndividualRunDAO.createTableIfNotExists();
+        teststepAtomicRunResultDAO.createTableIfNotExists();
         httpStubMappingDAO.createSequenceIfNotExists();
         httpStubMappingDAO.createTableIfNotExists();
         if (isInTeamMode(configuration)) {

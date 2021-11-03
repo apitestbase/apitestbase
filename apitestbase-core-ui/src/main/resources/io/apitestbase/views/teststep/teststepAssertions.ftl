@@ -1,4 +1,4 @@
-<#list stepRun.assertionVerifications as verification>
+<#list assertionVerifications as verification>
   <#-- convenience local variables -->
   <#assign assertion = verification.assertion>
   <#assign assertionProperties = assertion.otherProperties>

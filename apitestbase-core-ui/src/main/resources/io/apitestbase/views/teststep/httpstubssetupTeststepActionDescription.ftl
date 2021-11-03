@@ -3,7 +3,7 @@
 <div class="row">
   <div class="col-lg-12">Reset mock server, and load stubs:</div>
 </div>
-<#list stepRun.teststep.otherProperties.httpStubMappings as stubMapping>
+<#list metaTeststep.otherProperties.httpStubMappings as stubMapping>
   <#assign stubSpec = stubMapping.spec>
 
   <div class="form-group"></div> <#-- spacer -->
