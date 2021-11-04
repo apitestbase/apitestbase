@@ -49,17 +49,7 @@
   </div>
   <div class="row" ng-if="testcaseRun" id="testcase-run-result-outline-area">
     <div class="col-lg-12">
-      <!-- for regular test case run -->
-      <ul class="list-unstyled" ng-if="testcaseRun.stepRuns">
-        <li ng-repeat="stepRun in testcaseRun.stepRuns">
-          <a ng-click="showStepRunHTMLReport(stepRun.id)" href="">
-            <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',
-                  'text-lime' : stepRun.result === 'Passed' }">
-              <strong>{{stepRun.teststep.name}} ({{stepRun.duration | number}} ms)</strong>
-            </h5>
-          </a>
-        </li>
-      </ul>
+      <div ng-if="testcaseRun.stepRuns" ng-include="'/ui/views/testcases/regular-testcase-run-result-outline.html'"></div>
 
       <!-- for data driven test case run -->
       <uib-accordion ng-if="testcaseRun.individualRuns">

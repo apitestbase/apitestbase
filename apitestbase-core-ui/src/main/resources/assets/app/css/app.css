@@ -73,6 +73,9 @@
   margin-top: 0px;
   margin-bottom: 5px;
 }
+.data-driven-step-run-on-testcase-edit-view .panel-group {
+  margin-bottom: 0px;
+}
 
 /* custom jsTree contextmenu class */
 .vakata-context {

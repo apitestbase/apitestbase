@@ -1,5 +1,6 @@
 package io.apitestbase.models.testrun;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.core.teststep.APIResponse;
 import io.apitestbase.models.assertion.AssertionVerification;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Used for test case running.
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class TeststepAtomicRunResult {
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private Teststep teststep;
