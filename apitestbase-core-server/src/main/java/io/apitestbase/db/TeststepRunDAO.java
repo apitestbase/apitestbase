@@ -56,17 +56,21 @@ public interface TeststepRunDAO extends CrossReferenceDAO {
         ListIterator<TeststepRun> stepRunsIterator = stepRuns.listIterator();
         while (stepRunsIterator.hasNext()) {
             TeststepRun stepRun = stepRunsIterator.next();
-            List<TeststepIndividualRun> individualRuns = teststepIndividualRunDAO().findByTeststepRunId(stepRun.getId());
-            if (individualRuns.size() > 0) {  //  it is a data driven test step run
-                DataDrivenTeststepRun dataDrivenTeststepRun = new DataDrivenTeststepRun(stepRun);
-                dataDrivenTeststepRun.setIndividualRuns(individualRuns);
-                stepRunsIterator.set(dataDrivenTeststepRun);
-            } else {                          //  it is a regular test step run
-                RegularTeststepRun regularTeststepRun = new RegularTeststepRun(stepRun);
-                regularTeststepRun.setAtomicRunResult(
-                        teststepAtomicRunResultDAO().findFirstByTeststepRunId(stepRun.getId()));
-                stepRunsIterator.set(regularTeststepRun);
-            }
+            stepRunsIterator.set(resolveTeststepRun(stepRun));
+        }
+    }
+
+    default TeststepRun resolveTeststepRun(TeststepRun stepRun) {
+        List<TeststepIndividualRun> individualRuns = teststepIndividualRunDAO().findByTeststepRunId(stepRun.getId());
+        if (individualRuns.size() > 0) {  //  it is a data driven test step run
+            DataDrivenTeststepRun dataDrivenTeststepRun = new DataDrivenTeststepRun(stepRun);
+            dataDrivenTeststepRun.setIndividualRuns(individualRuns);
+            return dataDrivenTeststepRun;
+        } else {                          //  it is a regular test step run
+            RegularTeststepRun regularTeststepRun = new RegularTeststepRun(stepRun);
+            regularTeststepRun.setAtomicRunResult(
+                    teststepAtomicRunResultDAO().findFirstByTeststepRunId(stepRun.getId()));
+            return regularTeststepRun;
         }
     }
 
@@ -86,5 +90,10 @@ public interface TeststepRunDAO extends CrossReferenceDAO {
     }
 
     @SqlQuery("select * from teststep_run where id = :id")
-    TeststepRun findById(@Bind("id") long id);
+    TeststepRun _findById(@Bind("id") long id);
+
+    default TeststepRun findById(long id) {
+        TeststepRun stepRun = _findById(id);
+        return resolveTeststepRun(stepRun);
+    }
 }
