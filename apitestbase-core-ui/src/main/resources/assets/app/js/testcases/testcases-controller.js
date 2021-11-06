@@ -136,6 +136,29 @@ angular.module('apitestbase').controller('TestcasesController', ['$scope', 'Test
         });
     };
 
+    $scope.showStepIndividualRunHTMLReport = function(stepIndividualRunId) {
+      TestcaseRuns.getStepIndividualRunHTMLReport({ stepIndividualRunId: stepIndividualRunId },
+        function(response) {
+          //  without $sce.trustAsHtml, ngSanitize will strip elements like <textarea>
+          var stepIndividualRunReport = $sce.trustAsHtml(response.report);
+
+          //  open modal dialog
+          var modalInstance = $uibModal.open({
+            templateUrl: '/ui/views/testcases/teststep-run-report-modal.html',
+            controller: 'TeststepRunReportModalController',
+            size: 'lg',
+            windowClass: 'teststep-run-report-modal',
+            resolve: {
+              stepRunReport: function() {
+                return stepIndividualRunReport;
+              }
+            }
+          });
+        }, function(response) {
+          GeneralUtils.openErrorHTTPResponseModal(response);
+        });
+    };
+
     $scope.removeTeststep = function(teststep) {
       var teststepService = new Teststeps(teststep);
       teststepService.$remove(function(response) {

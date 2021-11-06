@@ -81,11 +81,11 @@
       <div class="form-group">
         <div class="col-lg-6">
           <#if stubSpec.request.bodyPatterns??>
-            <textarea name="requestBody" rows="9" class="form-control" readonly>${ generalUtilsAdatper.prettyPrintJSONOrXML((stubSpec.request.bodyPatterns?first).value) }</textarea>
+            <textarea name="requestBody" rows="9" class="form-control" readonly>${ generalUtilsAdapter.prettyPrintJSONOrXML((stubSpec.request.bodyPatterns?first).value) }</textarea>
           </#if>
         </div>
         <div class="col-lg-6">
-          <textarea name="responseBody" rows="9" class="form-control" readonly>${ generalUtilsAdatper.prettyPrintJSONOrXML((stubSpec.response.body??)?then(stubSpec.response.body, '')) }</textarea>
+          <textarea name="responseBody" rows="9" class="form-control" readonly>${ generalUtilsAdapter.prettyPrintJSONOrXML((stubSpec.response.body??)?then(stubSpec.response.body, '')) }</textarea>
         </div>
       </div>
     </form>

@@ -41,6 +41,17 @@ public interface TeststepIndividualRunDAO extends CrossReferenceDAO {
 
     default void insert(long teststepRunId, TeststepIndividualRun teststepIndividualRun) throws JsonProcessingException {
         long id = _insert(teststepRunId, teststepIndividualRun);
+        teststepIndividualRun.setId(id);
         teststepAtomicRunResultDAO().insert(teststepRunId, id, teststepIndividualRun.getAtomicRunResult());
+    }
+
+    @SqlQuery("select * from teststep_individualrun where id = :teststepIndividualRunId")
+    TeststepIndividualRun _findById(@Bind("teststepIndividualRunId") long teststepIndividualRunId);
+
+    default TeststepIndividualRun findById(long id) {
+        TeststepIndividualRun individualRun = _findById(id);
+        individualRun.setAtomicRunResult(teststepAtomicRunResultDAO().findByTeststepIndividualRunId(individualRun.getId()));
+
+        return individualRun;
     }
 }

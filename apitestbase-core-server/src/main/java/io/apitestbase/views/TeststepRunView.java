@@ -20,7 +20,7 @@ public class TeststepRunView extends View {
         return stepRun;
     }
 
-    public GeneralUtilsFreeMarkerAdapter getGeneralUtilsAdatper() {
+    public GeneralUtilsFreeMarkerAdapter getGeneralUtilsAdapter() {
         return generalUtilsAdapter;
     }
 }

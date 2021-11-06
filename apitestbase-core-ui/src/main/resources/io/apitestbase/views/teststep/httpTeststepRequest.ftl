@@ -16,7 +16,7 @@
   <div class="form-group"></div> <#-- spacer -->
   <div class="row">
     <div class="col-lg-12">
-      <textarea class="form-control message-body-textarea" readonly>${ generalUtilsAdatper.prettyPrintJSONOrXML(apiRequest.body) }</textarea>
+      <textarea class="form-control message-body-textarea" readonly>${ generalUtilsAdapter.prettyPrintJSONOrXML(apiRequest.body) }</textarea>
     </div>
   </div>
 </#if>

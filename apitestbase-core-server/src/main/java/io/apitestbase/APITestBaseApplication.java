@@ -290,10 +290,12 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new FolderResource(folderDAO, testcaseDAO));
         environment.jersey().register(new FolderTreeNodeResource(folderTreeNodeDAO));
-        environment.jersey().register(new TeststepResource(appInfo, teststepDAO, udpDAO, utilsDAO, dataTableDAO, assertionDAO, endpointDAO));
+        environment.jersey().register(new TeststepResource(
+                appInfo, teststepDAO, udpDAO, utilsDAO, dataTableDAO, assertionDAO, endpointDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new EnvironmentResource(environmentDAO));
-        environment.jersey().register(new TestcaseRunResource(testcaseDAO, utilsDAO, testcaseRunDAO, teststepRunDAO, wireMockServer));
+        environment.jersey().register(new TestcaseRunResource(
+                testcaseDAO, utilsDAO, testcaseRunDAO, teststepRunDAO, teststepIndividualRunDAO, wireMockServer));
         environment.jersey().register(new AssertionResource(udpDAO, teststepDAO, dataTableDAO, assertionDAO));
         environment.jersey().register(new UDPResource(udpDAO));
         environment.jersey().register(new DataTableResource(dataTableDAO, dataTableColumnDAO, dataTableCellDAO));

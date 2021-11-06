@@ -20,7 +20,7 @@ public class TestcaseRunView extends View {
         return testcaseRun;
     }
 
-    public GeneralUtilsFreeMarkerAdapter getGeneralUtilsAdatper() {
+    public GeneralUtilsFreeMarkerAdapter getGeneralUtilsAdapter() {
         return generalUtilsAdapter;
     }
 }

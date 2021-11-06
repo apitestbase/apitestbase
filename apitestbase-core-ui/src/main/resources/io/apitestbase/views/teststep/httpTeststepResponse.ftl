@@ -13,7 +13,7 @@
 <div class="row">
   <div class="col-lg-12">
     <textarea class="form-control message-body-textarea" readonly>
-      <#t>${ (response.httpBody??)?then(generalUtilsAdatper.prettyPrintJSONOrXML(response.httpBody), '') }
+      <#t>${ (response.httpBody??)?then(generalUtilsAdapter.prettyPrintJSONOrXML(response.httpBody), '') }
     </textarea>
   </div>
 </div>

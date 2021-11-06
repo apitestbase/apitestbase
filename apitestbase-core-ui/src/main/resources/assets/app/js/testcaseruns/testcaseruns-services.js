@@ -11,6 +11,13 @@ angular.module('apitestbase').factory('TestcaseRuns', ['$resource',
         transformResponse: function (data) {  //  avoid angularjs turning response html into array of chars
           return { report: data };
         }
+      },
+      getStepIndividualRunHTMLReport: {
+        url: 'api/teststepindividualruns/:stepIndividualRunId/htmlreport',
+        method: 'GET',
+        transformResponse: function (data) {  //  avoid angularjs turning response html into array of chars
+          return { report: data };
+        }
       }
     });
   }
