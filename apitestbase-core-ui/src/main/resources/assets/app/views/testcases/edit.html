@@ -49,27 +49,19 @@
   </div>
   <div class="row" ng-if="testcaseRun" id="testcase-run-result-outline-area">
     <div class="col-lg-12">
-      <div ng-if="testcaseRun.stepRuns" ng-include="'/ui/views/testcases/regular-testcase-run-result-outline.html'"></div>
+      <!-- for regular test case run -->
+      <div ng-if="testcaseRun.stepRuns" ng-init="stepRuns = testcaseRun.stepRuns" ng-include="'/ui/views/testcases/step-runs-outline.html'"></div>
 
       <!-- for data driven test case run -->
       <uib-accordion ng-if="testcaseRun.individualRuns">
-        <div uib-accordion-group class="panel-default" ng-repeat="individualRun in testcaseRun.individualRuns">
+        <div uib-accordion-group class="panel-default" ng-repeat="testcaseIndividualRun in testcaseRun.individualRuns">
           <uib-accordion-heading>
-            <h5 ng-class="{ 'text-red' : individualRun.result === 'Failed',
-                  'text-lime' : individualRun.result === 'Passed' }">
-              <strong>[{{individualRun.caption}}] ({{individualRun.duration | number}} ms)</strong>
+            <h5 ng-class="{ 'text-red' : testcaseIndividualRun.result === 'Failed',
+                  'text-lime' : testcaseIndividualRun.result === 'Passed' }">
+              <strong>[{{ testcaseIndividualRun.caption }}] ({{ testcaseIndividualRun.duration | number }} ms)</strong>
             </h5>
           </uib-accordion-heading>
-          <ul class="list-unstyled">
-            <li ng-repeat="stepRun in individualRun.stepRuns">
-              <a ng-click="showStepRunHTMLReport(stepRun.id)" href="">
-                <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',
-                    'text-lime' : stepRun.result === 'Passed' }">
-                  <strong>{{stepRun.teststep.name}} ({{stepRun.duration | number}} ms)</strong>
-                </h5>
-              </a>
-            </li>
-          </ul>
+          <div ng-init="stepRuns = testcaseIndividualRun.stepRuns" ng-include="'/ui/views/testcases/step-runs-outline.html'"></div>
         </div>
       </uib-accordion>
     </div>

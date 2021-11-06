@@ -1,6 +1,6 @@
 <ul class="list-unstyled">
   <uib-accordion class="data-driven-step-run-on-testcase-edit-view">
-    <li ng-repeat="stepRun in testcaseRun.stepRuns">
+    <li ng-repeat="stepRun in stepRuns">
       <a ng-if="stepRun.atomicRunResult" ng-click="showStepRunHTMLReport(stepRun.id)" href="">
         <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',
                   'text-lime' : stepRun.result === 'Passed' }">
