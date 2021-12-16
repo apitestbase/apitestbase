@@ -17,7 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +25,13 @@ public class WSDLResource {
     public WSDLResource() {}
 
     @GET @Path("/{wsdlUrl}/bindings")
-    public List<WSDLBinding> getWSDLBindings(@PathParam("wsdlUrl") String wsdlUrl) throws UnsupportedEncodingException {
-        List<WSDLBinding> result = new ArrayList<WSDLBinding>();
+    public List<WSDLBinding> getWSDLBindings(@PathParam("wsdlUrl") String wsdlUrl) {
+        List<WSDLBinding> result = new ArrayList<>();
         WSDLParser parser = new WSDLParser();
         parser.setResourceResolver(new SSLTrustedExternalResolver());
         Definitions definition = parser.parse(wsdlUrl);
         for (Binding binding: definition.getBindings()) {
-            List<String> operationNames = new ArrayList<String>();
+            List<String> operationNames = new ArrayList<>();
             for (BindingOperation operation: binding.getOperations()) {
                 operationNames.add(operation.getName());
             }
@@ -47,6 +46,7 @@ public class WSDLResource {
                                               @PathParam("operationName") String operationName) {
         SOAPOperationInfo info = new SOAPOperationInfo();
         WSDLParser parser = new WSDLParser();
+        parser.setResourceResolver(new SSLTrustedExternalResolver());
         Definitions definition = parser.parse(wsdlUrl);
         StringWriter writer = new StringWriter();
         SOARequestCreator creator = new SOARequestCreator(definition, new RequestTemplateCreator(), new MarkupBuilder(writer));
