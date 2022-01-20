@@ -80,6 +80,10 @@ public interface EndpointDAO {
                     endpoint.setType(Endpoint.TYPE_FTP);
                     endpoint.setOtherProperties(new FTPEndpointProperties());
                     break;
+                case Teststep.TYPE_SFTP:
+                    endpoint.setType(Endpoint.TYPE_SFTP);
+                    endpoint.setOtherProperties(new SFTPEndpointProperties());
+                    break;
                 case Teststep.TYPE_MQ:
                     endpoint.setType(Endpoint.TYPE_MQ);
                     MQEndpointProperties endpointProperties = new MQEndpointProperties();

@@ -14,6 +14,7 @@ public class Endpoint {
     public static final String TYPE_DB = "DB";
     public static final String TYPE_JMS = "JMS";
     public static final String TYPE_FTP = "FTP";
+    public static final String TYPE_SFTP = "SFTP";
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_IIB = "IIB";
     public static final String TYPE_AMQP = "AMQP";

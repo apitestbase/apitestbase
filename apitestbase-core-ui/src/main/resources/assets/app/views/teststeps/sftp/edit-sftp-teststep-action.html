@@ -1,0 +1,24 @@
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group">
+  <label for="sftpServerURL" class="col-lg-2 control-label">SFTP Server URL</label>
+  <div class="col-lg-8">
+    <input type="text" name="sftpServerURL" id="sftpServerURL" class="form-control" readonly
+           ng-model="teststep.endpoint.constructedUrl">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-lg-2 control-label">Action</label>
+  <div class="col-lg-3"><h5>Put</h5></div>
+  <div class="col-lg-1">
+    <button type="button" class="btn btn-info btn-block" ng-click="doAction()"
+            ng-disabled="appStatus.isForbidden() || endpointInfoIncomplete() || actionInfoIncomplete() ||
+              steprun.status === 'ongoing'">Do</button>
+  </div>
+  <div class="col-lg-4">       <!-- Action run status message -->
+    <h5 ng-if="steprun.status === 'ongoing'">Uploading file ...</h5>
+    <h5 ng-if="steprun.status === 'finished'">File uploaded.</h5>
+  </div>
+</div>
+
+<div ng-include="'/ui/views/teststeps/sftp/edit-sftp-teststep-request.html'"></div>

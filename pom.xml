@@ -79,6 +79,7 @@
         <wiremock.version>2.30.1</wiremock.version>
         <mqlight-api.version>1.0.2016062300</mqlight-api.version>
         <commons-net.version>3.8.0</commons-net.version>
+        <jsch.version>0.1.55</jsch.version>
         <zjsonpatch.version>0.4.11</zjsonpatch.version>
         <handlebars.version>4.2.0</handlebars.version>
         <jaxws-api.version>2.3.1</jaxws-api.version>
@@ -132,6 +133,7 @@
                 <module>apitestbase-core-ui</module>
                 <module>apitestbase-jms-solace</module>
                 <module>apitestbase-mqtt</module>
+                <module>apitestbase-sftp</module>
                 <module>apitestbase-assembly</module>
                 <module>apitestbase-iib</module>
                 <module>apitestbase-mq</module>
@@ -147,6 +149,7 @@
                 <module>apitestbase-core-ui</module>
                 <module>apitestbase-jms-solace</module>
                 <module>apitestbase-mqtt</module>
+                <module>apitestbase-sftp</module>
                 <module>apitestbase-assembly</module>
                 <module>apitestbase-iib</module>
                 <module>apitestbase-mq</module>
@@ -179,6 +182,7 @@
                 <module>apitestbase-core-ui</module>
                 <module>apitestbase-jms-solace</module>
                 <module>apitestbase-mqtt</module>
+                <module>apitestbase-sftp</module>
                 <module>apitestbase-upgrade</module>
                 <module>apitestbase-assembly</module>
             </modules>

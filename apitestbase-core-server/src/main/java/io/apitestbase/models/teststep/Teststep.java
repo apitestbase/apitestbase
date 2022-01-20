@@ -22,6 +22,7 @@ public class Teststep {
     public static final String TYPE_DB = "DB";
     public static final String TYPE_JMS = "JMS";
     public static final String TYPE_FTP = "FTP";
+    public static final String TYPE_SFTP = "SFTP";
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_IIB = "IIB";
     public static final String TYPE_AMQP = "AMQP";
@@ -84,6 +85,7 @@ public class Teststep {
             @JsonSubTypes.Type(value = HTTPOrSOAPTeststepProperties.class, name = Teststep.TYPE_SOAP),
             @JsonSubTypes.Type(value = JMSTeststepProperties.class, name = Teststep.TYPE_JMS),
             @JsonSubTypes.Type(value = FTPTeststepProperties.class, name = Teststep.TYPE_FTP),
+            @JsonSubTypes.Type(value = SFTPTeststepProperties.class, name = Teststep.TYPE_SFTP),
             @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TYPE_MQ),
             @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TYPE_IIB),
             @JsonSubTypes.Type(value = AMQPTeststepProperties.class, name = Teststep.TYPE_AMQP),

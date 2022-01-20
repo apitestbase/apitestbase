@@ -1,0 +1,45 @@
+<div class="form-group">
+  <label for="fileFrom" class="col-lg-2 control-label">File From</label>
+  <div class="col-lg-1">
+    <select name="fileFrom" id="fileFrom" class="form-control"
+            ng-model="teststep.apiRequest.minClassName" ng-change="fileFromChanged(teststepForm.$valid)"
+            ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
+      <option value=".SftpPutRequestFileFromText">Text</option>
+      <option value=".SftpPutRequestFileFromFile">File</option>
+    </select>
+  </div>
+  <label for="remoteFilePath" class="col-lg-2 control-label">Remote File Path</label>
+  <div class="col-lg-5">
+    <input name="remoteFilePath" id="remoteFilePath" type="text" class="form-control" ng-trim="true"
+           ng-model="teststep.otherProperties.remoteFilePath" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
+           ng-readonly="appStatus.isForbidden()">
+  </div>
+</div>
+
+<div class="form-group" ng-if="teststep.apiRequest.minClassName === '.SftpPutRequestFileFromText'">
+  <div class="col-lg-10">
+    <textarea id="fileContent" name="fileContent" class="form-control" spellcheck="false" rows="30"
+              ng-model="teststep.apiRequest.fileContent" ng-change="autoSave(teststepForm.$valid)"
+              ng-readonly="appStatus.isForbidden()"></textarea>
+  </div>
+</div>
+
+<div ng-if="teststep.apiRequest.minClassName === '.SftpPutRequestFileFromFile'">
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-1">
+      <button type="file" class="btn btn-info" ngf-select="uploadAPIRequestFile($file)" ngf-max-size="10MB"
+              ng-disabled="appStatus.isForbidden()">Select File</button>
+    </div>
+    <div class="col-lg-1" ng-if="teststep.apiRequest.fileName">
+      <button type="button" class="btn btn-info" ng-click="downloadAPIRequestFile()">Download File</button>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-7" ng-if="teststep.apiRequest.fileName">
+      <h5>{{ teststep.apiRequest.fileName }}</h5>
+    </div>
+  </div>
+</div>

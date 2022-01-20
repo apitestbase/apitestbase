@@ -101,6 +101,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
             case Teststep.TYPE_FTP:
                 apiRequest = new FtpPutRequestFileFromText();
                 break;
+            case Teststep.TYPE_SFTP:
+                apiRequest = new SftpPutRequestFileFromText();
+                break;
             case Teststep.TYPE_AMQP:
                 apiRequest = new AMQPRequest();
                 break;
@@ -177,6 +180,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
             case Teststep.TYPE_FTP:
                 processFTPTeststep(oldTeststep, teststep);
                 break;
+            case Teststep.TYPE_SFTP:
+                processSFTPTeststep(oldTeststep, teststep);
+                break;
             case Teststep.TYPE_MQ:
                 processMQTeststep(oldTeststep, teststep);
                 break;
@@ -250,6 +256,12 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     default void processFTPTeststep(Teststep oldTeststep, Teststep teststep) {
+        if (!teststep.getApiRequest().getClass().equals(oldTeststep.getApiRequest().getClass())) {         //  switching fileFrom between text/file
+            saveApiRequest(teststep.getId(), teststep.getApiRequest());
+        }
+    }
+
+    default void processSFTPTeststep(Teststep oldTeststep, Teststep teststep) {
         if (!teststep.getApiRequest().getClass().equals(oldTeststep.getApiRequest().getClass())) {         //  switching fileFrom between text/file
             saveApiRequest(teststep.getId(), teststep.getApiRequest());
         }

@@ -1,6 +1,5 @@
 package io.apitestbase.resources;
 
-import io.apitestbase.APITestBaseConstants;
 import io.apitestbase.db.EndpointDAO;
 import io.apitestbase.models.AppInfo;
 import io.apitestbase.models.AppMode;
@@ -36,6 +35,8 @@ public class ManagedEndpointResource {
             endpoint.setOtherProperties(new SOAPEndpointProperties());
         } else if (Endpoint.TYPE_FTP.equals(endpoint.getType())) {
             endpoint.setOtherProperties(new FTPEndpointProperties());
+        } else if (Endpoint.TYPE_SFTP.equals(endpoint.getType())) {
+            endpoint.setOtherProperties(new SFTPEndpointProperties());
         } else if (Endpoint.TYPE_MQ.equals(endpoint.getType())) {
             MQEndpointProperties otherProperties = new MQEndpointProperties();
             otherProperties.setConnectionMode(

@@ -22,6 +22,8 @@
          ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-endpoint-details.html'"></div>
     <div ng-if="teststep.type === 'FTP'"
          ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-endpoint-details.html'"></div>
+    <div ng-if="teststep.type === 'SFTP'"
+         ng-include="'/ui/views/teststeps/sftp/edit-sftp-teststep-endpoint-details.html'"></div>
     <div ng-if="teststep.type === 'MQ'"
          ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
     <div ng-if="teststep.type === 'IIB'"

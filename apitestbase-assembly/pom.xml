@@ -47,6 +47,11 @@
             <artifactId>apitestbase-mqtt</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.apitestbase</groupId>
+            <artifactId>apitestbase-sftp</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <profiles>
