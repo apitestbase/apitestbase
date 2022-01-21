@@ -28,10 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME;
@@ -168,7 +165,7 @@ public class TeststepResource {
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));
         DataTable teststepDataTable = dataTableDAO.getTeststepDataTable(teststep.getId(), true);
         DataTable testcaseDataTable = dataTableDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
-        GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(),
+        GeneralUtils.checkDuplicatePropertyNames(new ArrayList<>(referenceableStringProperties.keySet()),
                 teststepDataTable.getNonCaptionColumnNames(), testcaseDataTable.getNonCaptionColumnNames());
         Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
         if (teststepDataTable.getRows().size() > 0) {

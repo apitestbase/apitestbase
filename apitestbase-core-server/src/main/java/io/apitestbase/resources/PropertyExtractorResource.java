@@ -18,6 +18,7 @@ import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public class PropertyExtractorResource {
         Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         DataTable teststepDataTable = dataTableDAO.getTeststepDataTable(propertyExtractor.getTeststepId(), true);
         DataTable testcaseDataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
-        GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(),
+        GeneralUtils.checkDuplicatePropertyNames(new ArrayList<>(referenceableStringProperties.keySet()),
                 teststepDataTable.getNonCaptionColumnNames(), testcaseDataTable.getNonCaptionColumnNames());
         if (teststepDataTable.getRows().size() > 0) {
             referenceableStringProperties.putAll(teststepDataTable.getStringPropertiesInRow(0));

@@ -17,6 +17,7 @@ import io.apitestbase.models.propertyextractor.PropertyExtractor;
 import io.apitestbase.models.testrun.*;
 import io.apitestbase.models.teststep.HTTPHeader;
 import io.apitestbase.models.teststep.Teststep;
+import io.apitestbase.utils.GeneralUtils;
 import org.eclipse.jetty.http.HttpHeader;
 import org.slf4j.Logger;
 
@@ -42,7 +43,8 @@ public class TestcaseStepRunner {
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(stepRunStartTime));
 
-        if (teststep.getDataTable() == null || teststep.getDataTable().getRows().isEmpty()) {
+        DataTable stepDataTable = teststep.getDataTable();
+        if (stepDataTable == null || stepDataTable.getRows().isEmpty()) {
             RegularTeststepRun regularTeststepRun = new RegularTeststepRun();
             regularTeststepRun.setStartTime(stepRunStartTime);
             TestResult result = runAtomicStep(regularTeststepRun.getAtomicRunResult(), teststep, utilsDAO,
@@ -50,6 +52,8 @@ public class TestcaseStepRunner {
             regularTeststepRun.setResult(result);
             stepRun = regularTeststepRun;
         } else {
+            GeneralUtils.checkDuplicatePropertyNames(new ArrayList<>(referenceableStringProperties.keySet()),
+                    stepDataTable.getNonCaptionColumnNames());
             stepRun = runDataDrivenTeststep(stepRunStartTime, teststep, utilsDAO, referenceableStringProperties,
                     referenceableEndpointProperties, testcaseRunContext);
         }
@@ -123,7 +127,6 @@ public class TestcaseStepRunner {
         stepRun.setResult(TestResult.PASSED);
         stepRun.setStartTime(stepRunStartTime);
         DataTable dataTable = teststep.getDataTable();
-//        GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(getUdpNames(), dataTable);
 
         for (int dataTableRowIndex = 0; dataTableRowIndex < dataTable.getRows().size(); dataTableRowIndex++) {
             LinkedHashMap<String, DataTableCell> dataTableRow = dataTable.getRows().get(dataTableRowIndex);

@@ -99,17 +99,13 @@ public final class GeneralUtils {
         return result;
     }
 
-    public static void checkDuplicatePropertyNames(Set<String> names, List<String> names2, List<String> names3) {
+    public static void checkDuplicatePropertyNames(List<String>... names) {
         Set<String> set = new HashSet<>();
-        set.addAll(names);
-        for (String name2 : names2) {
-            if (!set.add(name2)) {
-                throw new RuntimeException("Duplicate property name \"" + name2 + "\" between data tables and/or UDPs");
-            }
-        }
-        for (String name3 : names3) {
-            if (!set.add(name3)) {
-                throw new RuntimeException("Duplicate property name \"" + name3 + "\" between data tables and/or UDPs");
+        for (List<String> nameList: names) {
+            for (String name : nameList) {
+                if (!set.add(name)) {
+                    throw new RuntimeException("Duplicate property name \"" + name + "\" between data tables and/or UDPs");
+                }
             }
         }
     }

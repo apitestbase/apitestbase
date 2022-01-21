@@ -26,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -94,7 +95,7 @@ public class AssertionResource {
         Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         DataTable teststepDataTable = dataTableDAO.getTeststepDataTable(assertion.getTeststepId(), true);
         DataTable testcaseDataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
-        GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(),
+        GeneralUtils.checkDuplicatePropertyNames(new ArrayList<>((referenceableStringProperties.keySet())),
                 teststepDataTable.getNonCaptionColumnNames(), testcaseDataTable.getNonCaptionColumnNames());
         if (teststepDataTable.getRows().size() > 0) {
             referenceableStringProperties.putAll(teststepDataTable.getStringPropertiesInRow(0));
