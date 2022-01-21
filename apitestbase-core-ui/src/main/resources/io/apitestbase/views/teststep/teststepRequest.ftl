@@ -8,6 +8,8 @@
   <#include "dbTeststepRequest.ftl">
 <#elseif teststep.type == "FTP">
   <#include "ftpTeststepRequest.ftl">
+<#elseif teststep.type == "SFTP">
+  <#include "sftpTeststepRequest.ftl">
 <#elseif teststep.type == "AMQP">
   <#include "amqpTeststepRequest.ftl">
 <#elseif teststep.type == "MQ">

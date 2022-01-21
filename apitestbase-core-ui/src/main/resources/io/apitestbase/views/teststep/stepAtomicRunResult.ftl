@@ -26,7 +26,7 @@
 </#if>
 
 <#-- Request, Response, and Assertions info -->
-<#assign teststepTypes = ["HTTP", "SOAP", "DB", "JMS", "FTP", "MQ", "AMQP", "MQTT", "HTTPStubRequestsCheck"]>
+<#assign teststepTypes = ["HTTP", "SOAP", "DB", "JMS", "FTP", "SFTP", "MQ", "AMQP", "MQTT", "HTTPStubRequestsCheck"]>
 <#if teststepTypes?seq_contains(stepType) && !(stepType == 'MQ' && stepAction?? && stepAction == 'Clear')>
   <div class="form-group"></div> <#-- spacer -->
 
@@ -35,10 +35,10 @@
     !['HTTPStubRequestsCheck']?seq_contains(stepType)>
   <#assign hasResponseTab = !(stepType == 'MQ' && stepAction?? && (stepAction == 'Enqueue' || stepAction == 'Publish')) &&
     !(stepType == 'JMS' && stepAction?? && (stepAction == 'Send' || stepAction == 'Publish')) &&
-    !['FTP', 'AMQP', 'MQTT']?seq_contains(stepType)>
+    !['FTP', 'SFTP', 'AMQP', 'MQTT']?seq_contains(stepType)>
   <#assign hasAssertionsTab = !(stepType == 'MQ' && stepAction?? && (stepAction == 'Enqueue' || stepAction == 'Publish')) &&
     !(stepType == 'JMS' && stepAction?? && (stepAction == 'Clear' || stepAction == 'Send' || stepAction == 'Publish')) &&
-    !['FTP', 'AMQP', 'MQTT']?seq_contains(stepType)>
+    !['FTP', 'SFTP', 'AMQP', 'MQTT']?seq_contains(stepType)>
   <div>
     <#-- Nav tabs -->
     <ul class="nav nav-tabs tabs-in-test-report" role="tablist">
