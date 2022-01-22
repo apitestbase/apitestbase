@@ -1,8 +1,10 @@
 package io.apitestbase.models.endpoint;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type", defaultImpl = EndpointProperties.class)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = SOAPEndpointProperties.class, name = EndpointProperties.SOAP_ENDPOINT_PROPERTIES),

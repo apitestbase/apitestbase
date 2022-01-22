@@ -13,6 +13,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.github.tomakehurst.wiremock.verification.notmatched.PlainTextStubNotMatchedRenderer;
 import io.apitestbase.core.teststep.HTTPAPIResponse;
 import io.apitestbase.db.SQLStatementType;
+import io.apitestbase.models.DataTable;
 import io.apitestbase.models.HTTPMethod;
 import io.apitestbase.models.HTTPStubMapping;
 import io.apitestbase.models.UDP;
@@ -394,5 +395,9 @@ public final class GeneralUtils {
 
     public static String base64EncodeByteArray(byte[] bytes) {
         return bytes == null ? null : Base64.encodeBase64String(bytes);
+    }
+
+    public static boolean dataTableIsEmpty(DataTable dataTable) {
+        return dataTable.getNonCaptionColumnNames().isEmpty() && dataTable.getRows().isEmpty();
     }
 }

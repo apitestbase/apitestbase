@@ -1,9 +1,11 @@
 package io.apitestbase.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.resources.ResourceJsonViews;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DataTableCell {
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private long id;

@@ -12,6 +12,7 @@ public interface DataTableDAO extends CrossReferenceDAO {
     /**
      * Caption column is the initial column in a data table.
      * @param testcaseId
+     * @param teststepId
      */
     default void createCaptionColumn(Long testcaseId, Long teststepId) {
         DataTableColumn dataTableColumn = new DataTableColumn();
@@ -111,11 +112,15 @@ public interface DataTableDAO extends CrossReferenceDAO {
 
     @Transaction
     default void insertTestcaseDataTableByImport(long testcaseId, DataTable dataTable) {
-        for (DataTableColumn column: dataTable.getColumns()) {
-            String columnName = column.getName();
-            long columnId = dataTableColumnDAO().insertTestcaseDataTableColumnByImport(
-                    testcaseId, columnName, column.getType().toString());
-            insertDataTableRows(columnId, columnName, dataTable.getRows());
+        if (dataTable == null) {
+            dataTableDAO().createCaptionColumn(testcaseId, null);
+        } else {
+            for (DataTableColumn column: dataTable.getColumns()) {
+                String columnName = column.getName();
+                long columnId = dataTableColumnDAO().insertTestcaseDataTableColumnByImport(
+                        testcaseId, columnName, column.getType().toString());
+                insertDataTableRows(columnId, columnName, dataTable.getRows());
+            }
         }
     }
 

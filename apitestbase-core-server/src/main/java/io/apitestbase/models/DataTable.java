@@ -16,6 +16,7 @@ public class DataTable {
         return columns;
     }
 
+    @JsonIgnore
     public List<String> getNonCaptionColumnNames() {
         List<String> columnNames = new ArrayList<>();
         for (DataTableColumn column : columns) {

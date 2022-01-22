@@ -3,11 +3,12 @@ package io.apitestbase.resources;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
-import io.dropwizard.jersey.PATCH;
 import io.apitestbase.db.TestcaseDAO;
 import io.apitestbase.db.TeststepDAO;
 import io.apitestbase.models.Testcase;
 import io.apitestbase.models.teststep.Teststep;
+import io.apitestbase.utils.GeneralUtils;
+import io.dropwizard.jersey.PATCH;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -40,7 +41,19 @@ public class TestcaseResource {
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     @JacksonFeatures(serializationEnable = { SerializationFeature.INDENT_OUTPUT })
     public Testcase export(@PathParam("testcaseId") long testcaseId) {
-        return testcaseDAO.findById_Complete(testcaseId);
+        Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
+
+        //  clear unnecessary content
+        if (GeneralUtils.dataTableIsEmpty(testcase.getDataTable())) {
+            testcase.setDataTable(null);
+        }
+        for (Teststep teststep: testcase.getTeststeps()) {
+            if (GeneralUtils.dataTableIsEmpty(teststep.getDataTable())) {
+                teststep.setDataTable(null);
+            }
+        }
+
+        return testcase;
     }
 
     @PATCH @Path("testcases/{testcaseId}/moveStep")
