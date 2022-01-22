@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME;
@@ -36,10 +37,17 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
         startTestcaseRun(testcaseRun);
 
         DataTable dataTable = getTestcase().getDataTable();
-        GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(getUdpNames(), dataTable);
+        Map<String, String> udpMap = GeneralUtils.udpListToMap(getTestcase().getUdps());
+        GeneralUtils.checkDuplicatePropertyNames(udpMap.keySet(), dataTable.getNonCaptionColumnNames());
 
         for (int dataTableRowIndex = 0; dataTableRowIndex < dataTable.getRows().size(); dataTableRowIndex++) {
             LinkedHashMap<String, DataTableCell> dataTableRow = dataTable.getRows().get(dataTableRowIndex);
+
+            TestcaseIndividualRunContext testcaseIndividualRunContext = new TestcaseIndividualRunContext();
+            testcaseIndividualRunContext.getReferenceableStringProperties().putAll(
+                    getTestcaseRunContext().getReferenceableStringProperties());
+            testcaseIndividualRunContext.getReferenceableEndpointProperties().putAll(
+                    getTestcaseRunContext().getReferenceableEndpointProperties());
             TestcaseIndividualRun individualRun = new TestcaseIndividualRun();
             testcaseRun.getIndividualRuns().add(individualRun);
 
@@ -48,15 +56,17 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
             individualRun.setCaption(dataTableRow.get(DataTableColumn.COLUMN_NAME_CAPTION).getValue());
             LOGGER.info("Start individually running test case with data table row: " + individualRun.getCaption());
             individualRun.setResult(TestResult.PASSED);
-            getTestcaseRunContext().setTestcaseIndividualRunStartTime(individualRun.getStartTime());
-            getReferenceableStringProperties().put(IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME,
+            testcaseIndividualRunContext.setTestcaseIndividualRunStartTime(individualRun.getStartTime());
+            testcaseIndividualRunContext.getReferenceableStringProperties().put(IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME,
                     IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(individualRun.getStartTime()));
-            getReferenceableEndpointProperties().putAll(dataTable.getEndpointPropertiesInRow(dataTableRowIndex));
-            getReferenceableStringProperties().putAll(dataTable.getStringPropertiesInRow(dataTableRowIndex));
+            testcaseIndividualRunContext.getReferenceableEndpointProperties().putAll(
+                    dataTable.getEndpointPropertiesInRow(dataTableRowIndex));
+            testcaseIndividualRunContext.getReferenceableStringProperties().putAll(
+                    dataTable.getStringPropertiesInRow(dataTableRowIndex));
 
             //  run test steps
             for (Teststep teststep : getTestcase().getTeststeps()) {
-                individualRun.getStepRuns().add(runTeststep(teststep));
+                individualRun.getStepRuns().add(runTeststep(teststep, testcaseIndividualRunContext));
             }
 
             //  test case individual run ends

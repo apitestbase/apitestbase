@@ -81,7 +81,8 @@ public class HTTPStubResource {
         Map<String, String> referenceableStringProperties = GeneralUtils.udpListToMap(testcaseUDPs);
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
         if (dataTable.getRows().size() > 0) {
-            GeneralUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(referenceableStringProperties.keySet(), dataTable);
+            GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(),
+                    dataTable.getNonCaptionColumnNames());
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
         }
 

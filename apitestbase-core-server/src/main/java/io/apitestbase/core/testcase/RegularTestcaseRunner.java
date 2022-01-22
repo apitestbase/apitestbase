@@ -31,7 +31,7 @@ public class RegularTestcaseRunner extends TestcaseRunner {
 
         //  run test steps
         for (Teststep teststep : getTestcase().getTeststeps()) {
-            testcaseRun.getStepRuns().add(runTeststep(teststep));
+            testcaseRun.getStepRuns().add(runTeststep(teststep, null));
         }
 
         //  test case run ends

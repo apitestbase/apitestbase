@@ -35,7 +35,8 @@ public class TestcaseStepRunner {
     }
 
     TeststepRun run(Teststep teststep, UtilsDAO utilsDAO, Map<String, String> referenceableStringProperties,
-                    Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext) throws IOException {
+                    Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext,
+                    TestcaseIndividualRunContext testcaseIndividualRunContext) throws IOException {
         TeststepRun stepRun;
 
         //  test step run starts
@@ -48,14 +49,15 @@ public class TestcaseStepRunner {
             RegularTeststepRun regularTeststepRun = new RegularTeststepRun();
             regularTeststepRun.setStartTime(stepRunStartTime);
             TestResult result = runAtomicStep(regularTeststepRun.getAtomicRunResult(), teststep, utilsDAO,
-                    referenceableStringProperties, referenceableEndpointProperties, testcaseRunContext);
+                    referenceableStringProperties, referenceableEndpointProperties, testcaseRunContext,
+                    testcaseIndividualRunContext);
             regularTeststepRun.setResult(result);
             stepRun = regularTeststepRun;
         } else {
-            GeneralUtils.checkDuplicatePropertyNames(new ArrayList<>(referenceableStringProperties.keySet()),
+            GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(),
                     stepDataTable.getNonCaptionColumnNames());
             stepRun = runDataDrivenTeststep(stepRunStartTime, teststep, utilsDAO, referenceableStringProperties,
-                    referenceableEndpointProperties, testcaseRunContext);
+                    referenceableEndpointProperties, testcaseRunContext, testcaseIndividualRunContext);
         }
 
         //  test step run ends
@@ -67,7 +69,8 @@ public class TestcaseStepRunner {
     private TestResult runAtomicStep(TeststepAtomicRunResult atomicRunResult, Teststep teststep, UtilsDAO utilsDAO,
                                      Map<String, String> referenceableStringProperties,
                                      Map<String, Endpoint> referenceableEndpointProperties,
-                                     TestcaseRunContext testcaseRunContext)
+                                     TestcaseRunContext testcaseRunContext,
+                                     TestcaseIndividualRunContext testcaseIndividualRunContext)
             throws IOException {
         TestResult result = TestResult.PASSED;
         BasicTeststepRun basicTeststepRun;
@@ -77,7 +80,7 @@ public class TestcaseStepRunner {
         try {
             basicTeststepRun = TeststepRunnerFactory.getInstance().newTeststepRunner(
                     clonedTeststep, utilsDAO, referenceableStringProperties, referenceableEndpointProperties,
-                    testcaseRunContext).run();
+                    testcaseRunContext, testcaseIndividualRunContext).run();
             atomicRunResult.setResponse(basicTeststepRun.getResponse());
             atomicRunResult.setInfoMessage(basicTeststepRun.getInfoMessage());
         } catch (Exception e) {
@@ -114,7 +117,12 @@ public class TestcaseStepRunner {
                 atomicRunResult.setErrorMessage(errorMessage + " " + e.getMessage());
                 result = TestResult.FAILED;
             }
-            referenceableStringProperties.putAll(extractedProperties);
+            GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(), extractedProperties.keySet());
+            if (testcaseIndividualRunContext != null) {    //  in data driven test case individual run
+                testcaseIndividualRunContext.getReferenceableStringProperties().putAll(extractedProperties);
+            } else {                                       //  in regular test case run
+                testcaseRunContext.getReferenceableStringProperties().putAll(extractedProperties);
+            }
         }
 
         return result;
@@ -122,7 +130,9 @@ public class TestcaseStepRunner {
 
     private DataDrivenTeststepRun runDataDrivenTeststep(Date stepRunStartTime, Teststep teststep, UtilsDAO utilsDAO,
                                                         Map<String, String> referenceableStringProperties,
-                                                        Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext) throws IOException {
+                                                        Map<String, Endpoint> referenceableEndpointProperties,
+                                                        TestcaseRunContext testcaseRunContext,
+                                                        TestcaseIndividualRunContext testcaseIndividualRunContext) throws IOException {
         DataDrivenTeststepRun stepRun = new DataDrivenTeststepRun();
         stepRun.setResult(TestResult.PASSED);
         stepRun.setStartTime(stepRunStartTime);
@@ -141,7 +151,7 @@ public class TestcaseStepRunner {
 
             individualRun.setResult(runAtomicStep(
                     individualRun.getAtomicRunResult(), teststep, utilsDAO, referenceableStringProperties,
-                    referenceableEndpointProperties, testcaseRunContext));
+                    referenceableEndpointProperties, testcaseRunContext, testcaseIndividualRunContext));
 
             //  test step individual run ends
             individualRun.setDuration(new Date().getTime() - individualRun.getStartTime().getTime());

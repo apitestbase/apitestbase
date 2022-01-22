@@ -2,8 +2,8 @@ package io.apitestbase.core.teststep;
 
 public class WaitUntilNextSecondTeststepRunner extends TeststepRunner {
     public BasicTeststepRun _run() throws InterruptedException {
-        long startTimeSecond = getTestcaseRunContext().getTestcaseIndividualRunStartTime() != null ?
-                getTestcaseRunContext().getTestcaseIndividualRunStartTime().getTime() / 1000 :   //  data driven test case individual run
+        long startTimeSecond = getTestcaseIndividualRunContext() != null ?
+                getTestcaseIndividualRunContext().getTestcaseIndividualRunStartTime().getTime() / 1000 :   //  data driven test case individual run
                 getTestcaseRunContext().getTestcaseRunStartTime().getTime() / 1000;              //  regular test case run
 
         while (System.currentTimeMillis() / 1000 == startTimeSecond) {

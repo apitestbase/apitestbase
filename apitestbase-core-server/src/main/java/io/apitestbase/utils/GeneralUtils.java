@@ -13,7 +13,9 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.github.tomakehurst.wiremock.verification.notmatched.PlainTextStubNotMatchedRenderer;
 import io.apitestbase.core.teststep.HTTPAPIResponse;
 import io.apitestbase.db.SQLStatementType;
-import io.apitestbase.models.*;
+import io.apitestbase.models.HTTPMethod;
+import io.apitestbase.models.HTTPStubMapping;
+import io.apitestbase.models.UDP;
 import io.apitestbase.models.mixin.*;
 import io.apitestbase.models.teststep.HTTPHeader;
 import io.apitestbase.models.teststep.MQRFH2Folder;
@@ -99,23 +101,13 @@ public final class GeneralUtils {
         return result;
     }
 
-    public static void checkDuplicatePropertyNames(List<String>... names) {
+    public static void checkDuplicatePropertyNames(Collection<String>... names) {
         Set<String> set = new HashSet<>();
-        for (List<String> nameList: names) {
+        for (Collection<String> nameList: names) {
             for (String name : nameList) {
                 if (!set.add(name)) {
-                    throw new RuntimeException("Duplicate property name \"" + name + "\" between data tables and/or UDPs");
+                    throw new RuntimeException("Duplicate property name \"" + name + "\" between data tables, UDPs and/or extracted properties");
                 }
-            }
-        }
-    }
-
-    public static void checkDuplicatePropertyNameBetweenDataTableAndUPDs(Set<String> udpNames, DataTable dataTable) {
-        Set<String> set = new HashSet<>();
-        set.addAll(udpNames);
-        for (DataTableColumn dataTableColumn : dataTable.getColumns()) {
-            if (!set.add(dataTableColumn.getName())) {
-                throw new RuntimeException("Duplicate property name between data table and UDPs: " + dataTableColumn.getName());
             }
         }
     }

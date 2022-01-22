@@ -34,6 +34,7 @@ public class IIBTeststepRunner extends TeststepRunner {
         TeststepRunner actualRunner = constructor.newInstance();
         actualRunner.setTeststep(getTeststep());
         actualRunner.setTestcaseRunContext(getTestcaseRunContext());
+        actualRunner.setTestcaseIndividualRunContext(getTestcaseIndividualRunContext());
 
         return actualRunner._run();
     }

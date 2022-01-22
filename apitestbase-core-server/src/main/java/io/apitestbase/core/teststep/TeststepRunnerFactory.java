@@ -3,6 +3,7 @@ package io.apitestbase.core.teststep;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apitestbase.core.MapValueLookup;
+import io.apitestbase.core.testcase.TestcaseIndividualRunContext;
 import io.apitestbase.core.testcase.TestcaseRunContext;
 import io.apitestbase.db.UtilsDAO;
 import io.apitestbase.models.endpoint.Endpoint;
@@ -48,7 +49,9 @@ public class TeststepRunnerFactory {
      */
     public TeststepRunner newTeststepRunner(Teststep teststep, UtilsDAO utilsDAO,
                                             Map<String, String> referenceableStringProperties,
-                                            Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext) throws Exception {
+                                            Map<String, Endpoint> referenceableEndpointProperties,
+                                            TestcaseRunContext testcaseRunContext,
+                                            TestcaseIndividualRunContext testcaseIndividualRunContext) throws Exception {
         TeststepRunner runner;
         Class runnerClass = Class.forName(resolveTeststepRunnerClassName(teststep));
         Constructor<TeststepRunner> constructor = runnerClass.getConstructor();
@@ -84,6 +87,7 @@ public class TeststepRunnerFactory {
         runner.setTeststep(teststep);
 
         runner.setTestcaseRunContext(testcaseRunContext);
+        runner.setTestcaseIndividualRunContext(testcaseIndividualRunContext);
 
         return runner;
     }

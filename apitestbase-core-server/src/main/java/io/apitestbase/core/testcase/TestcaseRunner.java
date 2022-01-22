@@ -29,9 +29,6 @@ public abstract class TestcaseRunner {
     private TestcaseRunDAO testcaseRunDAO;
     private Logger LOGGER;
     private TestcaseRunContext testcaseRunContext = new TestcaseRunContext();
-    private Set<String> udpNames;
-    private Map<String, String> referenceableStringProperties = new HashMap<>();
-    private Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
 
     TestcaseRunner(Testcase testcase, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO, Logger LOGGER, WireMockServer wireMockServer) {
         this.testcase = testcase;
@@ -51,16 +48,6 @@ public abstract class TestcaseRunner {
 
     TestcaseRunContext getTestcaseRunContext() {
         return testcaseRunContext;
-    }
-
-    Set<String> getUdpNames() { return udpNames; }
-
-    Map<String, String> getReferenceableStringProperties() {
-        return referenceableStringProperties;
-    }
-
-    Map<String, Endpoint> getReferenceableEndpointProperties() {
-        return referenceableEndpointProperties;
     }
 
     public abstract TestcaseRun run() throws IOException;
@@ -124,15 +111,21 @@ public abstract class TestcaseRunner {
         testcaseRun.setStartTime(testcaseRunStartTime);
         testcaseRunContext.setTestcaseRunStartTime(testcaseRunStartTime);
 
-        referenceableStringProperties = GeneralUtils.udpListToMap(testcase.getUdps());
-        udpNames = referenceableStringProperties.keySet();
-        referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME,
+        Map<String, String> udpMap= GeneralUtils.udpListToMap(testcase.getUdps());
+        testcaseRunContext.getReferenceableStringProperties().putAll(udpMap);
+        testcaseRunContext.getReferenceableStringProperties().put(IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(testcaseRunStartTime));
     }
 
-    TeststepRun runTeststep(Teststep teststep) throws IOException {
+    TeststepRun runTeststep(Teststep teststep, TestcaseIndividualRunContext testcaseIndividualRunContext) throws IOException {
+        Map<String, String> referenceableStringProperties = testcaseIndividualRunContext == null ?
+                getTestcaseRunContext().getReferenceableStringProperties() :
+                testcaseIndividualRunContext.getReferenceableStringProperties();
+        Map<String, Endpoint> referenceableEndpointProperties = testcaseIndividualRunContext == null ?
+                getTestcaseRunContext().getReferenceableEndpointProperties() :
+                testcaseIndividualRunContext.getReferenceableEndpointProperties();
         Map<String, String> referenceableStringPropertiesShallowCopy = new HashMap<>(referenceableStringProperties);
         return new TestcaseStepRunner(LOGGER).run(teststep, utilsDAO, referenceableStringPropertiesShallowCopy,
-                referenceableEndpointProperties, testcaseRunContext);
+                referenceableEndpointProperties, testcaseRunContext, testcaseIndividualRunContext);
     }
 }

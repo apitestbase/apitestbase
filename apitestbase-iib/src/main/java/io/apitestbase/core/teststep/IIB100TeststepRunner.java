@@ -1,7 +1,6 @@
 package io.apitestbase.core.teststep;
 
 import com.ibm.broker.config.proxy.*;
-import io.apitestbase.core.testcase.TestcaseRunContext;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.endpoint.IIBEndpointProperties;
 import io.apitestbase.models.teststep.IIBTeststepProperties;
@@ -152,9 +151,9 @@ public class IIB100TeststepRunner extends TeststepRunner {
         if (!messageFlowProxy.isRunning()) {
             throw new Exception("Message flow not running.");
         } else {
-            TestcaseRunContext testcaseRunContext = getTestcaseRunContext();
-            Date referenceTime = testcaseRunContext.getTestcaseIndividualRunStartTime() == null ?
-                    testcaseRunContext.getTestcaseRunStartTime() : testcaseRunContext.getTestcaseIndividualRunStartTime();
+            Date referenceTime = getTestcaseIndividualRunContext().getTestcaseIndividualRunStartTime() == null ?
+                    getTestcaseRunContext().getTestcaseRunStartTime() :           //  regular test case run
+                    getTestcaseIndividualRunContext().getTestcaseIndividualRunStartTime();    //  data driven test case individual run
             Date pollingEndTime = DateUtils.addSeconds(new Date(), activityLogPollingTimeout);
             ActivityLogEntry processingCompletionSignal = null;
             ActivityLogEntry potentialProcessingCompletionSignal = null;

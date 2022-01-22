@@ -1,5 +1,6 @@
 package io.apitestbase.core.teststep;
 
+import io.apitestbase.core.testcase.TestcaseIndividualRunContext;
 import io.apitestbase.core.testcase.TestcaseRunContext;
 import io.apitestbase.models.teststep.Teststep;
 import org.slf4j.Logger;
@@ -10,7 +11,8 @@ public abstract class TeststepRunner {
 
     private Teststep teststep;
     private String decryptedEndpointPassword;
-    private TestcaseRunContext testcaseRunContext;    //  set only when running test case
+    private TestcaseRunContext testcaseRunContext;    //  set when running test case
+    private TestcaseIndividualRunContext testcaseIndividualRunContext;    //  set when running data driven test case
 
     protected TeststepRunner() {}
 
@@ -48,5 +50,13 @@ public abstract class TeststepRunner {
 
     void setTestcaseRunContext(TestcaseRunContext testcaseRunContext) {
         this.testcaseRunContext = testcaseRunContext;
+    }
+
+    public TestcaseIndividualRunContext getTestcaseIndividualRunContext() {
+        return testcaseIndividualRunContext;
+    }
+
+    public void setTestcaseIndividualRunContext(TestcaseIndividualRunContext testcaseIndividualRunContext) {
+        this.testcaseIndividualRunContext = testcaseIndividualRunContext;
     }
 }
