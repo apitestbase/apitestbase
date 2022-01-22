@@ -151,7 +151,7 @@ public class IIB100TeststepRunner extends TeststepRunner {
         if (!messageFlowProxy.isRunning()) {
             throw new Exception("Message flow not running.");
         } else {
-            Date referenceTime = getTestcaseIndividualRunContext().getTestcaseIndividualRunStartTime() == null ?
+            Date referenceTime = getTestcaseIndividualRunContext() == null ?
                     getTestcaseRunContext().getTestcaseRunStartTime() :           //  regular test case run
                     getTestcaseIndividualRunContext().getTestcaseIndividualRunStartTime();    //  data driven test case individual run
             Date pollingEndTime = DateUtils.addSeconds(new Date(), activityLogPollingTimeout);
