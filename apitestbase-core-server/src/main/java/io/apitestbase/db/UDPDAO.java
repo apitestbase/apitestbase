@@ -19,17 +19,13 @@ public interface UDPDAO {
     void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS udp (" +
-            "id BIGINT DEFAULT udp_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT, folder_id BIGINT, " +
-            "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT 'P' || DATEDIFF('MS', '1970-01-01', CURRENT_TIMESTAMP), " +
+            "id BIGINT DEFAULT udp_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT, sequence SMALLINT NOT NULL, " +
+            "name VARCHAR(200) NOT NULL DEFAULT 'P' || DATEDIFF('MS', '1970-01-01', CURRENT_TIMESTAMP), " +
             "value CLOB NOT NULL DEFAULT '', created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
-            "FOREIGN KEY (folder_id) REFERENCES folder(id) ON DELETE CASCADE, " +
-            "CONSTRAINT UDP_EXCLUSIVE_CONTAINER_TYPE_CONSTRAINT CHECK((testcase_id IS NULL AND folder_id IS NOT NULL) OR (testcase_id IS NOT NULL AND folder_id IS NULL)), " +
             "CONSTRAINT UDP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
-            "CONSTRAINT UDP_UNIQUE_SEQUENCE_CONSTRAINT2 UNIQUE(folder_id, sequence), " +
             "CONSTRAINT UDP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name), " +
-            "CONSTRAINT UDP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + "2 UNIQUE(folder_id, name), " +
             "CONSTRAINT UDP_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" + CUSTOM_PROPERTY_NAME_CHECK + "))")
     void createTableIfNotExists();
 
