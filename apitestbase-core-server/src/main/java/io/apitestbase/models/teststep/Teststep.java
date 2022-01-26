@@ -77,7 +77,7 @@ public class Teststep {
     private List<PropertyExtractor> propertyExtractors = new ArrayList<>();
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private DataTable dataTable;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private TeststepRunPattern runPattern;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,

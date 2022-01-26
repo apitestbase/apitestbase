@@ -193,6 +193,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
                                        WireMockServer wireMockServer) {
         systemDBJdbi.registerArgument(new TeststepArgumentFactory());
         systemDBJdbi.registerArgument(new ApiRequestArgumentFactory());
+        systemDBJdbi.registerArgument(new TeststepRunPatternArgumentFactory());
         systemDBJdbi.registerArgument(new PropertiesArgumentFactory());
         systemDBJdbi.registerArgument(new EndpointPropertiesArgumentFactory());
         systemDBJdbi.registerArgument(new TestResultArgumentFactory());

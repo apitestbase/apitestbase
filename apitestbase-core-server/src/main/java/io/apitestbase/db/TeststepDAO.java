@@ -154,13 +154,14 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
             "api_request = :t.apiRequest, endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, " +
-            "other_properties = :t.otherProperties, " +
+            "other_properties = :t.otherProperties, run_pattern = :t.runPattern, " +
             "updated = CURRENT_TIMESTAMP where id = :t.id")
     void _updateWithApiRequest(@BindBean("t") Teststep teststep, @Bind("endpointId") Long endpointId);
 
     @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, " +
             "endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, " +
-            "other_properties = :t.otherProperties, updated = CURRENT_TIMESTAMP where id = :t.id")
+            "other_properties = :t.otherProperties, run_pattern = :t.runPattern, " +
+            "updated = CURRENT_TIMESTAMP where id = :t.id")
     void _updateWithoutApiRequest(@BindBean("t") Teststep teststep, @Bind("endpointId") Long endpointId);
 
     @Transaction
