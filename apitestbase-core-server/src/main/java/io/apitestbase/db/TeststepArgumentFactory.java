@@ -23,7 +23,7 @@ public class TeststepArgumentFactory extends AbstractArgumentFactory<Teststep> {
             try {
                 statement.setString(position, objectMapper.writeValueAsString(value));
             } catch (JsonProcessingException e) {
-                throw new RuntimeException("Fail to serialize the Teststep object.");
+                throw new RuntimeException("Failed to serialize the Teststep object.");
             }
         };
     }

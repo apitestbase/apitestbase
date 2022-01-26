@@ -20,7 +20,7 @@ public class EndpointPropertiesArgumentFactory extends AbstractArgumentFactory<E
             try {
                 statement.setString(position, new ObjectMapper().writeValueAsString(value));
             } catch (JsonProcessingException e) {
-                throw new RuntimeException("Fail to serialize the EndpointProperties object.");
+                throw new RuntimeException("Failed to serialize the EndpointProperties object.");
             }
         };
     }

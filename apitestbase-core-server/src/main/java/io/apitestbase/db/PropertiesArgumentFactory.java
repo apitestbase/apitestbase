@@ -20,7 +20,7 @@ public class PropertiesArgumentFactory extends AbstractArgumentFactory<Propertie
             try {
                 statement.setString(position, new ObjectMapper().writeValueAsString(value));
             } catch (JsonProcessingException e) {
-                throw new RuntimeException("Fail to serialize the Properties object.");
+                throw new RuntimeException("Failed to serialize the Properties object.");
             }
         };
     }

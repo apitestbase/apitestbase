@@ -20,7 +20,7 @@ public class ApiRequestArgumentFactory extends AbstractArgumentFactory<APIReques
             try {
                 statement.setString(position, new ObjectMapper().writeValueAsString(value));
             } catch (JsonProcessingException e) {
-                throw new RuntimeException("Fail to serialize the APIRequest object.");
+                throw new RuntimeException("Failed to serialize the APIRequest object.");
             }
         };
     }
