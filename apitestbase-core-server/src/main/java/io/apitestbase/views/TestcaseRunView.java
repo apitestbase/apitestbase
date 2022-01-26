@@ -1,7 +1,7 @@
 package io.apitestbase.views;
 
 import io.dropwizard.views.View;
-import io.apitestbase.models.testrun.TestcaseRun;
+import io.apitestbase.models.testrun.testcaserun.TestcaseRun;
 
 /**
  * Used for displaying test case run report.

@@ -1,4 +1,6 @@
-package io.apitestbase.models.testrun;
+package io.apitestbase.models.testrun.testcaserun;
+
+import io.apitestbase.models.testrun.TestRun;
 
 /**
  * Used for collecting data when running one test case.

@@ -1,6 +1,6 @@
 package io.apitestbase.views;
 
-import io.apitestbase.models.testrun.TeststepRun;
+import io.apitestbase.models.testrun.teststeprun.TeststepRun;
 import io.dropwizard.views.View;
 
 /**

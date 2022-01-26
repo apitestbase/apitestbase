@@ -1,6 +1,7 @@
-package io.apitestbase.models.testrun;
+package io.apitestbase.models.testrun.testcaserun;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.apitestbase.models.testrun.teststeprun.TeststepRun;
 import io.apitestbase.resources.ResourceJsonViews;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package io.apitestbase.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apitestbase.models.endpoint.Endpoint;
-import io.apitestbase.models.testrun.TeststepAtomicRunResult;
+import io.apitestbase.models.testrun.teststeprun.TeststepAtomicRunResult;
 import io.apitestbase.models.teststep.Teststep;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -15,11 +15,12 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 @RegisterRowMapper(TeststepAtomicRunResultMapper.class)
 public interface TeststepAtomicRunResultDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS teststep_atomicrun_result (id IDENTITY PRIMARY KEY, " +
-            "teststep_run_id BIGINT NOT NULL, teststep_individualrun_id BIGINT, teststep CLOB NOT NULL, " +
-            "response CLOB, info_message CLOB, error_message CLOB, assertion_verifications CLOB, " +
+            "teststep_run_id BIGINT NOT NULL, teststep_repeatrun_id BIGINT, teststep_individualrun_id BIGINT, " +
+            "teststep CLOB NOT NULL, response CLOB, info_message CLOB, error_message CLOB, assertion_verifications CLOB, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (teststep_run_id) REFERENCES teststep_run(id) ON DELETE CASCADE, " +
+            "FOREIGN KEY (teststep_repeatrun_id) REFERENCES teststep_repeatrun(id) ON DELETE CASCADE, " +
             "FOREIGN KEY (teststep_individualrun_id) REFERENCES teststep_individualrun(id) ON DELETE CASCADE)")
     void createTableIfNotExists();
 

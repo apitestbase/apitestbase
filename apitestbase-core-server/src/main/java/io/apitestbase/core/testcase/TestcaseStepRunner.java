@@ -14,7 +14,7 @@ import io.apitestbase.models.TestResult;
 import io.apitestbase.models.assertion.AssertionVerification;
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.propertyextractor.PropertyExtractor;
-import io.apitestbase.models.testrun.*;
+import io.apitestbase.models.testrun.teststeprun.*;
 import io.apitestbase.models.teststep.HTTPHeader;
 import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.utils.GeneralUtils;

@@ -1,7 +1,7 @@
 package io.apitestbase.db;
 
 import io.apitestbase.models.TestResult;
-import io.apitestbase.models.testrun.TestcaseIndividualRun;
+import io.apitestbase.models.testrun.testcaserun.TestcaseIndividualRun;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 

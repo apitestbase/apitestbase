@@ -1,7 +1,11 @@
 package io.apitestbase.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.apitestbase.models.testrun.*;
+import io.apitestbase.models.testrun.testcaserun.DataDrivenTestcaseRun;
+import io.apitestbase.models.testrun.testcaserun.RegularTestcaseRun;
+import io.apitestbase.models.testrun.testcaserun.TestcaseIndividualRun;
+import io.apitestbase.models.testrun.testcaserun.TestcaseRun;
+import io.apitestbase.models.testrun.teststeprun.TeststepRun;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apitestbase.core.teststep.APIResponse;
 import io.apitestbase.models.assertion.AssertionVerification;
-import io.apitestbase.models.testrun.TeststepAtomicRunResult;
+import io.apitestbase.models.testrun.teststeprun.TeststepAtomicRunResult;
 import io.apitestbase.models.teststep.Teststep;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;

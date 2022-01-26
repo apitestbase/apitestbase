@@ -215,6 +215,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         final TestcaseRunDAO testcaseRunDAO = systemDBJdbi.onDemand(TestcaseRunDAO.class);
         final TestcaseIndividualRunDAO testcaseIndividualRunDAO = systemDBJdbi.onDemand(TestcaseIndividualRunDAO.class);
         final TeststepRunDAO teststepRunDAO = systemDBJdbi.onDemand(TeststepRunDAO.class);
+        final TeststepRepeatRunDAO teststepRepeatRunDAO = systemDBJdbi.onDemand(TeststepRepeatRunDAO.class);
         final TeststepIndividualRunDAO teststepIndividualRunDAO = systemDBJdbi.onDemand(TeststepIndividualRunDAO.class);
         final TeststepAtomicRunResultDAO teststepAtomicRunResultDAO = systemDBJdbi.onDemand(TeststepAtomicRunResultDAO.class);
         final HTTPStubMappingDAO httpStubMappingDAO = systemDBJdbi.onDemand(HTTPStubMappingDAO.class);
@@ -274,6 +275,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
         testcaseIndividualRunDAO.createSequenceIfNotExists();
         testcaseIndividualRunDAO.createTableIfNotExists();
         teststepRunDAO.createTableIfNotExists();
+        teststepRepeatRunDAO.createTableIfNotExists();
         teststepIndividualRunDAO.createTableIfNotExists();
         teststepAtomicRunResultDAO.createTableIfNotExists();
         httpStubMappingDAO.createSequenceIfNotExists();

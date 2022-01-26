@@ -1,4 +1,4 @@
-package io.apitestbase.models.testrun;
+package io.apitestbase.models.testrun.teststeprun;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;

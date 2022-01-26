@@ -2,7 +2,7 @@ package io.apitestbase.views;
 
 import io.apitestbase.models.endpoint.Endpoint;
 import io.apitestbase.models.endpoint.EndpointProperties;
-import io.apitestbase.models.testrun.TeststepIndividualRun;
+import io.apitestbase.models.testrun.teststeprun.TeststepIndividualRun;
 import io.apitestbase.models.teststep.Teststep;
 import io.dropwizard.views.View;
 
