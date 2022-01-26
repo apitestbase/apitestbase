@@ -1,0 +1,15 @@
+<div class="form-group"></div> <!-- spacer -->
+<div class="col-lg-9">
+  <div class="form-group">
+    <div class="col-lg-4">
+      <select name="teststepRunPattern" id="teststepRunPattern" class="form-control"
+              ng-model="teststep.runPattern.type" ng-change="autoSave(teststepForm.$valid)"
+              ng-disabled="appStatus.isForbidden()">
+        <option value="RepeatUntilPass"
+                title="Repeat until invocation (or action), assertions and property extractions all successful">Repeat until pass</option>
+        <option value="RepeatFixedNumberOfTimes"
+                title="Repeat fixed number of times, regardless of pass or failure">Repeat fixed number of times</option>
+      </select>
+    </div>
+  </div>
+</div>

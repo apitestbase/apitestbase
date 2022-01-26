@@ -41,7 +41,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, " +
-            "endpoint_property VARCHAR(200), api_request CLOB, other_properties CLOB, step_data_backup CLOB, " +
+            "endpoint_property VARCHAR(200), api_request CLOB, other_properties CLOB, run_pattern CLOB, step_data_backup CLOB, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
