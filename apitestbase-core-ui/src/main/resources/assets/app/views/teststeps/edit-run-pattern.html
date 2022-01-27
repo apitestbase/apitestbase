@@ -1,15 +1,29 @@
 <div class="form-group"></div> <!-- spacer -->
 <div class="col-lg-9">
   <div class="form-group">
+    <label for="teststepRunPattern" class="col-lg-2 control-label">Pattern</label>
     <div class="col-lg-3">
       <select name="teststepRunPattern" id="teststepRunPattern" class="form-control"
-              ng-model="teststep.runPattern.type" ng-change="autoSave(teststepForm.$valid)"
+              ng-model="teststep.runPattern.type" ng-change="runPatternChanged(teststepForm.$valid)"
               ng-disabled="appStatus.isForbidden()">
+        <option value="">Run once</option>
         <option value="RepeatUntilPass"
                 title="Repeat until invocation (or action), assertions and property extractions all successful">Repeat until pass</option>
         <option value="RepeatFixedNumberOfTimes"
                 title="Repeat fixed number of times, regardless of pass or failure">Repeat fixed number of times</option>
       </select>
+    </div>
+  </div>
+  <div ng-if="teststep.runPattern.type === 'RepeatUntilPass'" class="form-group required"
+       ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.intervalBetweenRepeatRuns.$invalid }">
+    <label for="intervalBetweenRepeatRuns" class="col-lg-2 control-label">Interval between repeat runs (in milliseconds)</label>
+    <div class="col-lg-7">
+      <input name="intervalBetweenRepeatRuns" id="intervalBetweenRepeatRuns" type="text" class="form-control" required
+             ng-model="teststep.runPattern.intervalBetweenRepeatRuns" ng-change="autoSave(teststepForm.$valid)"
+             ng-readonly="appStatus.isForbidden()">
+      <div ng-show="savingStatus.submitted && teststepForm.intervalBetweenRepeatRuns.$invalid" class="help-block">
+        <p ng-show="teststepForm.intervalBetweenRepeatRuns.$error.required">Interval between repeat runs is required</p>
+      </div>
     </div>
   </div>
 </div>

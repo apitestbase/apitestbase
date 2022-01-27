@@ -74,6 +74,16 @@ angular.module('apitestbase').controller('TeststepsController', ['$scope', 'Test
     $scope.getActionOrInvocationTabHeading = function() {
       var teststep = $scope.teststep;
       return ['JMS', 'FTP', 'SFTP', 'MQ', 'IIB', 'AMQP', 'MQTT', 'Wait'].indexOf(teststep.type) >= 0 ? 'Action' : 'Invocation';
-    }
+    };
+
+    $scope.runPatternChanged = function(isValid) {
+      var teststep = $scope.teststep;
+      if (!teststep.runPattern.type) {
+        delete teststep.runPattern;
+      }
+
+      //  update test step immediately (no timeout)
+      $scope.update(isValid);
+    };
   }
 ]);

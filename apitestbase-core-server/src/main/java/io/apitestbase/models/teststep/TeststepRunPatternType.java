@@ -3,8 +3,8 @@ package io.apitestbase.models.teststep;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum TeststepRunPatternType {
-    NONE("None"), REPEAT_UNTIL_PASS("RepeatUntilPass"),
-    REPEAT_FIXED_NUMBER_OF_TIMES("RepeatFixedNumberOfTimes");
+    REPEAT_UNTIL_PASS(Constants.REPEAT_UNTIL_PASS),
+    REPEAT_FIXED_NUMBER_OF_TIMES(Constants.REPEAT_FIXED_NUMBER_OF_TIMES);
 
     private final String text;
 
@@ -25,5 +25,10 @@ public enum TeststepRunPatternType {
             }
         }
         return null;
+    }
+
+    public static class Constants {
+        static final String REPEAT_UNTIL_PASS = "RepeatUntilPass";
+        static final String REPEAT_FIXED_NUMBER_OF_TIMES = "RepeatFixedNumberOfTimes";
     }
 }
