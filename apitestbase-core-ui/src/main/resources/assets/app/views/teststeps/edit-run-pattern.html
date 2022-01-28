@@ -1,8 +1,8 @@
 <div class="form-group"></div> <!-- spacer -->
 <div class="col-lg-9">
   <div class="form-group">
-    <label for="teststepRunPattern" class="col-lg-2 control-label">Pattern</label>
-    <div class="col-lg-3">
+    <label for="teststepRunPattern" class="col-lg-3 control-label">Pattern</label>
+    <div class="col-lg-4">
       <select name="teststepRunPattern" id="teststepRunPattern" class="form-control"
               ng-model="teststep.runPattern.type" ng-change="runPatternChanged(teststepForm.$valid)"
               ng-disabled="appStatus.isForbidden()">
@@ -14,15 +14,43 @@
       </select>
     </div>
   </div>
-  <div ng-if="teststep.runPattern.type === 'RepeatUntilPass'" class="form-group required"
-       ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.intervalBetweenRepeatRuns.$invalid }">
-    <label for="intervalBetweenRepeatRuns" class="col-lg-2 control-label">Interval between repeat runs (in milliseconds)</label>
+
+  <div ng-if="teststep.runPattern.type === 'RepeatUntilPass'">
+    <div class="form-group required"
+         ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.waitBetweenRepeatRuns.$invalid }">
+      <label for="waitBetweenRepeatRuns" class="col-lg-3 control-label" title="in milliseconds">Wait between repeat runs</label>
+      <div class="col-lg-7">
+        <input name="waitBetweenRepeatRuns" id="waitBetweenRepeatRuns" type="text" class="form-control" required
+               ng-model="teststep.runPattern.waitBetweenRepeatRuns" ng-change="autoSave(teststepForm.$valid)"
+               ng-readonly="appStatus.isForbidden()">
+        <div ng-show="savingStatus.submitted && teststepForm.waitBetweenRepeatRuns.$invalid" class="help-block">
+          <p ng-show="teststepForm.waitBetweenRepeatRuns.$error.required">Wait between repeat runs is required</p>
+        </div>
+      </div>
+    </div>
+    <div class="form-group required"
+         ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.repeatUntilPassTimeout.$invalid }">
+      <label for="repeatUntilPassTimeout" class="col-lg-3 control-label" title="in milliseconds">Timeout</label>
+      <div class="col-lg-7">
+        <input name="repeatUntilPassTimeout" id="repeatUntilPassTimeout" type="text" class="form-control" required
+               ng-model="teststep.runPattern.timeout" ng-change="autoSave(teststepForm.$valid)"
+               ng-readonly="appStatus.isForbidden()">
+        <div ng-show="savingStatus.submitted && teststepForm.repeatUntilPassTimeout.$invalid" class="help-block">
+          <p ng-show="teststepForm.repeatUntilPassTimeout.$error.required">Timeout is required</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="teststep.runPattern.type === 'RepeatFixedNumberOfTimes'" class="form-group required"
+       ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.repeatTimes.$invalid }">
+    <label for="repeatUntilPassTimeout" class="col-lg-3 control-label" title="in milliseconds">Repeat times</label>
     <div class="col-lg-7">
-      <input name="intervalBetweenRepeatRuns" id="intervalBetweenRepeatRuns" type="text" class="form-control" required
-             ng-model="teststep.runPattern.intervalBetweenRepeatRuns" ng-change="autoSave(teststepForm.$valid)"
+      <input name="repeatTimes" id="repeatTimes" type="text" class="form-control" required
+             ng-model="teststep.runPattern.repeatTimes" ng-change="autoSave(teststepForm.$valid)"
              ng-readonly="appStatus.isForbidden()">
-      <div ng-show="savingStatus.submitted && teststepForm.intervalBetweenRepeatRuns.$invalid" class="help-block">
-        <p ng-show="teststepForm.intervalBetweenRepeatRuns.$error.required">Interval between repeat runs is required</p>
+      <div ng-show="savingStatus.submitted && teststepForm.repeatTimes.$invalid" class="help-block">
+        <p ng-show="teststepForm.repeatTimes.$error.required">Repeat times is required</p>
       </div>
     </div>
   </div>
