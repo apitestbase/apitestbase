@@ -24,16 +24,18 @@ public interface TeststepAtomicRunResultDAO {
             "FOREIGN KEY (teststep_individualrun_id) REFERENCES teststep_individualrun(id) ON DELETE CASCADE)")
     void createTableIfNotExists();
 
-    @SqlUpdate("insert into teststep_atomicrun_result (teststep_run_id, teststep_individualrun_id, teststep, " +
-            "response, info_message, error_message, assertion_verifications) values (:teststepRunId, " +
-            ":teststepIndividualRunId, :t.teststep, :response, :t.infoMessage, :t.errorMessage, :assertionVerifications)")
+    @SqlUpdate("insert into teststep_atomicrun_result (teststep_run_id, teststep_repeatrun_id, " +
+            "teststep_individualrun_id, teststep, response, info_message, error_message, assertion_verifications) " +
+            "values (:teststepRunId, :teststepRepeatRunId, :teststepIndividualRunId, :t.teststep, :response, " +
+            ":t.infoMessage, :t.errorMessage, :assertionVerifications)")
     @GetGeneratedKeys("id")
-    long _insert(@Bind("teststepRunId") long teststepRunId,
+    long _insert(@Bind("teststepRunId") long teststepRunId, @Bind("teststepRepeatRunId") Long teststepRepeatRunId,
                  @Bind("teststepIndividualRunId") Long teststepIndividualRunId,
                  @BindBean("t") TeststepAtomicRunResult atomicRunResult,
                  @Bind("response") String response, @Bind("assertionVerifications") String assertionVerifications);
 
-    default void insert(long teststepRunId, Long teststepIndividualRunId, TeststepAtomicRunResult atomicRunResult)
+    default void insert(long teststepRunId, Long teststepRepeatRunId, Long teststepIndividualRunId,
+                        TeststepAtomicRunResult atomicRunResult)
             throws JsonProcessingException {
         //  remove contents that are not to be serialized into the teststep column
         Teststep teststep = atomicRunResult.getTeststep();
@@ -47,7 +49,7 @@ public interface TeststepAtomicRunResultDAO {
         ObjectMapper objectMapper = new ObjectMapper();
         String responseStr = objectMapper.writeValueAsString(atomicRunResult.getResponse());
         String assertionVeStr = objectMapper.writeValueAsString(atomicRunResult.getAssertionVerifications());
-        _insert(teststepRunId, teststepIndividualRunId, atomicRunResult, responseStr, assertionVeStr);
+        _insert(teststepRunId, teststepRepeatRunId, teststepIndividualRunId, atomicRunResult, responseStr, assertionVeStr);
     }
 
     @SqlQuery("select * from teststep_atomicrun_result where teststep_run_id = :teststepRunId")

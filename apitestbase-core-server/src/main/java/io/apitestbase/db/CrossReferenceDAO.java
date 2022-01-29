@@ -31,6 +31,9 @@ public interface CrossReferenceDAO {
     TeststepRunDAO teststepRunDAO();
 
     @CreateSqlObject
+    TeststepRepeatRunDAO teststepRepeatRunDAO();
+
+    @CreateSqlObject
     TeststepIndividualRunDAO teststepIndividualRunDAO();
 
     @CreateSqlObject

@@ -35,15 +35,19 @@ public interface TeststepIndividualRunDAO extends CrossReferenceDAO {
         return individualRuns;
     }
 
-    @SqlUpdate("insert into teststep_individualrun (teststep_run_id, caption, starttime, duration, result) values (" +
-            ":teststepRunId, :t.caption, :t.startTime, :t.duration, :t.result)")
+    @SqlUpdate("insert into teststep_individualrun (teststep_run_id, teststep_repeatrun_id, caption, starttime, " +
+            "duration, result) values (:teststepRunId, :teststepRepeatRunId, :t.caption, :t.startTime, :t.duration, " +
+            ":t.result)")
     @GetGeneratedKeys("id")
-    long _insert(@Bind("teststepRunId") long teststepRunId, @BindBean("t") TeststepIndividualRun teststepIndividualRun);
+    long _insert(@Bind("teststepRunId") long teststepRunId, @Bind("teststepRepeatRunId") Long teststepRepeatRunId,
+                 @BindBean("t") TeststepIndividualRun teststepIndividualRun);
 
-    default void insert(long teststepRunId, TeststepIndividualRun teststepIndividualRun) throws JsonProcessingException {
-        long id = _insert(teststepRunId, teststepIndividualRun);
+    default void insert(long teststepRunId, Long teststepRepeatRunId, TeststepIndividualRun teststepIndividualRun)
+            throws JsonProcessingException {
+        long id = _insert(teststepRunId, teststepRepeatRunId, teststepIndividualRun);
         teststepIndividualRun.setId(id);
-        teststepAtomicRunResultDAO().insert(teststepRunId, id, teststepIndividualRun.getAtomicRunResult());
+        teststepAtomicRunResultDAO().insert(teststepRunId, teststepRepeatRunId, id,
+                teststepIndividualRun.getAtomicRunResult());
     }
 
     @SqlQuery("select * from teststep_individualrun where id = :teststepIndividualRunId")

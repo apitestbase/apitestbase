@@ -5,4 +5,8 @@ import java.util.List;
 
 public class DataDrivenTeststepRepeatRun extends TeststepRepeatRun {
     private List<TeststepIndividualRun> individualRuns = new ArrayList<>();
+
+    public List<TeststepIndividualRun> getIndividualRuns() {
+        return individualRuns;
+    }
 }

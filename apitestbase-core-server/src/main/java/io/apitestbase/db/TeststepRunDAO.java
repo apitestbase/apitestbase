@@ -1,10 +1,7 @@
 package io.apitestbase.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.apitestbase.models.testrun.teststeprun.DataDrivenTeststepRun;
-import io.apitestbase.models.testrun.teststeprun.RegularTeststepRun;
-import io.apitestbase.models.testrun.teststeprun.TeststepIndividualRun;
-import io.apitestbase.models.testrun.teststeprun.TeststepRun;
+import io.apitestbase.models.testrun.teststeprun.*;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -37,12 +34,17 @@ public interface TeststepRunDAO extends CrossReferenceDAO {
         long id = _insert(testcaseRunId, testcaseIndividualRunId, teststepRun);
 
         if (teststepRun instanceof RegularTeststepRun) {
-            teststepAtomicRunResultDAO().insert(id, null,
+            teststepAtomicRunResultDAO().insert(id, null, null,
                     ((RegularTeststepRun) teststepRun).getAtomicRunResult());
         } else if (teststepRun instanceof DataDrivenTeststepRun) {
             DataDrivenTeststepRun dataDrivenTeststepRun = (DataDrivenTeststepRun) teststepRun;
             for (TeststepIndividualRun teststepIndividualRun: dataDrivenTeststepRun.getIndividualRuns()) {
-                teststepIndividualRunDAO().insert(id, teststepIndividualRun);
+                teststepIndividualRunDAO().insert(id, null, teststepIndividualRun);
+            }
+        } else if (teststepRun instanceof RepeatedTeststepRun) {
+            RepeatedTeststepRun repeatedTeststepRun = (RepeatedTeststepRun) teststepRun;
+            for (TeststepRepeatRun teststepRepeatRun: repeatedTeststepRun.getRepeatRuns()) {
+                teststepRepeatRunDAO().insert(id, teststepRepeatRun);
             }
         }
 

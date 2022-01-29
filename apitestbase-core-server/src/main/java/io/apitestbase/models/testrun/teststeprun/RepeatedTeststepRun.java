@@ -4,5 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepeatedTeststepRun extends TeststepRun {
-    private List<TeststepRepeatRun> teststepRepeatRuns = new ArrayList<>();
+    private List<TeststepRepeatRun> repeatRuns = new ArrayList<>();
+
+    public List<TeststepRepeatRun> getRepeatRuns() {
+        return repeatRuns;
+    }
 }
