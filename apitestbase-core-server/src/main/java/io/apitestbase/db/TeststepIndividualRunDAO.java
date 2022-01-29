@@ -25,6 +25,9 @@ public interface TeststepIndividualRunDAO extends CrossReferenceDAO {
     @SqlQuery("select * from teststep_individualrun where teststep_run_id = :teststepRunId")
     List<TeststepIndividualRun> _findByTeststepRunId(@Bind("teststepRunId") long teststepRunId);
 
+    @SqlQuery("select * from teststep_individualrun where teststep_repeatrun_id = :teststepRepeatRunId")
+    List<TeststepIndividualRun> _findByTeststepRepeatRunId(@Bind("teststepRepeatRunId") long teststepRepeatRunId);
+
     default List<TeststepIndividualRun> findByTeststepRunId(long teststepRunId) {
         List<TeststepIndividualRun> individualRuns = _findByTeststepRunId(teststepRunId);
         for (TeststepIndividualRun individualRun: individualRuns) {
@@ -58,5 +61,15 @@ public interface TeststepIndividualRunDAO extends CrossReferenceDAO {
         individualRun.setAtomicRunResult(teststepAtomicRunResultDAO().findByTeststepIndividualRunId(individualRun.getId()));
 
         return individualRun;
+    }
+
+    default List<TeststepIndividualRun> findByTeststepRepeatRunId(long teststepRepeatRunId) {
+        List<TeststepIndividualRun> individualRuns = _findByTeststepRepeatRunId(teststepRepeatRunId);
+        for (TeststepIndividualRun individualRun: individualRuns) {
+            individualRun.setAtomicRunResult(
+                    teststepAtomicRunResultDAO().findByTeststepIndividualRunId(individualRun.getId()));
+        }
+
+        return individualRuns;
     }
 }

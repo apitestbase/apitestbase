@@ -12,7 +12,7 @@
   border-bottom: 1px solid black;
 }
 
-.data-driven-testcase-step-list, .data-driven-teststep-caption-list {
+.data-driven-testcase-step-list, .data-driven-teststep-caption-list, .teststep-repeatrun-list {
   padding-left: 20px;
 }
 

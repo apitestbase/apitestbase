@@ -57,4 +57,7 @@ public interface TeststepAtomicRunResultDAO {
 
     @SqlQuery("select * from teststep_atomicrun_result where teststep_individualrun_id = :teststepIndividualRunId")
     TeststepAtomicRunResult findByTeststepIndividualRunId(@Bind("teststepIndividualRunId") long teststepIndividualRunId);
+
+    @SqlQuery("select * from teststep_atomicrun_result where teststep_repeatrun_id = :teststepRepeatRunId")
+    TeststepAtomicRunResult findFirstByTeststepRepeatRunId(@Bind("teststepRepeatRunId") long teststepRepeatRunId);
 }

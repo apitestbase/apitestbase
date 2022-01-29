@@ -146,6 +146,7 @@ public class TestcaseStepRunner {
             TestResult result = new AtomicTeststepRunner().run(LOGGER, regularTeststepRepeatRun.getAtomicRunResult(),
                     teststep, utilsDAO, referenceableStringProperties, referenceableEndpointProperties,
                     testcaseRunContext, testcaseIndividualRunContext);
+            regularTeststepRepeatRun.setDuration(new Date().getTime() - startTime.getTime());
             regularTeststepRepeatRun.setResult(result);
             return regularTeststepRepeatRun;
         } else {
@@ -192,6 +193,7 @@ public class TestcaseStepRunner {
         runDataDrivenTeststepIndividuals(teststep.getDataTable(), stepRepeatRun.getIndividualRuns(), teststep, utilsDAO,
                 referenceableStringProperties, referenceableEndpointProperties, testcaseRunContext, testcaseIndividualRunContext);
 
+        stepRepeatRun.setDuration(new Date().getTime() - startTime.getTime());
         for (TeststepIndividualRun individualRun: stepRepeatRun.getIndividualRuns()) {
             if (TestResult.FAILED == individualRun.getResult()) {
                 stepRepeatRun.setResult(TestResult.FAILED);
