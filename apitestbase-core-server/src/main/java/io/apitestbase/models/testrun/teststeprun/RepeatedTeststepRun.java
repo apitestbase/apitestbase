@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepeatedTeststepRun extends TeststepRun {
+    public static final int REPEAT_CAP = 1000;
+
     @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private List<TeststepRepeatRun> repeatRuns = new ArrayList<>();
 

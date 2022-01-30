@@ -78,7 +78,7 @@ public class TestcaseStepRunner {
                         referenceableStringProperties, referenceableEndpointProperties, testcaseRunContext,
                         testcaseIndividualRunContext);
                 teststepRepeatRun.setIndex(index);
-                repeatedTeststepRun.getRepeatRuns().add(teststepRepeatRun);
+                addRepeatRun(teststep.getName(), repeatedTeststepRun, teststepRepeatRun);
                 repeatRunPassed = teststepRepeatRun.getResult() == TestResult.PASSED;
             } while (!repeatRunPassed && System.currentTimeMillis() < timeoutTime.getTime());
             repeatedTeststepRun.setResult(repeatRunPassed ? TestResult.PASSED : TestResult.FAILED);
@@ -103,7 +103,7 @@ public class TestcaseStepRunner {
                         referenceableStringProperties, referenceableEndpointProperties, testcaseRunContext,
                         testcaseIndividualRunContext);
                 teststepRepeatRun.setIndex(i);
-                repeatedTeststepRun.getRepeatRuns().add(teststepRepeatRun);
+                addRepeatRun(teststep.getName(), repeatedTeststepRun, teststepRepeatRun);
                 if (teststepRepeatRun.getResult() == TestResult.FAILED) {
                     repeatedTeststepRun.setResult(TestResult.FAILED);
                 }
@@ -118,6 +118,15 @@ public class TestcaseStepRunner {
         stepRun.setDuration(new Date().getTime() - stepRun.getStartTime().getTime());
 
         return stepRun;
+    }
+
+    private void addRepeatRun(String stepName, RepeatedTeststepRun repeatedTeststepRun, TeststepRepeatRun repeatRun) {
+        if (repeatedTeststepRun.getRepeatRuns().size() >= RepeatedTeststepRun.REPEAT_CAP) {
+            throw new IllegalStateException("Teststep '" + stepName + "' is repeating more than " +
+                    RepeatedTeststepRun.REPEAT_CAP + " times.");
+        } else {
+            repeatedTeststepRun.getRepeatRuns().add(repeatRun);
+        }
     }
 
     private TeststepRun runTeststep(Date startTime, Teststep teststep, UtilsDAO utilsDAO,
