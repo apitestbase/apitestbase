@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataDrivenTestcaseRun extends TestcaseRun {
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private List<TestcaseIndividualRun> individualRuns = new ArrayList<>();
 
     public DataDrivenTestcaseRun() {}

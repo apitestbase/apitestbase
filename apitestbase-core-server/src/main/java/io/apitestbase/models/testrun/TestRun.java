@@ -7,12 +7,12 @@ import io.apitestbase.resources.ResourceJsonViews;
 import java.util.Date;
 
 public class TestRun {
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private long id;        //  id of corresponding database record
     private Date startTime;
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private long duration;              //  in milliseconds
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private TestResult result;
 
     public long getId() {

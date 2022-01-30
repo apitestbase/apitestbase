@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegularTestcaseRun extends TestcaseRun {
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private List<TeststepRun> stepRuns = new ArrayList<>();
 
     public RegularTestcaseRun() {}

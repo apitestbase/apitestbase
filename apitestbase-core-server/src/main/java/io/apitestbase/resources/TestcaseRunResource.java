@@ -40,7 +40,7 @@ public class TestcaseRunResource {
     }
 
     @POST @Path("testcaseruns") @PermitAll
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws IOException {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         TestcaseRunner testcaseRunner;

@@ -5,7 +5,7 @@ public class ResourceJsonViews {
 
     public static class DataTableUIGrid {}
 
-    public static class TestcaseRunResultOnTestcaseEditView {}
+    public static class TestcaseRunOutlineOnTestcaseEditView {}
 
     public static class TestcaseExport {}
 

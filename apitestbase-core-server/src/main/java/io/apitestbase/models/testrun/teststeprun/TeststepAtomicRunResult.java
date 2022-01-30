@@ -15,7 +15,7 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class TeststepAtomicRunResult {
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private Teststep teststep;
     private APIResponse response;            //  API response (could be null when there is no response, no endpoint, no API invocation, or response is not used)
     private String infoMessage;         //  some additional information when the test step finishes running successfully

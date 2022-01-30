@@ -12,9 +12,9 @@ import java.util.List;
  * An individual run of a data driven test case, corresponding to one row in the data table.
  */
 public class TestcaseIndividualRun extends TestRun {
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private String caption;      //  caption of the data table row
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private List<TeststepRun> stepRuns = new ArrayList<>();
 
     public String getCaption() {

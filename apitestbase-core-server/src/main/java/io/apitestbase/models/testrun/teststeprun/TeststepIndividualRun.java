@@ -5,9 +5,8 @@ import io.apitestbase.models.testrun.TestRun;
 import io.apitestbase.resources.ResourceJsonViews;
 
 public class TeststepIndividualRun extends TestRun {
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private String caption;      //  caption of the data table row
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private TeststepAtomicRunResult atomicRunResult = new TeststepAtomicRunResult();
 
     public String getCaption() {

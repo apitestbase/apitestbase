@@ -1,11 +1,8 @@
 package io.apitestbase.models.testrun.teststeprun;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.models.teststep.Teststep;
-import io.apitestbase.resources.ResourceJsonViews;
 
 public class RegularTeststepRun extends TeststepRun {
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private TeststepAtomicRunResult atomicRunResult = new TeststepAtomicRunResult();
 
     public RegularTeststepRun(TeststepRun stepRun) {

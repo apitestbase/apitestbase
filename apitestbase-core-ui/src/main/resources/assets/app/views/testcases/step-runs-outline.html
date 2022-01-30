@@ -4,14 +4,14 @@
       <a ng-if="stepRun.atomicRunResult" ng-click="showStepRunHTMLReport(stepRun.id)" href="">
         <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',
                   'text-lime' : stepRun.result === 'Passed' }">
-          <strong>{{ stepRun.atomicRunResult.teststep.name }} ({{stepRun.duration | number}} ms)</strong>
+          <strong>{{ stepRun.metaTeststep.name }} ({{ stepRun.duration | number }} ms)</strong>
         </h5>
       </a>
       <div ng-if="stepRun.individualRuns" uib-accordion-group class="panel-default">
         <uib-accordion-heading>
           <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',
                   'text-lime' : stepRun.result === 'Passed' }">
-            <strong>{{ stepRun.individualRuns[0].atomicRunResult.teststep.name }} ({{ stepRun.duration | number }} ms)</strong>
+            <strong>{{ stepRun.metaTeststep.name }} ({{ stepRun.duration | number }} ms)</strong>
           </h5>
         </uib-accordion-heading>
         <ul class="list-unstyled">
@@ -29,18 +29,15 @@
         <uib-accordion-heading>
           <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',
                   'text-lime' : stepRun.result === 'Passed' }">
-            <strong>{{ stepRun.repeatRuns[0].atomicRunResult ? stepRun.repeatRuns[0].atomicRunResult.teststep.name :
-              stepRun.repeatRuns[0].individualRuns[0].atomicRunResult.teststep.name }} ({{ stepRun.duration | number }} ms)</strong>
+            <strong>{{ stepRun.metaTeststep.name }} ({{ stepRun.duration | number }} ms)</strong>
           </h5>
         </uib-accordion-heading>
         <ul class="list-unstyled">
-          <li ng-repeat="individualRun in stepRun.individualRuns">
-            <a ng-click="showStepIndividualRunHTMLReport(individualRun.id)" href="">
-              <h5 ng-class="{ 'text-red' : individualRun.result === 'Failed',
-                    'text-lime' : individualRun.result === 'Passed' }">
-                <strong>[{{ individualRun.caption }}] ({{ individualRun.duration | number }} ms)</strong>
-              </h5>
-            </a>
+          <li ng-repeat="repeatRun in stepRun.repeatRuns">
+            <h5 ng-class="{ 'text-red' : repeatRun.result === 'Failed',
+                  'text-lime' : repeatRun.result === 'Passed' }">
+              <strong>&lt;Repeat run {{ repeatRun.index }}&gt; ({{ repeatRun.duration | number }} ms)</strong>
+            </h5>
           </li>
         </ul>
       </div>

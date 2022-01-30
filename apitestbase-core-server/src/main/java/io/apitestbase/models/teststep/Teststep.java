@@ -56,7 +56,7 @@ public class Teststep {
     @JsonView(ResourceJsonViews.TeststepEdit.class)
     private long testcaseId;
     private short sequence;
-    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class,
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class,
             ResourceJsonViews.TestcaseExport.class})
     private String name;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
