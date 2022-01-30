@@ -131,7 +131,7 @@ angular.module('apitestbase').controller('TestcasesController', ['$scope', 'Test
       });
     };
 
-    $scope.showStepRunHTMLReport = function(stepRunId) {
+    $scope.showRegularStepRunHTMLReport = function(stepRunId) {
       TestcaseRuns.getStepRunHTMLReport({ stepRunId: stepRunId }, showReportModal,
         function(response) {
           GeneralUtils.openErrorHTTPResponseModal(response);
@@ -141,6 +141,14 @@ angular.module('apitestbase').controller('TestcasesController', ['$scope', 'Test
 
     $scope.showStepIndividualRunHTMLReport = function(stepIndividualRunId) {
       TestcaseRuns.getStepIndividualRunHTMLReport({ stepIndividualRunId: stepIndividualRunId }, showReportModal,
+        function(response) {
+          GeneralUtils.openErrorHTTPResponseModal(response);
+        }
+      );
+    };
+
+    $scope.showRegularStepRepeatRunHTMLReport = function(stepRepeatRunId) {
+      TestcaseRuns.getStepRepeatRunHTMLReport({ stepRepeatRunId: stepRepeatRunId }, showReportModal,
         function(response) {
           GeneralUtils.openErrorHTTPResponseModal(response);
         }

@@ -73,4 +73,12 @@ public interface TeststepRepeatRunDAO extends CrossReferenceDAO {
             return regularTeststepRepeatRun;
         }
     }
+
+    @SqlQuery("select * from teststep_repeatrun where id = :id")
+    TeststepRepeatRun _findById(@Bind("id") long id);
+
+    default TeststepRepeatRun findById(long id) {
+        TeststepRepeatRun stepRepeatRun = _findById(id);
+        return resolveTeststepRepeatRun(stepRepeatRun);
+    }
 }
