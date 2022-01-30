@@ -17,10 +17,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME;
@@ -75,10 +72,11 @@ public class TestcaseStepRunner {
                 }
                 Date repeatRunStartTime = new Date();
                 LOGGER.info("Start test step repeat run " + index);
-                referenceableStringProperties.put(
+                Map<String, String> referenceableStringPropertiesShallowCopy = new HashMap<>(referenceableStringProperties);
+                referenceableStringPropertiesShallowCopy.put(
                         APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_REPEAT_RUN_INDEX, String.valueOf(index));
                 teststepRepeatRun = runTeststepRepeat(repeatRunStartTime, teststep, utilsDAO,
-                        referenceableStringProperties, referenceableEndpointProperties, testcaseRunContext,
+                        referenceableStringPropertiesShallowCopy, referenceableEndpointProperties, testcaseRunContext,
                         testcaseIndividualRunContext);
                 teststepRepeatRun.setIndex(index);
                 addRepeatRun(teststep.getName(), repeatedTeststepRun, teststepRepeatRun);
@@ -104,10 +102,11 @@ public class TestcaseStepRunner {
             repeatedTeststepRun.setResult(TestResult.PASSED);
             for (int i = 1; i < repeatTimes; i++) {
                 Date repeatRunStartTime = new Date();
-                referenceableStringProperties.put(
+                Map<String, String> referenceableStringPropertiesShallowCopy = new HashMap<>(referenceableStringProperties);
+                referenceableStringPropertiesShallowCopy.put(
                         APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_REPEAT_RUN_INDEX, String.valueOf(i));
                 TeststepRepeatRun teststepRepeatRun = runTeststepRepeat(repeatRunStartTime, teststep, utilsDAO,
-                        referenceableStringProperties, referenceableEndpointProperties, testcaseRunContext,
+                        referenceableStringPropertiesShallowCopy, referenceableEndpointProperties, testcaseRunContext,
                         testcaseIndividualRunContext);
                 teststepRepeatRun.setIndex(i);
                 addRepeatRun(teststep.getName(), repeatedTeststepRun, teststepRepeatRun);
