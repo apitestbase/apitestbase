@@ -1,6 +1,7 @@
 package io.apitestbase.models.testrun.teststeprun;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.resources.ResourceJsonViews;
 
 public class RegularTeststepRun extends TeststepRun {
@@ -22,5 +23,10 @@ public class RegularTeststepRun extends TeststepRun {
 
     public void setAtomicRunResult(TeststepAtomicRunResult atomicRunResult) {
         this.atomicRunResult = atomicRunResult;
+    }
+
+    @Override
+    public Teststep getMetaTeststep() {
+        return atomicRunResult.getTeststep();
     }
 }

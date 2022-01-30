@@ -25,6 +25,25 @@
           </li>
         </ul>
       </div>
+      <div ng-if="stepRun.repeatRuns" uib-accordion-group class="panel-default">
+        <uib-accordion-heading>
+          <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',
+                  'text-lime' : stepRun.result === 'Passed' }">
+            <strong>{{ stepRun.repeatRuns[0].atomicRunResult ? stepRun.repeatRuns[0].atomicRunResult.teststep.name :
+              stepRun.repeatRuns[0].individualRuns[0].atomicRunResult.teststep.name }} ({{ stepRun.duration | number }} ms)</strong>
+          </h5>
+        </uib-accordion-heading>
+        <ul class="list-unstyled">
+          <li ng-repeat="individualRun in stepRun.individualRuns">
+            <a ng-click="showStepIndividualRunHTMLReport(individualRun.id)" href="">
+              <h5 ng-class="{ 'text-red' : individualRun.result === 'Failed',
+                    'text-lime' : individualRun.result === 'Passed' }">
+                <strong>[{{ individualRun.caption }}] ({{ individualRun.duration | number }} ms)</strong>
+              </h5>
+            </a>
+          </li>
+        </ul>
+      </div>
     </li>
   </uib-accordion>
 </ul>

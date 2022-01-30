@@ -1,19 +1,7 @@
 <li>
-  <#if stepRun.atomicRunResult??>
-    <#assign stepName = stepRun.atomicRunResult.teststep.name>
-  <#elseif stepRun.individualRuns??>
-    <#assign stepName = stepRun.individualRuns[0].atomicRunResult.teststep.name>
-  <#elseif stepRun.repeatRuns??>
-    <#if stepRun.repeatRuns[0].atomicRunResult??>
-      <#assign stepName = stepRun.repeatRuns[0].atomicRunResult.teststep.name>
-    <#elseif stepRun.repeatRuns[0].individualRuns??>
-      <#assign stepName = stepRun.repeatRuns[0].individualRuns[0].atomicRunResult.teststep.name>
-    </#if>
-  </#if>
-
   <a href="#step-run-${ stepRun.id?string.computer }">
     <h5 class="test-result-color-${ stepRun.result }">
-      <strong>${ stepName }</strong>
+      <strong>${ stepRun.metaTeststep.name }</strong>
     </h5>
   </a>
 

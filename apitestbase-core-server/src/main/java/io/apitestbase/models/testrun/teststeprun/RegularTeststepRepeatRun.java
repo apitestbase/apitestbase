@@ -1,5 +1,7 @@
 package io.apitestbase.models.testrun.teststeprun;
 
+import io.apitestbase.models.teststep.Teststep;
+
 public class RegularTeststepRepeatRun extends TeststepRepeatRun {
     private TeststepAtomicRunResult atomicRunResult = new TeststepAtomicRunResult();
 
@@ -19,5 +21,10 @@ public class RegularTeststepRepeatRun extends TeststepRepeatRun {
 
     public void setAtomicRunResult(TeststepAtomicRunResult atomicRunResult) {
         this.atomicRunResult = atomicRunResult;
+    }
+
+    @Override
+    public Teststep getMetaTeststep() {
+        return atomicRunResult.getTeststep();
     }
 }

@@ -1,14 +1,4 @@
-<#if stepRun.atomicRunResult??>
-  <#assign metaTeststep = stepRun.atomicRunResult.teststep>
-<#elseif stepRun.individualRuns??>
-  <#assign metaTeststep = stepRun.individualRuns[0].atomicRunResult.teststep>
-<#elseif stepRun.repeatRuns??>
-    <#if stepRun.repeatRuns[0].atomicRunResult??>
-      <#assign metaTeststep = stepRun.repeatRuns[0].atomicRunResult.teststep>
-    <#elseif stepRun.repeatRuns[0].individualRuns??>
-      <#assign metaTeststep = stepRun.repeatRuns[0].individualRuns[0].atomicRunResult.teststep>
-    </#if>
-</#if>
+<#assign metaTeststep = stepRun.metaTeststep>
 <#assign stepName = metaTeststep.name>
 <#assign stepType = metaTeststep.type>
 <#if metaTeststep.action??>  <#-- not all test steps have action (e.g. Wait step) -->

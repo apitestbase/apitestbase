@@ -1,5 +1,7 @@
 package io.apitestbase.models.testrun.teststeprun;
 
+import io.apitestbase.models.teststep.Teststep;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,5 +24,10 @@ public class DataDrivenTeststepRepeatRun extends TeststepRepeatRun {
 
     public void setIndividualRuns(List<TeststepIndividualRun> individualRuns) {
         this.individualRuns = individualRuns;
+    }
+
+    @Override
+    public Teststep getMetaTeststep() {
+        return individualRuns.get(0).getAtomicRunResult().getTeststep();
     }
 }

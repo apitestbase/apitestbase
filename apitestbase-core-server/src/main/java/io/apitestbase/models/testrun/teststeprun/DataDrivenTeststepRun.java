@@ -1,6 +1,7 @@
 package io.apitestbase.models.testrun.teststeprun;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.resources.ResourceJsonViews;
 
 import java.util.ArrayList;
@@ -25,5 +26,10 @@ public class DataDrivenTeststepRun extends TeststepRun {
 
     public void setIndividualRuns(List<TeststepIndividualRun> individualRuns) {
         this.individualRuns = individualRuns;
+    }
+
+    @Override
+    public Teststep getMetaTeststep() {
+        return individualRuns.get(0).getAtomicRunResult().getTeststep();
     }
 }
