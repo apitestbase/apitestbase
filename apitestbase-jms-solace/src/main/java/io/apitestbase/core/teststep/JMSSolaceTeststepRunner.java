@@ -19,10 +19,11 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
 
-public class JMSSolaceTeststepRunner extends TeststepRunner {
+public class JMSSolaceTeststepRunner extends TeststepActionRunner {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
-    public BasicTeststepRun _run() throws Exception {
+    @Override
+    public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();
         String action = teststep.getAction();
         if (teststep.getAction() == null) {
@@ -33,7 +34,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
             throw new Exception("Destination type not specified.");
         }
 
-        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+        TeststepActionRunResult basicTeststepRun = new TeststepActionRunResult();
 
         APIResponse response = null;
         Endpoint endpoint = teststep.getEndpoint();

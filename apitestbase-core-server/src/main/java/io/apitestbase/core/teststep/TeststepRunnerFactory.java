@@ -47,14 +47,14 @@ public class TeststepRunnerFactory {
      * @param testcaseRunContext
      * @return
      */
-    public TeststepRunner newTeststepRunner(Teststep teststep, UtilsDAO utilsDAO,
-                                            Map<String, String> referenceableStringProperties,
-                                            Map<String, Endpoint> referenceableEndpointProperties,
-                                            TestcaseRunContext testcaseRunContext,
-                                            TestcaseIndividualRunContext testcaseIndividualRunContext) throws Exception {
-        TeststepRunner runner;
+    public TeststepActionRunner newTeststepRunner(Teststep teststep, UtilsDAO utilsDAO,
+                                                  Map<String, String> referenceableStringProperties,
+                                                  Map<String, Endpoint> referenceableEndpointProperties,
+                                                  TestcaseRunContext testcaseRunContext,
+                                                  TestcaseIndividualRunContext testcaseIndividualRunContext) throws Exception {
+        TeststepActionRunner runner;
         Class runnerClass = Class.forName(resolveTeststepRunnerClassName(teststep));
-        Constructor<TeststepRunner> constructor = runnerClass.getConstructor();
+        Constructor<TeststepActionRunner> constructor = runnerClass.getConstructor();
         runner = constructor.newInstance();
 
         resolveReferenceableStringProperties(teststep, referenceableStringProperties);

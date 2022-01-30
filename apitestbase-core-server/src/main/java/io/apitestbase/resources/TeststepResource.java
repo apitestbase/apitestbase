@@ -20,6 +20,8 @@ import io.apitestbase.utils.PasswordUtils;
 import io.apitestbase.utils.XMLUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -38,6 +40,8 @@ import static io.apitestbase.APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_ST
 
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeststepResource.class);
+
     private AppInfo appInfo;
     private TeststepDAO teststepDAO;
     private UDPDAO udpDAO;
@@ -150,7 +154,9 @@ public class TeststepResource {
      */
     @POST @Path("{teststepId}/run")
     @PermitAll
-    public BasicTeststepRun run(Teststep teststep) throws Exception {
+    public TeststepActionRunResult run(Teststep teststep) throws Exception {
+        LOGGER.info("Start test step '" + teststep.getName() + "' invocation/action");
+
         //  fetch API request binary if its type is file
         if (teststep.getApiRequest() instanceof APIRequestFile) {
             teststep.setApiRequest(teststepDAO.getAPIRequestById(teststep.getId()));
@@ -180,10 +186,12 @@ public class TeststepResource {
         }
 
         //  run the test step
-        TeststepRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
+        TeststepActionRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
                 teststep, utilsDAO, referenceableStringProperties, referenceableEndpointProperties,
                 null, null);
-        BasicTeststepRun basicTeststepRun = teststepRunner.run();
+        TeststepActionRunResult basicTeststepRun = teststepRunner.run();
+
+        LOGGER.info("Finish test step '" + teststep.getName() + "' invocation/action");
 
         //  for better display in browser, transform JSON/XML response to be pretty-printed
         switch (teststep.getType()) {

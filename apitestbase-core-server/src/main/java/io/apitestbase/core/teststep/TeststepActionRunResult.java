@@ -1,9 +1,9 @@
 package io.apitestbase.core.teststep;
 
 /**
- * Used for standalone test step running.
+ * Result of test step invocation or action run.
  */
-public class BasicTeststepRun {
+public class TeststepActionRunResult {
     private APIResponse response;            //  API response (could be null when there is no endpoint, no API invocation, or API invocation response is not used)
     private String infoMessage;         //  some additional information when the test step finishes running successfully
 

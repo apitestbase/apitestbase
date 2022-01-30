@@ -9,9 +9,9 @@ import io.apitestbase.utils.GeneralUtils;
 import java.util.Map;
 import java.util.UUID;
 
-public class HTTPStubsSetupTeststepRunner extends TeststepRunner {
+public class HTTPStubsSetupTeststepRunner extends TeststepActionRunner {
     @Override
-    public BasicTeststepRun _run() {
+    public TeststepActionRunResult run() {
         WireMockServer wireMockServer = getTestcaseRunContext().getWireMockServer();
 
         //  reset mock server
@@ -28,6 +28,6 @@ public class HTTPStubsSetupTeststepRunner extends TeststepRunner {
             }
         });
 
-        return new BasicTeststepRun();
+        return new TeststepActionRunResult();
     }
 }

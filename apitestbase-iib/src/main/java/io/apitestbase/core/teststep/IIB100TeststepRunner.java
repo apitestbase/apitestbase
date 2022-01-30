@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-public class IIB100TeststepRunner extends TeststepRunner {
+public class IIB100TeststepRunner extends TeststepActionRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(IIB100TeststepRunner.class);
 
     //  disable IIB 10 IntegrationAPI.jar's jetty logging (which pollutes StdErr)
@@ -39,7 +39,8 @@ public class IIB100TeststepRunner extends TeststepRunner {
         @Override public void ignore(Throwable ignored) {}
     }
 
-    public BasicTeststepRun _run() throws Exception {
+    @Override
+    public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();
 
         String action = teststep.getAction();
@@ -47,7 +48,7 @@ public class IIB100TeststepRunner extends TeststepRunner {
             throw new Exception("Action not specified.");
         }
 
-        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+        TeststepActionRunResult basicTeststepRun = new TeststepActionRunResult();
 
         Endpoint endpoint = teststep.getEndpoint();
         IIBEndpointProperties endpointProperties = (IIBEndpointProperties) endpoint.getOtherProperties();
@@ -128,7 +129,7 @@ public class IIB100TeststepRunner extends TeststepRunner {
         return messageFlowProxy;
     }
 
-    private void start(MessageFlowProxy messageFlowProxy, BasicTeststepRun basicTeststepRun) throws Exception {
+    private void start(MessageFlowProxy messageFlowProxy, TeststepActionRunResult basicTeststepRun) throws Exception {
         if (messageFlowProxy.isRunning()) {
             basicTeststepRun.setInfoMessage("Message flow is already running");
         } else {
@@ -137,7 +138,7 @@ public class IIB100TeststepRunner extends TeststepRunner {
         }
     }
 
-    private void stop(MessageFlowProxy messageFlowProxy, BasicTeststepRun basicTeststepRun) throws Exception {
+    private void stop(MessageFlowProxy messageFlowProxy, TeststepActionRunResult basicTeststepRun) throws Exception {
         if (messageFlowProxy.isRunning()) {
             messageFlowProxy.stop();
             basicTeststepRun.setInfoMessage("Message flow stopped");

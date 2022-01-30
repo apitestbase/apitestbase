@@ -39,6 +39,7 @@ public class TestcaseStepRunner {
 
         //  test step run starts
         Date stepRunStartTime = new Date();
+        LOGGER.info("Start running test step: " + teststep.getName());
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(stepRunStartTime));
 
@@ -62,6 +63,7 @@ public class TestcaseStepRunner {
                 throw new IllegalArgumentException("Invalid timeout value " + timeout + ". It must be a positive integer.");
             }
 
+            LOGGER.info("Start test step repeat run until pass");
             Date timeoutTime = DateUtils.addMilliseconds(stepRunStartTime, timeout);
             TeststepRepeatRun teststepRepeatRun;
             boolean repeatRunPassed;
@@ -72,6 +74,7 @@ public class TestcaseStepRunner {
                     Thread.sleep(waitBetweenRepeatRuns);
                 }
                 Date repeatRunStartTime = new Date();
+                LOGGER.info("Start test step repeat run " + index);
                 referenceableStringProperties.put(
                         APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_REPEAT_RUN_INDEX, String.valueOf(index));
                 teststepRepeatRun = runTeststepRepeat(repeatRunStartTime, teststep, utilsDAO,
@@ -80,10 +83,13 @@ public class TestcaseStepRunner {
                 teststepRepeatRun.setIndex(index);
                 addRepeatRun(teststep.getName(), repeatedTeststepRun, teststepRepeatRun);
                 repeatRunPassed = teststepRepeatRun.getResult() == TestResult.PASSED;
+                LOGGER.info("Finish test step repeat run " + index);
             } while (!repeatRunPassed && System.currentTimeMillis() < timeoutTime.getTime());
             repeatedTeststepRun.setResult(repeatRunPassed ? TestResult.PASSED : TestResult.FAILED);
 
             stepRun = repeatedTeststepRun;
+
+            LOGGER.info("Finish test step repeat run until pass");
         } else if (teststepRunPattern instanceof RepeatFixedNumberOfTimesTeststepRunPattern) {
             RepeatedTeststepRun repeatedTeststepRun = new RepeatedTeststepRun();
             repeatedTeststepRun.setStartTime(stepRunStartTime);
@@ -94,6 +100,7 @@ public class TestcaseStepRunner {
                 throw new IllegalArgumentException("Invalid repeatTimes value " + repeatTimes + ". It must be a positive integer.");
             }
 
+            LOGGER.info("Start test step repeat run fixed number of times");
             repeatedTeststepRun.setResult(TestResult.PASSED);
             for (int i = 1; i < repeatTimes; i++) {
                 Date repeatRunStartTime = new Date();
@@ -110,12 +117,14 @@ public class TestcaseStepRunner {
             }
 
             stepRun = repeatedTeststepRun;
+            LOGGER.info("Finish test step repeat run fixed number of times");
         } else {
             throw new IllegalArgumentException("Unsupported test step run pattern");
         }
 
         //  test step run ends
         stepRun.setDuration(new Date().getTime() - stepRun.getStartTime().getTime());
+        LOGGER.info("Finish running test step: " + teststep.getName());
 
         return stepRun;
     }

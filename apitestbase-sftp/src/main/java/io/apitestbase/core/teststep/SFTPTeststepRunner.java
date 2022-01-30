@@ -15,10 +15,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class SFTPTeststepRunner extends TeststepRunner {
-    public BasicTeststepRun _run() throws Exception {
+public class SFTPTeststepRunner extends TeststepActionRunner {
+    @Override
+    public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();
-        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+        TeststepActionRunResult basicTeststepRun = new TeststepActionRunResult();
         SFTPTeststepProperties otherProperties = (SFTPTeststepProperties) teststep.getOtherProperties();
         Endpoint endpoint = teststep.getEndpoint();
 

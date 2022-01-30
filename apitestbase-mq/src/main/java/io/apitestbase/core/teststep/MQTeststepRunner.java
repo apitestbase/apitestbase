@@ -22,10 +22,11 @@ import java.io.IOException;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
-public class MQTeststepRunner extends TeststepRunner {
+public class MQTeststepRunner extends TeststepActionRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(MQTeststepRunner.class);
 
-    public BasicTeststepRun _run() throws Exception {
+    @Override
+    public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();
         String action = teststep.getAction();
         if (teststep.getAction() == null) {
@@ -36,7 +37,7 @@ public class MQTeststepRunner extends TeststepRunner {
             throw new Exception("Destination type not specified.");
         }
 
-        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+        TeststepActionRunResult basicTeststepRun = new TeststepActionRunResult();
 
         APIResponse response = null;
         Endpoint endpoint = teststep.getEndpoint();

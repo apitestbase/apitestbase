@@ -21,10 +21,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class FTPTeststepRunner extends TeststepRunner {
-    public BasicTeststepRun _run() throws Exception {
+public class FTPTeststepRunner extends TeststepActionRunner {
+    @Override
+    public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();
-        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+        TeststepActionRunResult basicTeststepRun = new TeststepActionRunResult();
         FTPTeststepProperties otherProperties = (FTPTeststepProperties) teststep.getOtherProperties();
         Endpoint endpoint = teststep.getEndpoint();
 

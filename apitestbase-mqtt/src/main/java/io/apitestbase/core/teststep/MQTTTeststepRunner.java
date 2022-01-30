@@ -9,9 +9,9 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-public class MQTTTeststepRunner extends TeststepRunner {
+public class MQTTTeststepRunner extends TeststepActionRunner {
     @Override
-    public BasicTeststepRun _run() throws Exception {
+    public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();
         MQTTTeststepProperties otherProperties = (MQTTTeststepProperties) teststep.getOtherProperties();
 
@@ -37,6 +37,6 @@ public class MQTTTeststepRunner extends TeststepRunner {
             mqttClient.disconnect();
         }
 
-        return new BasicTeststepRun();
+        return new TeststepActionRunResult();
     }
 }

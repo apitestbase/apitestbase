@@ -8,7 +8,7 @@ import java.net.URL;
 /**
  * This is actually a factory and delegator instead of the actual runner.
  */
-public class IIBTeststepRunner extends TeststepRunner {
+public class IIBTeststepRunner extends TeststepActionRunner {
     private static IIBTeststepRunnerClassLoader iib100ClassLoader;
     static {
         URL[] iib100URLs;
@@ -28,14 +28,15 @@ public class IIBTeststepRunner extends TeststepRunner {
         iib100ClassLoader = new IIBTeststepRunnerClassLoader(iib100URLs, IIBTeststepRunner.class.getClassLoader());
     }
 
-    public BasicTeststepRun _run() throws Exception {
+    @Override
+    public TeststepActionRunResult run() throws Exception {
         Class actualRunnerClass = Class.forName("io.apitestbase.core.teststep.IIB100TeststepRunner", false, iib100ClassLoader);
-        Constructor<TeststepRunner> constructor = actualRunnerClass.getConstructor();
-        TeststepRunner actualRunner = constructor.newInstance();
+        Constructor<TeststepActionRunner> constructor = actualRunnerClass.getConstructor();
+        TeststepActionRunner actualRunner = constructor.newInstance();
         actualRunner.setTeststep(getTeststep());
         actualRunner.setTestcaseRunContext(getTestcaseRunContext());
         actualRunner.setTestcaseIndividualRunContext(getTestcaseIndividualRunContext());
 
-        return actualRunner._run();
+        return actualRunner.run();
     }
 }

@@ -3,30 +3,19 @@ package io.apitestbase.core.teststep;
 import io.apitestbase.core.testcase.TestcaseIndividualRunContext;
 import io.apitestbase.core.testcase.TestcaseRunContext;
 import io.apitestbase.models.teststep.Teststep;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public abstract class TeststepRunner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TeststepRunner.class);
-
+/**
+ * Class for running test step invocation or action.
+ */
+public abstract class TeststepActionRunner {
     private Teststep teststep;
     private String decryptedEndpointPassword;
     private TestcaseRunContext testcaseRunContext;    //  set when running test case
     private TestcaseIndividualRunContext testcaseIndividualRunContext;    //  set when running data driven test case
 
-    protected TeststepRunner() {}
+    protected TeststepActionRunner() {}
 
-    public BasicTeststepRun run() throws Exception {
-        LOGGER.info("Start running test step: " + teststep.getName());
-
-        BasicTeststepRun result = _run();
-
-        LOGGER.info("Finish running test step: " + teststep.getName());
-
-        return result;
-    }
-
-    protected abstract BasicTeststepRun _run() throws Exception;
+    public abstract TeststepActionRunResult run() throws Exception;
 
     public void setDecryptedEndpointPassword(String decryptedEndpointPassword) {
         this.decryptedEndpointPassword = decryptedEndpointPassword;

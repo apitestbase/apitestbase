@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DBTeststepRunner extends TeststepRunner {
+public class DBTeststepRunner extends TeststepActionRunner {
     private static ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
     static {
@@ -45,9 +45,10 @@ public class DBTeststepRunner extends TeststepRunner {
         }
     }
 
-    public BasicTeststepRun _run() throws Exception {
+    @Override
+    public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();
-        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+        TeststepActionRunResult basicTeststepRun = new TeststepActionRunResult();
         DBAPIResponse response = new DBAPIResponse();
         DBRequest dbRequest = (DBRequest) teststep.getApiRequest();
         String sqlScript = dbRequest.getSqlScript();

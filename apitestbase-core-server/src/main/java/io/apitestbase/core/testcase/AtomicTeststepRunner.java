@@ -3,7 +3,7 @@ package io.apitestbase.core.testcase;
 import com.rits.cloning.Cloner;
 import io.apitestbase.core.propertyextractor.PropertyExtractorRunner;
 import io.apitestbase.core.propertyextractor.PropertyExtractorRunnerFactory;
-import io.apitestbase.core.teststep.BasicTeststepRun;
+import io.apitestbase.core.teststep.TeststepActionRunResult;
 import io.apitestbase.core.teststep.HTTPAPIResponse;
 import io.apitestbase.core.teststep.TeststepRunnerFactory;
 import io.apitestbase.db.UtilsDAO;
@@ -32,7 +32,7 @@ public class AtomicTeststepRunner {
                           TestcaseIndividualRunContext testcaseIndividualRunContext)
             throws IOException {
         TestResult result = TestResult.PASSED;
-        BasicTeststepRun basicTeststepRun;
+        TeststepActionRunResult basicTeststepRun;
         boolean exceptionOccurred = false;  //  use this flag instead of checking stepRun.getErrorMessage() != null, for code clarity
         Teststep clonedTeststep = new Cloner().deepClone(teststep);
         atomicRunResult.setTeststep(clonedTeststep);

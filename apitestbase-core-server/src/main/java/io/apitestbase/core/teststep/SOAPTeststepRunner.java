@@ -7,10 +7,11 @@ import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.apirequest.SOAPRequest;
 import io.apitestbase.utils.GeneralUtils;
 
-public class SOAPTeststepRunner extends TeststepRunner {
-    public BasicTeststepRun _run() throws Exception {
+public class SOAPTeststepRunner extends TeststepActionRunner {
+    @Override
+    public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();
-        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+        TeststepActionRunResult basicTeststepRun = new TeststepActionRunResult();
         HTTPOrSOAPTeststepProperties otherProperties = (HTTPOrSOAPTeststepProperties) teststep.getOtherProperties();
         Endpoint endpoint = teststep.getEndpoint();
         SOAPRequest apiRequest = (SOAPRequest) teststep.getApiRequest();

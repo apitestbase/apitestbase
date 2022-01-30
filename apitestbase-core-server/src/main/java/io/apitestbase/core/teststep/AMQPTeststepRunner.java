@@ -11,10 +11,11 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AMQPTeststepRunner extends TeststepRunner {
+public class AMQPTeststepRunner extends TeststepActionRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(AMQPTeststepRunner.class);
 
-    public BasicTeststepRun _run() throws Exception {
+    @Override
+    public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();
         AMQPTeststepProperties otherProperties = (AMQPTeststepProperties) teststep.getOtherProperties();
 
@@ -75,6 +76,6 @@ public class AMQPTeststepRunner extends TeststepRunner {
             throw exceptionListDuringSending.get(0);    //  throw the first encountered exception
         }
 
-        return new BasicTeststepRun();
+        return new TeststepActionRunResult();
     }
 }

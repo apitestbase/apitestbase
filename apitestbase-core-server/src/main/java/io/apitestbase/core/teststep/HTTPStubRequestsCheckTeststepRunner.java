@@ -6,10 +6,10 @@ import io.apitestbase.utils.GeneralUtils;
 
 import java.util.List;
 
-public class HTTPStubRequestsCheckTeststepRunner extends TeststepRunner {
+public class HTTPStubRequestsCheckTeststepRunner extends TeststepActionRunner {
     @Override
-    public BasicTeststepRun _run() {
-        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+    public TeststepActionRunResult run() {
+        TeststepActionRunResult basicTeststepRun = new TeststepActionRunResult();
 
         WireMockServer wireMockServer = getTestcaseRunContext().getWireMockServer();
         WireMockServerAPIResponse response = new WireMockServerAPIResponse();
