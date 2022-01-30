@@ -1,11 +1,14 @@
 package io.apitestbase.models.testrun.teststeprun;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.apitestbase.models.teststep.Teststep;
+import io.apitestbase.resources.ResourceJsonViews;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataDrivenTeststepRepeatRun extends TeststepRepeatRun {
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private List<TeststepIndividualRun> individualRuns = new ArrayList<>();
 
     public DataDrivenTeststepRepeatRun(TeststepRepeatRun repeatRun) {

@@ -17,5 +17,5 @@
 <#if stepRepeatRun.atomicRunResult??>
   <#include "regularStepRepeatRun.ftl">
 <#elseif stepRepeatRun.individualRuns??>
-
+  <#include "dataDrivenStepRepeatRun.ftl">
 </#if>
