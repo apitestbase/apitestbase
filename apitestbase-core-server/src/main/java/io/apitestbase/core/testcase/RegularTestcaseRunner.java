@@ -23,7 +23,7 @@ public class RegularTestcaseRunner extends TestcaseRunner {
     }
 
     @Override
-    public TestcaseRun run() throws IOException {
+    public TestcaseRun run() throws IOException, InterruptedException {
         RegularTestcaseRun testcaseRun = new RegularTestcaseRun();
 
         preProcessing();

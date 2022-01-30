@@ -17,7 +17,6 @@ import io.apitestbase.views.TeststepRunView;
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseRunResource {
@@ -41,7 +40,7 @@ public class TestcaseRunResource {
 
     @POST @Path("testcaseruns") @PermitAll
     @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
-    public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws IOException {
+    public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws Exception {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         TestcaseRunner testcaseRunner;
         if (testcase.getDataTable().getRows().isEmpty()) {

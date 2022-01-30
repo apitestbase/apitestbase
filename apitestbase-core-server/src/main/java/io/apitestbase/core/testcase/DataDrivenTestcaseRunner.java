@@ -29,7 +29,7 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
     }
 
     @Override
-    public TestcaseRun run() throws IOException {
+    public TestcaseRun run() throws IOException, InterruptedException {
         DataDrivenTestcaseRun testcaseRun = new DataDrivenTestcaseRun();
 
         preProcessing();

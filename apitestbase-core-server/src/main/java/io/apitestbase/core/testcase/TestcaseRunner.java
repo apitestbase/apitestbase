@@ -50,7 +50,7 @@ public abstract class TestcaseRunner {
         return testcaseRunContext;
     }
 
-    public abstract TestcaseRun run() throws IOException;
+    public abstract TestcaseRun run() throws Exception;
 
     //  process the test case before starting to run it
     void preProcessing() {
@@ -117,7 +117,8 @@ public abstract class TestcaseRunner {
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(testcaseRunStartTime));
     }
 
-    TeststepRun runTeststep(Teststep teststep, TestcaseIndividualRunContext testcaseIndividualRunContext) throws IOException {
+    TeststepRun runTeststep(Teststep teststep, TestcaseIndividualRunContext testcaseIndividualRunContext)
+            throws IOException, InterruptedException {
         Map<String, String> referenceableStringProperties = testcaseIndividualRunContext == null ?
                 getTestcaseRunContext().getReferenceableStringProperties() :
                 testcaseIndividualRunContext.getReferenceableStringProperties();

@@ -34,7 +34,7 @@ public class TestcaseStepRunner {
 
     TeststepRun run(Teststep teststep, UtilsDAO utilsDAO, Map<String, String> referenceableStringProperties,
                     Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext,
-                    TestcaseIndividualRunContext testcaseIndividualRunContext) throws IOException {
+                    TestcaseIndividualRunContext testcaseIndividualRunContext) throws IOException, InterruptedException {
         TeststepRun stepRun;
 
         //  test step run starts
@@ -52,7 +52,12 @@ public class TestcaseStepRunner {
             repeatedTeststepRun.setStartTime(stepRunStartTime);
             RepeatUntilPassTeststepRunPattern repeatUntilPassTeststepRunPattern =
                     (RepeatUntilPassTeststepRunPattern) teststepRunPattern;
+            int waitBetweenRepeatRuns = Integer.parseInt(repeatUntilPassTeststepRunPattern.getWaitBetweenRepeatRuns());
             int timeout = Integer.parseInt(repeatUntilPassTeststepRunPattern.getTimeout());
+            if (waitBetweenRepeatRuns < 0) {
+                throw new IllegalArgumentException("Invalid waitBetweenRepeatRuns value " + waitBetweenRepeatRuns +
+                        ". It must be a non-negative integer.");
+            }
             if (timeout <= 0) {
                 throw new IllegalArgumentException("Invalid timeout value " + timeout + ". It must be a positive integer.");
             }
@@ -63,9 +68,12 @@ public class TestcaseStepRunner {
             int index = 0;
             do {
                 index++;
+                if (index > 1) {
+                    Thread.sleep(waitBetweenRepeatRuns);
+                }
+                Date repeatRunStartTime = new Date();
                 referenceableStringProperties.put(
                         APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_REPEAT_RUN_INDEX, String.valueOf(index));
-                Date repeatRunStartTime = new Date();
                 teststepRepeatRun = runTeststepRepeat(repeatRunStartTime, teststep, utilsDAO,
                         referenceableStringProperties, referenceableEndpointProperties, testcaseRunContext,
                         testcaseIndividualRunContext);
@@ -88,9 +96,9 @@ public class TestcaseStepRunner {
 
             repeatedTeststepRun.setResult(TestResult.PASSED);
             for (int i = 1; i < repeatTimes; i++) {
+                Date repeatRunStartTime = new Date();
                 referenceableStringProperties.put(
                         APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_REPEAT_RUN_INDEX, String.valueOf(i));
-                Date repeatRunStartTime = new Date();
                 TeststepRepeatRun teststepRepeatRun = runTeststepRepeat(repeatRunStartTime, teststep, utilsDAO,
                         referenceableStringProperties, referenceableEndpointProperties, testcaseRunContext,
                         testcaseIndividualRunContext);
