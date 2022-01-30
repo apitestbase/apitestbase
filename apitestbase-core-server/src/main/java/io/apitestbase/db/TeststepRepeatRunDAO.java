@@ -35,6 +35,7 @@ public interface TeststepRepeatRunDAO extends CrossReferenceDAO {
 
     default void insert(long teststepRunId, TeststepRepeatRun teststepRepeatRun) throws JsonProcessingException {
         long id = _insert(teststepRunId, teststepRepeatRun);
+        teststepRepeatRun.setId(id);
 
         if (teststepRepeatRun instanceof RegularTeststepRepeatRun) {
             teststepAtomicRunResultDAO().insert(teststepRunId, id, null,

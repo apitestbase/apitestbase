@@ -113,50 +113,38 @@ angular.module('apitestbase').controller('TestcasesController', ['$scope', 'Test
       });
     };
 
-    $scope.showStepRunHTMLReport = function(stepRunId) {
-      TestcaseRuns.getStepRunHTMLReport({ stepRunId: stepRunId },
-        function(response) {
-          //  without $sce.trustAsHtml, ngSanitize will strip elements like <textarea>
-          var stepRunReport = $sce.trustAsHtml(response.report);
+    var showReportModal = function(response) {
+      //  without $sce.trustAsHtml, ngSanitize will strip elements like <textarea>
+      var report = $sce.trustAsHtml(response.report);
 
-          //  open modal dialog
-          var modalInstance = $uibModal.open({
-            templateUrl: '/ui/views/testcases/teststep-run-report-modal.html',
-            controller: 'TeststepRunReportModalController',
-            size: 'lg',
-            windowClass: 'teststep-run-report-modal',
-            resolve: {
-              stepRunReport: function() {
-                return stepRunReport;
-              }
-            }
-          });
-        }, function(response) {
+      //  open modal dialog
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/testcases/teststep-run-report-modal.html',
+        controller: 'TeststepRunReportModalController',
+        size: 'lg',
+        windowClass: 'teststep-run-report-modal',
+        resolve: {
+          stepRunReport: function() {
+            return report;
+          }
+        }
+      });
+    };
+
+    $scope.showStepRunHTMLReport = function(stepRunId) {
+      TestcaseRuns.getStepRunHTMLReport({ stepRunId: stepRunId }, showReportModal,
+        function(response) {
           GeneralUtils.openErrorHTTPResponseModal(response);
-        });
+        }
+      );
     };
 
     $scope.showStepIndividualRunHTMLReport = function(stepIndividualRunId) {
-      TestcaseRuns.getStepIndividualRunHTMLReport({ stepIndividualRunId: stepIndividualRunId },
+      TestcaseRuns.getStepIndividualRunHTMLReport({ stepIndividualRunId: stepIndividualRunId }, showReportModal,
         function(response) {
-          //  without $sce.trustAsHtml, ngSanitize will strip elements like <textarea>
-          var stepIndividualRunReport = $sce.trustAsHtml(response.report);
-
-          //  open modal dialog
-          var modalInstance = $uibModal.open({
-            templateUrl: '/ui/views/testcases/teststep-run-report-modal.html',
-            controller: 'TeststepRunReportModalController',
-            size: 'lg',
-            windowClass: 'teststep-run-report-modal',
-            resolve: {
-              stepRunReport: function() {
-                return stepIndividualRunReport;
-              }
-            }
-          });
-        }, function(response) {
           GeneralUtils.openErrorHTTPResponseModal(response);
-        });
+        }
+      );
     };
 
     $scope.removeTeststep = function(teststep) {

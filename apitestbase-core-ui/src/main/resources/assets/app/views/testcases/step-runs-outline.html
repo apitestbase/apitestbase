@@ -1,12 +1,15 @@
 <ul class="list-unstyled">
   <uib-accordion class="data-driven-step-run-on-testcase-edit-view">
     <li ng-repeat="stepRun in stepRuns">
-      <a ng-if="stepRun.atomicRunResult" ng-click="showStepRunHTMLReport(stepRun.id)" href="">
+      <!-- regular test step run -->
+      <a ng-if="!stepRun.individualRuns && !stepRun.repeatRuns" ng-click="showStepRunHTMLReport(stepRun.id)" href="">
         <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',
                   'text-lime' : stepRun.result === 'Passed' }">
           <strong>{{ stepRun.metaTeststep.name }} ({{ stepRun.duration | number }} ms)</strong>
         </h5>
       </a>
+
+      <!-- data driven test step run -->
       <div ng-if="stepRun.individualRuns" uib-accordion-group class="panel-default">
         <uib-accordion-heading>
           <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',
@@ -25,6 +28,8 @@
           </li>
         </ul>
       </div>
+
+      <!-- repeated test step run -->
       <div ng-if="stepRun.repeatRuns" uib-accordion-group class="panel-default">
         <uib-accordion-heading>
           <h5 ng-class="{ 'text-red' : stepRun.result === 'Failed',

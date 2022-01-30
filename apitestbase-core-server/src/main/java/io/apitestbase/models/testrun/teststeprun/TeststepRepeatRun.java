@@ -6,6 +6,7 @@ import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.resources.ResourceJsonViews;
 
 public class TeststepRepeatRun extends TestRun {
+    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     private int index;
 
     public int getIndex() {
@@ -20,7 +21,6 @@ public class TeststepRepeatRun extends TestRun {
      * To be overridden by subclasses
      * @return
      */
-    @JsonView(ResourceJsonViews.TestcaseRunOutlineOnTestcaseEditView.class)
     public Teststep getMetaTeststep() {
         return null;
     }
