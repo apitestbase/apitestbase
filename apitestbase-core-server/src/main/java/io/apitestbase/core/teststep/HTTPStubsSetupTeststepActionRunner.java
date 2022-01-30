@@ -9,7 +9,7 @@ import io.apitestbase.utils.GeneralUtils;
 import java.util.Map;
 import java.util.UUID;
 
-public class HTTPStubsSetupTeststepRunner extends TeststepActionRunner {
+public class HTTPStubsSetupTeststepActionRunner extends TeststepActionRunner {
     @Override
     public TeststepActionRunResult run() {
         WireMockServer wireMockServer = getTestcaseRunContext().getWireMockServer();

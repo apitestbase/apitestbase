@@ -1,6 +1,6 @@
 package io.apitestbase.core.teststep;
 
-public class WaitUntilNextSecondTeststepRunner extends TeststepActionRunner {
+public class WaitUntilNextSecondTeststepActionRunner extends TeststepActionRunner {
     @Override
     public TeststepActionRunResult run() throws InterruptedException {
         long startTimeSecond = getTestcaseIndividualRunContext() != null ?

@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AMQPTeststepRunner extends TeststepActionRunner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AMQPTeststepRunner.class);
+public class AMQPTeststepActionRunner extends TeststepActionRunner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AMQPTeststepActionRunner.class);
 
     @Override
     public TeststepActionRunResult run() throws Exception {

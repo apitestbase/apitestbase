@@ -9,7 +9,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-public class MQTTTeststepRunner extends TeststepActionRunner {
+public class MQTTTeststepActionRunner extends TeststepActionRunner {
     @Override
     public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();

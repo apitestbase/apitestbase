@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DBTeststepRunner extends TeststepActionRunner {
+public class DBTeststepActionRunner extends TeststepActionRunner {
     private static ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
     static {

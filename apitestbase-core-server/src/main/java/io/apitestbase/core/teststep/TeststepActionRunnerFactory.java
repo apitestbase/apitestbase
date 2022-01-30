@@ -20,21 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TeststepRunnerFactory {
-    private static TeststepRunnerFactory instance = new TeststepRunnerFactory();
+public class TeststepActionRunnerFactory {
+    private static TeststepActionRunnerFactory instance = new TeststepActionRunnerFactory();
 
-    private TeststepRunnerFactory() { }
+    private TeststepActionRunnerFactory() { }
 
-    public static TeststepRunnerFactory getInstance() {
+    public static TeststepActionRunnerFactory getInstance() {
         return instance;
     }
 
-    private String resolveTeststepRunnerClassName(Teststep teststep) {
+    private String resolveTeststepActionRunnerClassName(Teststep teststep) {
         if (Teststep.TYPE_JMS.equals(teststep.getType())) {
             JMSEndpointProperties endpointProperties = (JMSEndpointProperties) teststep.getEndpoint().getOtherProperties();
-            return "io.apitestbase.core.teststep." + teststep.getType() + endpointProperties.getJmsProvider() + "TeststepRunner";
+            return "io.apitestbase.core.teststep." + teststep.getType() + endpointProperties.getJmsProvider() + "TeststepActionRunner";
         } else {
-            return "io.apitestbase.core.teststep." + teststep.getType() + "TeststepRunner";
+            return "io.apitestbase.core.teststep." + teststep.getType() + "TeststepActionRunner";
         }
     }
 
@@ -47,13 +47,13 @@ public class TeststepRunnerFactory {
      * @param testcaseRunContext
      * @return
      */
-    public TeststepActionRunner newTeststepRunner(Teststep teststep, UtilsDAO utilsDAO,
-                                                  Map<String, String> referenceableStringProperties,
-                                                  Map<String, Endpoint> referenceableEndpointProperties,
-                                                  TestcaseRunContext testcaseRunContext,
-                                                  TestcaseIndividualRunContext testcaseIndividualRunContext) throws Exception {
+    public TeststepActionRunner newTeststepActionRunner(Teststep teststep, UtilsDAO utilsDAO,
+                                                        Map<String, String> referenceableStringProperties,
+                                                        Map<String, Endpoint> referenceableEndpointProperties,
+                                                        TestcaseRunContext testcaseRunContext,
+                                                        TestcaseIndividualRunContext testcaseIndividualRunContext) throws Exception {
         TeststepActionRunner runner;
-        Class runnerClass = Class.forName(resolveTeststepRunnerClassName(teststep));
+        Class runnerClass = Class.forName(resolveTeststepActionRunnerClassName(teststep));
         Constructor<TeststepActionRunner> constructor = runnerClass.getConstructor();
         runner = constructor.newInstance();
 

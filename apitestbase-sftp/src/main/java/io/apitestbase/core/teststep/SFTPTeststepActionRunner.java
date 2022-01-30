@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class SFTPTeststepRunner extends TeststepActionRunner {
+public class SFTPTeststepActionRunner extends TeststepActionRunner {
     @Override
     public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();

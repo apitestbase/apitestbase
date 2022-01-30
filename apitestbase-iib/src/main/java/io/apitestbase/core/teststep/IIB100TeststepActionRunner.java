@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-public class IIB100TeststepRunner extends TeststepActionRunner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(IIB100TeststepRunner.class);
+public class IIB100TeststepActionRunner extends TeststepActionRunner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(IIB100TeststepActionRunner.class);
 
     //  disable IIB 10 IntegrationAPI.jar's jetty logging (which pollutes StdErr)
     static {

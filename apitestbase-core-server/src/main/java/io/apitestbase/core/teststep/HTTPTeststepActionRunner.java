@@ -6,7 +6,7 @@ import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.apirequest.HTTPRequest;
 import io.apitestbase.utils.GeneralUtils;
 
-public class HTTPTeststepRunner extends TeststepActionRunner {
+public class HTTPTeststepActionRunner extends TeststepActionRunner {
     @Override
     public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();

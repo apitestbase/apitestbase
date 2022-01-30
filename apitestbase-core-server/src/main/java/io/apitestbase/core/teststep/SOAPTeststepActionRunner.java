@@ -7,7 +7,7 @@ import io.apitestbase.models.teststep.Teststep;
 import io.apitestbase.models.teststep.apirequest.SOAPRequest;
 import io.apitestbase.utils.GeneralUtils;
 
-public class SOAPTeststepRunner extends TeststepActionRunner {
+public class SOAPTeststepActionRunner extends TeststepActionRunner {
     @Override
     public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();

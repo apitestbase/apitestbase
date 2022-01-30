@@ -147,7 +147,7 @@ public class TeststepResource {
     }
 
     /**
-     * Run a test step individually (not as part of test case running).
+     * Run a test step's invocation/action standalone (not as part of test case running).
      * This is a stateless operation, i.e. not persisting anything in database.
      * @param teststep
      * @return
@@ -185,11 +185,11 @@ public class TeststepResource {
             referenceableEndpointProperties.putAll(testcaseDataTable.getEndpointPropertiesInRow(0));
         }
 
-        //  run the test step
-        TeststepActionRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
+        //  run the test step invocation/action
+        TeststepActionRunner teststepActionRunner = TeststepActionRunnerFactory.getInstance().newTeststepActionRunner(
                 teststep, utilsDAO, referenceableStringProperties, referenceableEndpointProperties,
                 null, null);
-        TeststepActionRunResult basicTeststepRun = teststepRunner.run();
+        TeststepActionRunResult basicTeststepRun = teststepActionRunner.run();
 
         LOGGER.info("Finish test step '" + teststep.getName() + "' invocation/action");
 

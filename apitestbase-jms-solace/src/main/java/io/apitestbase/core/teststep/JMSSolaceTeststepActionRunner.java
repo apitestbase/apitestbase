@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
 
-public class JMSSolaceTeststepRunner extends TeststepActionRunner {
+public class JMSSolaceTeststepActionRunner extends TeststepActionRunner {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     @Override

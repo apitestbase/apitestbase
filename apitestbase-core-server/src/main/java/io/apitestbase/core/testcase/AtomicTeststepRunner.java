@@ -5,7 +5,7 @@ import io.apitestbase.core.propertyextractor.PropertyExtractorRunner;
 import io.apitestbase.core.propertyextractor.PropertyExtractorRunnerFactory;
 import io.apitestbase.core.teststep.TeststepActionRunResult;
 import io.apitestbase.core.teststep.HTTPAPIResponse;
-import io.apitestbase.core.teststep.TeststepRunnerFactory;
+import io.apitestbase.core.teststep.TeststepActionRunnerFactory;
 import io.apitestbase.db.UtilsDAO;
 import io.apitestbase.models.TestResult;
 import io.apitestbase.models.assertion.AssertionVerification;
@@ -37,7 +37,7 @@ public class AtomicTeststepRunner {
         Teststep clonedTeststep = new Cloner().deepClone(teststep);
         atomicRunResult.setTeststep(clonedTeststep);
         try {
-            basicTeststepRun = TeststepRunnerFactory.getInstance().newTeststepRunner(
+            basicTeststepRun = TeststepActionRunnerFactory.getInstance().newTeststepActionRunner(
                     clonedTeststep, utilsDAO, referenceableStringProperties, referenceableEndpointProperties,
                     testcaseRunContext, testcaseIndividualRunContext).run();
             atomicRunResult.setResponse(basicTeststepRun.getResponse());

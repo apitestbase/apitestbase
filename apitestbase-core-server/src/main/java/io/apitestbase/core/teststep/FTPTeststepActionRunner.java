@@ -21,7 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class FTPTeststepRunner extends TeststepActionRunner {
+public class FTPTeststepActionRunner extends TeststepActionRunner {
     @Override
     public TeststepActionRunResult run() throws Exception {
         Teststep teststep = getTeststep();

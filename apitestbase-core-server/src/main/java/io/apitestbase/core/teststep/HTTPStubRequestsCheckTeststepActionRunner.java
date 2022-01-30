@@ -6,7 +6,7 @@ import io.apitestbase.utils.GeneralUtils;
 
 import java.util.List;
 
-public class HTTPStubRequestsCheckTeststepRunner extends TeststepActionRunner {
+public class HTTPStubRequestsCheckTeststepActionRunner extends TeststepActionRunner {
     @Override
     public TeststepActionRunResult run() {
         TeststepActionRunResult basicTeststepRun = new TeststepActionRunResult();

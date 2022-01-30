@@ -7,10 +7,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-public class IIBTeststepRunnerClassLoader extends URLClassLoader {
+public class IIBTeststepActionRunnerClassLoader extends URLClassLoader {
     private ClassLoader parentClassLoader;
 
-    protected IIBTeststepRunnerClassLoader(URL[] urls, ClassLoader parentClassLoader) {
+    protected IIBTeststepActionRunnerClassLoader(URL[] urls, ClassLoader parentClassLoader) {
         super(urls, null);
         this.parentClassLoader = parentClassLoader;
     }

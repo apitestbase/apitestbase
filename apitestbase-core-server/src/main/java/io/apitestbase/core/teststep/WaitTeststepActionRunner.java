@@ -2,7 +2,7 @@ package io.apitestbase.core.teststep;
 
 import io.apitestbase.models.teststep.WaitTeststepProperties;
 
-public class WaitTeststepRunner extends TeststepActionRunner {
+public class WaitTeststepActionRunner extends TeststepActionRunner {
     @Override
     public TeststepActionRunResult run() throws InterruptedException {
         WaitTeststepProperties teststepProperties = (WaitTeststepProperties) getTeststep().getOtherProperties();

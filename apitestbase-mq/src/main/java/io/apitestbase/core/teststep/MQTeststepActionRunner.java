@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
-public class MQTeststepRunner extends TeststepActionRunner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MQTeststepRunner.class);
+public class MQTeststepActionRunner extends TeststepActionRunner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MQTeststepActionRunner.class);
 
     @Override
     public TeststepActionRunResult run() throws Exception {
