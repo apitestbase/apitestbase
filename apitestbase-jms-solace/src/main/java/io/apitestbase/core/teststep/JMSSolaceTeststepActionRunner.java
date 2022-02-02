@@ -86,8 +86,12 @@ public class JMSSolaceTeststepActionRunner extends TeststepActionRunner {
                 sendMessageToQueue(endpoint, teststepOtherProperties.getQueueName(), apiRequest);
                 break;
             case Teststep.ACTION_BROWSE:
+                int browseMessageIndex = Integer.valueOf(teststepOtherProperties.getBrowseMessageIndex());
+                if (browseMessageIndex < 1) {
+                    throw new IllegalArgumentException("Message index must be a positive integer");
+                }
                 response = browseQueue(endpoint, teststepOtherProperties.getQueueName(),
-                        teststepOtherProperties.getBrowseMessageIndex());
+                        browseMessageIndex);
                 break;
             default:
                 throw new IllegalArgumentException("Unrecognized action " + action + ".");
@@ -250,6 +254,7 @@ public class JMSSolaceTeststepActionRunner extends TeststepActionRunner {
                 javax.jms.Message message = messages.nextElement();
                 if (index == browseMessageIndex) {
                     response = new JMSBrowseQueueResponse();
+                    response.setBrowseMessageIndex(browseMessageIndex);
 
                     //  set header
                     Map<String, String> header = response.getHeader();

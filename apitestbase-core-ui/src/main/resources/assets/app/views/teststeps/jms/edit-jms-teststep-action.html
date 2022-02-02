@@ -1,7 +1,7 @@
 <div class="form-group"></div> <!-- spacer -->
 <div class="form-group">
   <label for="endpointAddress" class="col-lg-2 control-label">Endpoint Address</label>
-  <div class="col-lg-7">
+  <div class="col-lg-8">
     <input type="text" name="endpointAddress" id="endpointAddress" class="form-control" readonly
            ng-model="teststep.endpoint.constructedUrl">
   </div>
@@ -46,16 +46,12 @@
       <option value="Publish" ng-if="teststep.otherProperties.destinationType === 'Topic'">Publish</option>
     </select>
   </div>
-  <div ng-if="teststep.action === 'Browse'"
-       ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.browseMessageIndex.$invalid }">
+  <div ng-if="teststep.action === 'Browse'">
     <label for="browseMessageIndex" class="col-lg-1 control-label no-left-padding">Message Index</label>
-    <div class="col-lg-1">
+    <div class="col-lg-3">
       <input name="browseMessageIndex" id="browseMessageIndex" type="text" class="form-control"
-             pattern="^[1-9]\d*$" ng-model="teststep.otherProperties.browseMessageIndex"
+             ng-model="teststep.otherProperties.browseMessageIndex"
              ng-change="autoSave(teststepForm.$valid)" ng-readonly="appStatus.isForbidden()">
-      <div ng-show="savingStatus.submitted && teststepForm.browseMessageIndex.$invalid" class="help-block">
-        <p ng-show="teststepForm.browseMessageIndex.$error.pattern">Message Index must be a positive integer</p>
-      </div>
     </div>
   </div>
   <div class="col-lg-1">
@@ -73,7 +69,7 @@
       Queue depth is {{ steprun.response.queueDepth }}.</h5>
     <h5 ng-if="teststep.action === 'Browse' && steprun.status === 'finished'">
       {{ steprun.response === null ? 'Message unavailable at this index.' :
-        'Message ' + steprun.messageIndex + ' of ' + steprun.queueDepth + ' read.' }}</h5>
+        'Message ' + steprun.response.browseMessageIndex + ' of ' + steprun.queueDepth + ' read.' }}</h5>
     <h5 ng-if="teststep.action === 'Send' && steprun.status === 'ongoing'">Sending message ...</h5>
     <h5 ng-if="teststep.action === 'Send' && steprun.status === 'finished'">Message sent.</h5>
     <h5 ng-if="teststep.action === 'Publish' && steprun.status === 'ongoing'">Publishing message ...</h5>

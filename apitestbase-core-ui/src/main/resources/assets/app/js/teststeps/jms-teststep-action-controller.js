@@ -76,7 +76,6 @@ angular.module('apitestbase').controller('JMSTeststepActionController', ['$scope
 
       //  for Browse action, get queue depth first
       if ($scope.teststep.action === 'Browse') {
-        $scope.steprun.messageIndex = $scope.teststep.otherProperties.browseMessageIndex;
         var checkQueueDepthStep = new Teststeps($scope.teststep);
         checkQueueDepthStep.action = 'CheckDepth';
         checkQueueDepthStep.$run(function(basicTeststepRun) {
