@@ -58,8 +58,8 @@ public class SFTPTeststepActionRunner extends TeststepActionRunner {
             SftpPutRequestFileFromText sftpPutRequestFileFromText = (SftpPutRequestFileFromText) sftpPutRequest;
             String fileContent = sftpPutRequestFileFromText.getFileContent();
 
-            //  validate arguments
-            if ("".equals(StringUtils.trimToEmpty(fileContent))) {
+            //  validate arguments (allow empty text file content)
+            if (fileContent == null) {
                 throw new IllegalArgumentException("No file content.");
             }
 
