@@ -298,6 +298,15 @@ public class JMSSolaceTeststepActionRunner extends TeststepActionRunner {
                         byte[] bytes = new byte[(int) bytesMessage.getBodyLength()];
                         bytesMessage.readBytes(bytes);
                         body = new String(bytes);
+                    } else if (message instanceof javax.jms.MapMessage) {
+                        StringBuffer sb = new StringBuffer();
+                        javax.jms.MapMessage mapMessage = (javax.jms.MapMessage) message;
+                        Enumeration mapNames = mapMessage.getMapNames();
+                        while (mapNames.hasMoreElements()) {
+                            String mapName = (String) mapNames.nextElement();
+                            sb.append(mapName).append(":").append(mapMessage.getObject(mapName)).append("\n");
+                        }
+                        body = sb.toString();
                     } else {
                         throw new RuntimeException("Message type " + message.getClass() + " currently unsupported.");
                     }
