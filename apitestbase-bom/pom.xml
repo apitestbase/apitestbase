@@ -213,6 +213,11 @@
                 <artifactId>jaxb-core</artifactId>
                 <version>${jaxb-core.version}</version>
             </dependency>
+			<dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb-api.version}</version>
+            </dependency>
             <dependency>
                 <groupId>javax.activation</groupId>
                 <artifactId>activation</artifactId>
