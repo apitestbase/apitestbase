@@ -11,3 +11,5 @@ ALTER TABLE UDP DROP CONSTRAINT UDP_PROPERTY_NAME_CONSTRAINT;
 ALTER TABLE UDP ADD CONSTRAINT UDP_PROPERTY_NAME_CONSTRAINT CHECK((NOT ("NAME" IN('Test_Case_Start_Time', 'Test_Step_Start_Time', 'Test_Step_Repeat_Run_Index', 'Test_Case_Individual_Start_Time'))) AND REGEXP_LIKE("NAME", '^[a-zA-Z_$][a-zA-Z_$0-9]*$'));
 ALTER TABLE PROPERTY_EXTRACTOR DROP CONSTRAINT PROPERTY_EXTRACTOR_PROPERTY_NAME_CONSTRAINT;
 ALTER TABLE PROPERTY_EXTRACTOR ADD CONSTRAINT PROPERTY_EXTRACTOR_PROPERTY_NAME_CONSTRAINT CHECK((NOT ("PROPERTY_NAME" IN('Test_Case_Start_Time', 'Test_Step_Start_Time', 'Test_Step_Repeat_Run_Index', 'Test_Case_Individual_Start_Time'))) AND REGEXP_LIKE("PROPERTY_NAME", '^[a-zA-Z_$][a-zA-Z_$0-9]*$'));
+
+update httpstubmapping set spec_json = replace(spec_json, '"anything" : "anything"', '"contains" : ""') where spec_json like '%"anything" : "anything"%';

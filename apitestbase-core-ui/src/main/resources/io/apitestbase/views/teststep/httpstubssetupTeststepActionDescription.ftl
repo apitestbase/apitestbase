@@ -53,8 +53,8 @@
               <#compress>
                 <#list requestHeaders?keys as key>
                   <#t>${ key }
-                  <#if requestHeaders[key].name = 'anything'>
-                    is anything
+                  <#if requestHeaders[key].name = 'contains' && requestHeaders[key].expected = ''>
+                    is present
                   <#else>
                     ${ requestHeaders[key].name } ${ requestHeaders[key].expected }
                   </#if>

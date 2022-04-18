@@ -21,10 +21,11 @@ angular.module('mockserver').controller('StubInstanceController', ['$scope', 'Mo
                 stubRequestHeadersStr += '\n';
               }
               var operator = Object.keys(requestHeaders[key])[0];
-              if (operator === 'anything') {
-                stubRequestHeadersStr += key + ' is anything';
+              var value = requestHeaders[key][operator];
+              if (operator === 'contains' && value === '') {
+                stubRequestHeadersStr += key + ' is present';
               } else {
-                stubRequestHeadersStr += key + ' ' + operator + ' ' + requestHeaders[key][operator];
+                stubRequestHeadersStr += key + ' ' + operator + ' ' + value;
               }
             });
           }

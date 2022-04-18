@@ -61,7 +61,10 @@ angular.module('apitestbase').controller('HTTPStubController', ['$scope', 'HTTPS
           $scope.requestHeaderGridOptions.data = Object.keys(requestHeaders).map(function(key) {
             var header = requestHeaders[key];
             var operator = Object.keys(header)[0];
-            var value = operator === 'anything' ? '' : header[operator];
+            var value = header[operator];
+            if (operator === 'contains' && value === '') {
+              operator = 'isPresent';
+            }
             return { name: key, operator: operator, value: value };
           });
         }
@@ -233,12 +236,12 @@ angular.module('apitestbase').controller('HTTPStubController', ['$scope', 'HTTPS
         editableCellTemplate: 'headerGridEditableCellTemplate.html' },
       { name: 'operator', width: '15%', headerTooltip: 'Double click cell to select',
         editableCellTemplate: 'ui-grid/dropdownEditor', editDropdownOptionsArray: [
-        { id: 'equalTo', value: 'equalTo' }, { id: 'anything', value: 'anything' },
+        { id: 'equalTo', value: 'equalTo' }, { id: 'isPresent', value: 'isPresent' },
         { id: 'contains', value: 'contains' }, { id: 'matches', value: 'matches' }
       ]},
       { name: 'value', headerTooltip: 'Double click cell to edit', cellTooltip: true,
         cellEditableCondition: function(scope) {
-          return scope.row.entity.operator !== 'anything';
+          return scope.row.entity.operator !== 'isPresent';
         },
         editableCellTemplate: 'headerGridEditableCellTemplate.html' }
     ];
@@ -263,14 +266,16 @@ angular.module('apitestbase').controller('HTTPStubController', ['$scope', 'HTTPS
           var headersObj = request.headers;
           if (colDef.name === 'name') {       //  header name was changed
             //  to preserve the order of headers, can't just create new property and delete old property on headersObj
-            request.headers = {};   //  can't use headersObj variable in this if block
+            request.headers = {};   //  can't use headersObj variable in this 'if' block
             var headersInGrid = $scope.requestHeaderGridOptions.data;
             headersInGrid.forEach(headerInGrid =>
-              request.headers[headerInGrid.name] = { [headerInGrid.operator]: headerInGrid.value }
+              request.headers[headerInGrid.name] = {
+                [headerInGrid.operator === 'isPresent' ? 'contains' : headerInGrid.operator]: headerInGrid.value
+              }
             );
           } else if (colDef.name === 'operator') {           //  header operator was changed
             rowEntity.value = '';
-            headersObj[rowEntity.name] = { [newValue]: '' };
+            headersObj[rowEntity.name] = { [newValue === 'isPresent' ? 'contains' : newValue]: '' };
           } else if (colDef.name === 'value') {                            //  header value was changed
             headersObj[rowEntity.name][rowEntity.operator] = newValue;
           }
