@@ -151,7 +151,7 @@
             <artifactId>zip4j</artifactId>
         </dependency>
         <dependency>
-            <groupId>uk.com.robust-it</groupId>
+            <groupId>io.github.kostaskougios</groupId>
             <artifactId>cloning</artifactId>
         </dependency>
         <dependency>

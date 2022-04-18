@@ -129,7 +129,7 @@
                 <version>${zip4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>uk.com.robust-it</groupId>
+                <groupId>io.github.kostaskougios</groupId>
                 <artifactId>cloning</artifactId>
                 <version>${cloning.version}</version>
             </dependency>
