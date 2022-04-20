@@ -70,23 +70,16 @@ public class TestcaseStepRunner {
                 if (index > 1) {
                     Thread.sleep(waitBetweenRepeatRuns);
                 }
-                Date repeatRunStartTime = new Date();
-                LOGGER.info("Start test step repeat run " + index);
                 Map<String, String> referenceableStringPropertiesShallowCopy = new HashMap<>(referenceableStringProperties);
-                referenceableStringPropertiesShallowCopy.put(
-                        APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_REPEAT_RUN_INDEX, String.valueOf(index));
-                teststepRepeatRun = runTeststepRepeat(repeatRunStartTime, teststep, utilsDAO,
+                teststepRepeatRun = runTeststepRepeat(index, teststep, utilsDAO,
                         referenceableStringPropertiesShallowCopy, referenceableEndpointProperties, testcaseRunContext,
                         testcaseIndividualRunContext);
-                teststepRepeatRun.setIndex(index);
                 addRepeatRun(teststep.getName(), repeatedTeststepRun, teststepRepeatRun);
                 repeatRunPassed = teststepRepeatRun.getResult() == TestResult.PASSED;
-                LOGGER.info("Finish test step repeat run " + index);
             } while (!repeatRunPassed && System.currentTimeMillis() < timeoutTime.getTime());
             repeatedTeststepRun.setResult(repeatRunPassed ? TestResult.PASSED : TestResult.FAILED);
 
             stepRun = repeatedTeststepRun;
-
             LOGGER.info("Finish test step repeat run until pass");
         } else if (teststepRunPattern instanceof RepeatFixedNumberOfTimesTeststepRunPattern) {
             RepeatedTeststepRun repeatedTeststepRun = new RepeatedTeststepRun();
@@ -100,15 +93,11 @@ public class TestcaseStepRunner {
 
             LOGGER.info("Start test step repeat run fixed number of times");
             repeatedTeststepRun.setResult(TestResult.PASSED);
-            for (int i = 1; i < repeatTimes; i++) {
-                Date repeatRunStartTime = new Date();
+            for (int index = 1; index <= repeatTimes; index++) {
                 Map<String, String> referenceableStringPropertiesShallowCopy = new HashMap<>(referenceableStringProperties);
-                referenceableStringPropertiesShallowCopy.put(
-                        APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_REPEAT_RUN_INDEX, String.valueOf(i));
-                TeststepRepeatRun teststepRepeatRun = runTeststepRepeat(repeatRunStartTime, teststep, utilsDAO,
+                TeststepRepeatRun teststepRepeatRun = runTeststepRepeat(index, teststep, utilsDAO,
                         referenceableStringPropertiesShallowCopy, referenceableEndpointProperties, testcaseRunContext,
                         testcaseIndividualRunContext);
-                teststepRepeatRun.setIndex(i);
                 addRepeatRun(teststep.getName(), repeatedTeststepRun, teststepRepeatRun);
                 if (teststepRepeatRun.getResult() == TestResult.FAILED) {
                     repeatedTeststepRun.setResult(TestResult.FAILED);
@@ -159,11 +148,17 @@ public class TestcaseStepRunner {
         }
     }
 
-    private TeststepRepeatRun runTeststepRepeat(Date startTime, Teststep teststep, UtilsDAO utilsDAO,
+    private TeststepRepeatRun runTeststepRepeat(int index, Teststep teststep, UtilsDAO utilsDAO,
                                     Map<String, String> referenceableStringProperties,
                                     Map<String, Endpoint> referenceableEndpointProperties,
                                     TestcaseRunContext testcaseRunContext,
                                     TestcaseIndividualRunContext testcaseIndividualRunContext) throws IOException {
+        TeststepRepeatRun repeatRun;
+        Date startTime = new Date();
+        LOGGER.info("Start test step repeat run " + index);
+        referenceableStringProperties.put(
+                APITestBaseConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_REPEAT_RUN_INDEX, String.valueOf(index));
+
         DataTable stepDataTable = teststep.getDataTable();
         if (stepDataTable == null || stepDataTable.getRows().isEmpty()) {
             RegularTeststepRepeatRun regularTeststepRepeatRun = new RegularTeststepRepeatRun();
@@ -173,13 +168,19 @@ public class TestcaseStepRunner {
                     testcaseRunContext, testcaseIndividualRunContext);
             regularTeststepRepeatRun.setDuration(new Date().getTime() - startTime.getTime());
             regularTeststepRepeatRun.setResult(result);
-            return regularTeststepRepeatRun;
+            repeatRun = regularTeststepRepeatRun;
         } else {
             GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(),
                     stepDataTable.getNonCaptionColumnNames());
-            return runDataDrivenTeststepRepeat(startTime, teststep, utilsDAO, referenceableStringProperties,
+            repeatRun = runDataDrivenTeststepRepeat(startTime, teststep, utilsDAO, referenceableStringProperties,
                     referenceableEndpointProperties, testcaseRunContext, testcaseIndividualRunContext);
         }
+
+        repeatRun.setIndex(index);
+
+        LOGGER.info("Finish test step repeat run " + index);
+
+        return repeatRun;
     }
 
     private DataDrivenTeststepRun runDataDrivenTeststep(Date stepRunStartTime, Teststep teststep,

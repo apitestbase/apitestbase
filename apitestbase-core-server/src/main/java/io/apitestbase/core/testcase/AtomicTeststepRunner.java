@@ -76,7 +76,6 @@ public class AtomicTeststepRunner {
                 atomicRunResult.setErrorMessage(errorMessage + " " + e.getMessage());
                 result = TestResult.FAILED;
             }
-            GeneralUtils.checkDuplicatePropertyNames(referenceableStringProperties.keySet(), extractedProperties.keySet());
             if (testcaseIndividualRunContext != null) {    //  in data driven test case individual run
                 testcaseIndividualRunContext.getReferenceableStringProperties().putAll(extractedProperties);
             } else {                                       //  in regular test case run
