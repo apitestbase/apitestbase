@@ -10,14 +10,11 @@ public class SystemDBOperationList extends OperationList {
                 "io/apitestbase/upgrade/db/" + sqlScriptFileName));
     }
     public SystemDBOperationList() {
-        addSimpleSystemDBOperation("0.18.3", "0.18.4","SystemDB_0_18_3_To_0_18_4.sql");
 
-        //  two operations for 0.18.4 to 0.18.5
-        getOperationList().add(new AdvancedSystemDBOperation_0_18_4_To_0_18_5_Part1());
-        addSimpleSystemDBOperation("0.18.4", "0.18.5","SystemDB_0_18_4_To_0_18_5_Part2.sql");
+        //  sample code for two operations
+//        getOperationList().add(new AdvancedSystemDBOperation_0_18_4_To_0_18_5_Part1());
+//        addSimpleSystemDBOperation("0.18.4", "0.18.5","SystemDB_0_18_4_To_0_18_5_Part2.sql");
 
-        addSimpleSystemDBOperation("0.18.5", "0.18.6","SystemDB_0_18_5_To_0_18_6.sql");
-        addSimpleSystemDBOperation("0.18.7", "0.19.0","SystemDB_0_18_7_To_0_19_0.sql");
         addSimpleSystemDBOperation("0.19.0", "0.20.0","SystemDB_0_19_0_To_0_20_0.sql");
     }
 }
