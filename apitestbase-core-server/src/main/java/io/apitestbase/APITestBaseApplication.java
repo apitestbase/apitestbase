@@ -140,6 +140,7 @@ public class APITestBaseApplication extends Application<APITestBaseConfiguration
                 .httpsPort(Integer.parseInt(configuration.getWireMock().get("httpsPort")))
                 .maxRequestJournalEntries(Integer.parseInt(configuration.getWireMock().get("maxRequestJournalEntries")))
                 .notifier(new WireMockFileNotifier())
+                .stubCorsEnabled(true)
         );
         wireMockServer.start();
 
