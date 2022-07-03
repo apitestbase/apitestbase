@@ -1,0 +1,28 @@
+name: Build and Upload Prod Dist
+on: [workflow_dispatch]
+jobs:
+  Build-And-Upload-Prod-Dist:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: maven
+      - name: Get project version
+        id: get-projectversion
+        run: echo "::set-output name=projectversion::$(mvn help:evaluate '-Dexpression=project.version' -q -DforceStdout)"
+      - name: Build prod dist with Maven
+        run: mvn clean package -P prod
+      - name: Create apitestbase-dist.zip
+        run: Compress-Archive -Path apitestbase-assembly/dist/* -DestinationPath apitestbase-assembly/dist/apitestbase-dist.zip
+      - name: List files under dist folder
+        run: Get-ChildItem -Path apitestbase-assembly/dist –Recurse
+      - name: Upload apitestbase-dist.zip to release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get-projectversion.outputs.projectversion }}
+          files: apitestbase-assembly/dist/apitestbase-dist.zip
