@@ -192,10 +192,6 @@
                                                 <include>config.yml</include>
                                             </includes>
                                         </resource>
-                                        <!-- copy files -->
-                                        <resource>
-                                            <directory>files</directory>
-                                        </resource>
                                     </resources>
                                 </configuration>
                             </execution>
