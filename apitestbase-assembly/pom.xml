@@ -99,6 +99,21 @@
             </dependencies>
             <build>
                 <plugins>
+                    <!-- clean dist directory -->
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${distDir}</directory>
+                                    <includes>
+                                        <include>**/*</include>
+                                    </includes>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+
                     <!-- create uber jar -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -191,6 +206,10 @@
                                             <includes>
                                                 <include>config.yml</include>
                                             </includes>
+                                        </resource>
+                                        <!-- copy files -->
+                                        <resource>
+                                            <directory>files</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
