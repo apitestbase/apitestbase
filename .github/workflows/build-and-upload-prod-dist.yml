@@ -23,31 +23,10 @@ jobs:
         run: mvn clean package -P prod
       - name: List files under dist folder
         run: Get-ChildItem -Path apitestbase-assembly/dist –Recurse
-      - name: Create jre folders
-        run: |
-          mkdir mac/jre
-          mkdir win/jre
-      # Create and upload dist for Mac
-      - name: Download Mac JRE 17
-        run: curl -L -o jre17-mac.tar.gz https://api.adoptium.net/v3/binary/latest/17/ga/mac/x64/jre/hotspot/normal/eclipse
-      - name: Extract Mac JRE 17
-        run: tar -xf jre17-mac.tar.gz -C mac/jre --strip-components 3 */Contents/Home
-      - name: Create apitestbase-dist-mac.zip
-        run: Compress-Archive -Path mac/jre, apitestbase-assembly/dist/lib, apitestbase-assembly/dist/*.jar, apitestbase-assembly/dist/*.yml, apitestbase-assembly/files/*.sh -DestinationPath apitestbase-dist-mac.zip
-      - name: Upload apitestbase-dist-mac.zip to release
+      - name: Create apitestbase-dist.zip
+        run: Compress-Archive -Path apitestbase-assembly/dist -DestinationPath apitestbase-dist.zip
+      - name: Upload apitestbase-dist.zip to release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get-latest-tag.outputs.tag }}
-          files: apitestbase-dist-mac.zip
-      # Create and upload dist for Windows
-      - name: Download Windows JRE 17
-        run: curl -L -o jre17-win.zip https://api.adoptium.net/v3/binary/latest/17/ga/windows/x64/jre/hotspot/normal/eclipse
-      - name: Extract Windows JRE 17
-        run: tar -xf jre17-win.zip -C win/jre --strip-components 1 *
-      - name: Create apitestbase-dist-win.zip
-        run: Compress-Archive -Path win/jre, apitestbase-assembly/dist/lib, apitestbase-assembly/dist/*.jar, apitestbase-assembly/dist/*.yml, apitestbase-assembly/files/*.bat -DestinationPath apitestbase-dist-win.zip
-      - name: Upload apitestbase-dist-win.zip to release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.get-latest-tag.outputs.tag }}
-          files: apitestbase-dist-win.zip
+          files: apitestbase-dist.zip
