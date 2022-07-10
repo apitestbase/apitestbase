@@ -24,7 +24,7 @@ jobs:
       - name: List files under dist folder
         run: Get-ChildItem -Path apitestbase-assembly/dist –Recurse
       - name: Create apitestbase-dist.zip
-        run: Compress-Archive -Path apitestbase-assembly/dist -DestinationPath apitestbase-dist.zip
+        run: Compress-Archive -Path apitestbase-assembly/dist/* -DestinationPath apitestbase-dist.zip
       - name: Upload apitestbase-dist.zip to release
         uses: softprops/action-gh-release@v1
         with:
