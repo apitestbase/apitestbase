@@ -131,6 +131,7 @@
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-core-ui</module>
+                <module>apitestbase-jms-activemq</module>
                 <module>apitestbase-jms-solace</module>
                 <module>apitestbase-mqtt</module>
                 <module>apitestbase-sftp</module>
@@ -147,6 +148,7 @@
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-core-ui</module>
+                <module>apitestbase-jms-activemq</module>
                 <module>apitestbase-jms-solace</module>
                 <module>apitestbase-mqtt</module>
                 <module>apitestbase-sftp</module>
@@ -180,6 +182,7 @@
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-core-ui</module>
+                <module>apitestbase-jms-activemq</module>
                 <module>apitestbase-jms-solace</module>
                 <module>apitestbase-mqtt</module>
                 <module>apitestbase-sftp</module>

@@ -245,6 +245,7 @@
         <profile>
             <id>dev</id>
             <properties>
+                <java.net.useSystemProxies>true</java.net.useSystemProxies>
                 <dw.mode />
             </properties>
             <build>

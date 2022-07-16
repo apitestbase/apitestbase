@@ -3,10 +3,13 @@
   <div class="col-lg-10">
     <select name="jmsProvider" id="jmsProvider" class="form-control" ng-model="endpoint.otherProperties.jmsProvider"
             ng-change="jmsProviderChanged(endpointForm.$valid)" ng-disabled="appStatus.isForbidden()">
+      <option value="ActiveMQ">ActiveMQ</option>
       <option value="Solace">Solace</option>
     </select>
   </div>
 </div>
 
+<div ng-if="endpoint.otherProperties.jmsProvider === 'ActiveMQ'"
+     ng-include="'/ui/views/endpoints/edit-jms-activemq-endpoint.html'"></div>
 <div ng-if="endpoint.otherProperties.jmsProvider === 'Solace'"
      ng-include="'/ui/views/endpoints/edit-jms-solace-endpoint.html'"></div>

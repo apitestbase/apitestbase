@@ -71,7 +71,9 @@ angular.module('apitestbase').controller('EndpointsController', ['$scope', 'Mana
 
     $scope.jmsProviderChanged = function(isValid) {
       var otherProperties = $scope.endpoint.otherProperties;
-      if (otherProperties.jmsProvider === 'Solace') {
+      if (otherProperties.jmsProvider === 'ActiveMQ') {
+        otherProperties['@type'] = 'JMSActiveMQEndpointProperties';
+      } else if (otherProperties.jmsProvider === 'Solace') {
         otherProperties['@type'] = 'JMSSolaceEndpointProperties';
       }
 
