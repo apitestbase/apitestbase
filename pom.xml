@@ -108,9 +108,9 @@
         <ng-js-tree.version>0.0.10</ng-js-tree.version>
 
         <iib.version>[10.0.0.0, 10.0.0.50]</iib.version>
-
+        <jms.api.version>2.0.1</jms.api.version>
+        <activemq.client.version>5.17.1</activemq.client.version>
         <solace.version>10.12.0</solace.version>
-
         <mq.version>[8.0.0.0, 8.0.0.50]</mq.version>
 
         <paho.client.mqttv3.version>1.2.5</paho.client.mqttv3.version>
@@ -131,6 +131,7 @@
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-core-ui</module>
+                <module>apitestbase-jms</module>
                 <module>apitestbase-jms-activemq</module>
                 <module>apitestbase-jms-solace</module>
                 <module>apitestbase-mqtt</module>
@@ -148,6 +149,7 @@
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-core-ui</module>
+                <module>apitestbase-jms</module>
                 <module>apitestbase-jms-activemq</module>
                 <module>apitestbase-jms-solace</module>
                 <module>apitestbase-mqtt</module>
@@ -182,6 +184,7 @@
                 <module>apitestbase-common</module>
                 <module>apitestbase-core-server</module>
                 <module>apitestbase-core-ui</module>
+                <module>apitestbase-jms</module>
                 <module>apitestbase-jms-activemq</module>
                 <module>apitestbase-jms-solace</module>
                 <module>apitestbase-mqtt</module>

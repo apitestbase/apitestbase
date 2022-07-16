@@ -10,7 +10,7 @@
         <version>0.20.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>apitestbase-jms-activemq</artifactId>
+    <artifactId>apitestbase-jms</artifactId>
 
     <dependencyManagement>
         <dependencies>
@@ -27,12 +27,12 @@
     <dependencies>
         <dependency>
             <groupId>io.apitestbase</groupId>
-            <artifactId>apitestbase-jms</artifactId>
+            <artifactId>apitestbase-core-server</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-client</artifactId>
+            <groupId>javax.jms</groupId>
+            <artifactId>javax.jms-api</artifactId>
         </dependency>
     </dependencies>
 </project>

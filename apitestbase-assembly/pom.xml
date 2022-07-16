@@ -39,6 +39,11 @@
         </dependency>
         <dependency>
             <groupId>io.apitestbase</groupId>
+            <artifactId>apitestbase-jms-activemq</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.apitestbase</groupId>
             <artifactId>apitestbase-jms-solace</artifactId>
             <version>${project.version}</version>
         </dependency>
