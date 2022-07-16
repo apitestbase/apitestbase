@@ -25,7 +25,7 @@
     <dependencies>
         <dependency>
             <groupId>io.apitestbase</groupId>
-            <artifactId>apitestbase-core-server</artifactId>
+            <artifactId>apitestbase-jms</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
