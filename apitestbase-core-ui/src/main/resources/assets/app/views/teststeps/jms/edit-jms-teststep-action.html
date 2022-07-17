@@ -48,7 +48,7 @@
   </div>
   <div ng-if="teststep.action === 'Browse'">
     <label for="browseMessageIndex" class="col-lg-1 control-label no-left-padding">Message Index</label>
-    <div class="col-lg-3">
+    <div class="col-lg-2">
       <input name="browseMessageIndex" id="browseMessageIndex" type="text" class="form-control"
              ng-model="teststep.otherProperties.browseMessageIndex"
              ng-change="autoSave(teststepForm.$valid)" ng-readonly="appStatus.isForbidden()">
