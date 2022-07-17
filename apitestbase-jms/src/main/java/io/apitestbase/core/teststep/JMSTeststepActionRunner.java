@@ -73,12 +73,8 @@ public abstract class JMSTeststepActionRunner extends TeststepActionRunner {
     }
 
     private void doTopicAction(Endpoint endpoint, String topicString, APIRequest apiRequest) throws Exception {
-        Connection connection = createJMSConnection(endpoint);
-        Session session = null;
-
-        try {
-            connection.start();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        try (Connection connection = createJMSConnection(endpoint);
+                Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);) {
             Topic topic = session.createTopic(topicString);
             MessageProducer messageProducer = session.createProducer(topic);
             JMSRequest request = (JMSRequest) apiRequest;
@@ -88,25 +84,15 @@ public abstract class JMSTeststepActionRunner extends TeststepActionRunner {
             }
 
             messageProducer.send(message);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
         }
     }
 
     protected APIResponse checkDepth(Endpoint endpoint, String queueName) throws Exception {
         JMSCheckQueueDepthResponse response = new JMSCheckQueueDepthResponse();
         int queueDepth = 0;
-        Connection connection = createJMSConnection(endpoint);
-        Session session = null;
 
-        try {
-            connection.start();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        try (Connection connection = createJMSConnection(endpoint);
+                Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
             Queue queue = session.createQueue(queueName);
             QueueBrowser browser = session.createBrowser(queue);
 
@@ -114,13 +100,6 @@ public abstract class JMSTeststepActionRunner extends TeststepActionRunner {
             while (messages.hasMoreElements()) {
                 messages.nextElement();
                 queueDepth++;
-            }
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-            if (connection != null) {
-                connection.close();
             }
         }
 
@@ -130,16 +109,28 @@ public abstract class JMSTeststepActionRunner extends TeststepActionRunner {
     }
 
     protected APIResponse clearQueue(Endpoint endpoint, String queueName) throws Exception {
-        return null;
+        JMSClearQueueResponse response = new JMSClearQueueResponse();
+        int clearedMessagesCount = 0;
+
+        try (Connection connection = createJMSConnection(endpoint);
+                Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                MessageConsumer consumer = session.createConsumer(session.createQueue(queueName))) {
+            Message message;
+            do {
+                message = consumer.receive(1000);
+                if (message != null) {
+                    clearedMessagesCount++;
+                }
+            } while (message != null);
+        }
+
+        response.setClearedMessagesCount(clearedMessagesCount);
+        return response;
     }
 
     private void sendMessageToQueue(Endpoint endpoint, String queueName, APIRequest apiRequest) throws Exception {
-        Connection connection = createJMSConnection(endpoint);
-        Session session = null;
-
-        try {
-            connection.start();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        try (Connection connection = createJMSConnection(endpoint);
+                Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
             Queue queue = session.createQueue(queueName);
             MessageProducer messageProducer = session.createProducer(queue);
             JMSRequest request = (JMSRequest) apiRequest;
@@ -173,25 +164,15 @@ public abstract class JMSTeststepActionRunner extends TeststepActionRunner {
             }
 
             messageProducer.send(message);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
         }
     }
 
     private APIResponse browseQueue(Endpoint endpoint, String queueName, int browseMessageIndex) throws Exception {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         JMSBrowseQueueResponse response = null;
-        Connection connection = createJMSConnection(endpoint);
-        Session session = null;
 
-        try {
-            connection.start();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        try (Connection connection = createJMSConnection(endpoint);
+                Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
             Queue queue = session.createQueue(queueName);
 
             QueueBrowser browser = session.createBrowser(queue);
@@ -263,13 +244,6 @@ public abstract class JMSTeststepActionRunner extends TeststepActionRunner {
 
                     break;
                 }
-            }
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-            if (connection != null) {
-                connection.close();
             }
         }
 

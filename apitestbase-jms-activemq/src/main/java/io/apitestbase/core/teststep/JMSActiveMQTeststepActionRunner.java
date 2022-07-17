@@ -11,7 +11,8 @@ public class JMSActiveMQTeststepActionRunner extends JMSTeststepActionRunner {
     @Override
     protected Connection createJMSConnection(Endpoint endpoint) throws JMSException {
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(endpoint.getConstructedUrl());
-
-        return connectionFactory.createConnection();
+        Connection connection = connectionFactory.createConnection();
+        connection.start();
+        return connection;
     }
 }
