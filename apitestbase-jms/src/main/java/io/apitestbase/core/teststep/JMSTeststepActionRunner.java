@@ -72,19 +72,12 @@ public abstract class JMSTeststepActionRunner extends TeststepActionRunner {
         return response;
     }
 
-    protected APIResponse checkDepth(Endpoint endpoint, String queueName) throws Exception {
-        return null;
-    }
-
-    protected APIResponse clearQueue(Endpoint endpoint, String queueName) throws Exception {
-        return null;
-    }
-
     private void doTopicAction(Endpoint endpoint, String topicString, APIRequest apiRequest) throws Exception {
         Connection connection = createJMSConnection(endpoint);
         Session session = null;
 
         try {
+            connection.start();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Topic topic = session.createTopic(topicString);
             MessageProducer messageProducer = session.createProducer(topic);
@@ -105,11 +98,47 @@ public abstract class JMSTeststepActionRunner extends TeststepActionRunner {
         }
     }
 
+    protected APIResponse checkDepth(Endpoint endpoint, String queueName) throws Exception {
+        JMSCheckQueueDepthResponse response = new JMSCheckQueueDepthResponse();
+        int queueDepth = 0;
+        Connection connection = createJMSConnection(endpoint);
+        Session session = null;
+
+        try {
+            connection.start();
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Queue queue = session.createQueue(queueName);
+            QueueBrowser browser = session.createBrowser(queue);
+
+            Enumeration<Message> messages = browser.getEnumeration();
+            while (messages.hasMoreElements()) {
+                messages.nextElement();
+                queueDepth++;
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+        response.setQueueDepth(queueDepth);
+
+        return response;
+    }
+
+    protected APIResponse clearQueue(Endpoint endpoint, String queueName) throws Exception {
+        return null;
+    }
+
     private void sendMessageToQueue(Endpoint endpoint, String queueName, APIRequest apiRequest) throws Exception {
         Connection connection = createJMSConnection(endpoint);
         Session session = null;
 
         try {
+            connection.start();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Queue queue = session.createQueue(queueName);
             MessageProducer messageProducer = session.createProducer(queue);
@@ -161,6 +190,7 @@ public abstract class JMSTeststepActionRunner extends TeststepActionRunner {
         Session session = null;
 
         try {
+            connection.start();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Queue queue = session.createQueue(queueName);
 
